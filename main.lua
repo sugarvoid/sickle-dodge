@@ -30,12 +30,20 @@ local sickle = obj:new({
         x=30,
         y=30,
         image = sickle_img,
-        moving_dir={0,0},
-        life_timer=60,
-        speed=0,
+        w= sickle_img:getWidth(),
+        h= sickle_img:getHeight(),
+        moving_dir={1,0},
+        rotation = 0,
+        life_timer=120,
+        speed=200,
+        update=function(self, dt)
+            self.x = (self.x + self.moving_dir[1] * self.speed * dt)
+            self.y = (self.y + self.moving_dir[2] * self.speed * dt)
+            self.life_timer = self.life_timer - 1
+        end,
         draw=function(self)
             love.graphics.draw(self.image, self.x, self.y)
-        end
+        end,
 })
 
 --create loadFont() function in lib
@@ -67,7 +75,7 @@ function love.load()
 
     platfrom = {
         x=40,
-        y=92,
+        y=110,
         image = love.graphics.newImage("platform.png"),
         draw=function(self)
             love.graphics.draw(self.image, self.x, self.y)
@@ -75,6 +83,7 @@ function love.load()
     }
 
     test_sickle = sickle:new()
+    table.insert(active_sickles, test_sickle)
 
     gamestate = 1
     score = 0
@@ -153,6 +162,14 @@ function update_game(dt)
 	elseif love.keyboard.isDown('a') then                -- When the player presses and holds down the "A" button:
 		player.x = player.x - (player.speed * dt)    -- The player moves to the left.
 	end
+    for s in all(active_sickles) do
+        s:update(dt)
+        if s.life_timer <= 0 then
+            local _s = s
+            table.insert(dead_sickles, s)
+            del(active_sickles, s)
+        end
+    end
 end
 
 
@@ -166,7 +183,7 @@ function love.draw()
     love.graphics.draw(background, 0, 0)
     player:draw()
     platfrom:draw()
-    test_sickle:draw()
+    
     if gamestate == 0 then
         draw_menu()
     end
