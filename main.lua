@@ -15,9 +15,16 @@ dead_sickles = {}
 local active_sickles = {}
 local is_paused = false
 
+
+local seconds_in = 0
+local frames = 0
+local tick = 0
+
 love.graphics.setDefaultFilter("nearest", "nearest")
 
+
 local sickle_img = love.graphics.newImage("ice_sickle.png")
+local platform_img = love.graphics.newImage("platform.png")
 
 local my_timer = Timer:new(60*5, function() print("Timer finished!") end, true)
 my_timer:start()
@@ -60,9 +67,10 @@ local sickle = obj:new({
         life_timer=120,
         speed=200,
         update=function(self, dt)
-            self.x = (self.x + self.moving_dir[1] * self.speed * dt)
-            self.y = (self.y + self.moving_dir[2] * self.speed * dt)
+            self.x = (self.x + (self.moving_dir[1] * self.speed * dt))
+            self.y = (self.y + (self.moving_dir[2] * self.speed * dt))
             self.life_timer = self.life_timer - 1
+            print(self.y)
         end,
         draw=function(self)
             love.graphics.draw(self.image, self.x, self.y)
@@ -88,7 +96,7 @@ sickle_manager = {
             [1] = update_for_1_second,
             [2] = update_for_2_seconds,
             [3] = update_for_3_seconds,
-            [4] = function() self:spawn_sickles({pattern = all_top, speed = 3}) end,
+            [4] = function() spawn_sickles(WAVES.all_top, 200) end,
             [5] = nil,
             [6] = nil,
             [7] = nil,
@@ -153,13 +161,13 @@ sickle_manager = {
         else
             -- Handle invalid input
         end
-    end
+    end,
+
 }
 
 --create loadFont() function in lib
 
 function love.load()
-    
     print('set filter')
     window = {translateX = 40, translateY = 40, scale = 4, width = 240, height = 136}
     --love.window.setMode(screenWidth*4, screenHeight*4)
@@ -186,9 +194,15 @@ function love.load()
     platfrom = {
         x=40,
         y=110,
-        image = love.graphics.newImage("platform.png"),
+        image = platform_img,
+        w= platform_img:getWidth(),
+        h= platform_img:getHeight(),
         draw=function(self)
             love.graphics.draw(self.image, self.x, self.y)
+            love.graphics.push("all")
+            changeFontColor("#FF0000")
+            love.graphics.rectangle( "line", self.x, self.y, self.w, self.h) 
+            love.graphics.pop()
         end,
     }
 
@@ -206,36 +220,39 @@ end
 print('player')
 
 
-function spawn_sickle(_x, _y, _dir)
+function spawn_sickle(_x, _y, _dir, _speed)
 
-	local new_sickle = table.remove(dead_sickles, 1)
-	new_sickle.dir=_dir
+	local new_sickle = sickle:new()
+	new_sickle.moving_dir=_dir
 	new_sickle.x=_x
 	new_sickle.y=_y
-
-	add(active_sickles, new_sickle)
+    new_sickle.speed = _speed
+    new_sickle.life_timer = 60
+	--add(active_sickles, new_sickle)
+    return new_sickle
 end
 
-function spawn_sickles(self, pattern, speed)
-    for _, s in ipairs(pattern) do
-        local n_s = spawn_sickle({pos = {s[1], s[2]}, moving_dir = s[3], groups = self.sickle_group})
-        n_s.speed = speed
-        n_s.life_timer = 60
+function spawn_sickles(pattern, speed)
+    --print(#pattern)
+    for p in all(pattern) do
+        --print(p)
+        print("------")
+        print("x: ".. p[1])
+        print("y: ".. p[2])
+        print("moving_dir: {"..p[3][1]..","..p[3][2].."}")
+        print("speed: "..speed)
+        print("------")
+        --for s in all(p) do
+            --print(s)
+            --print(sickle[1])
+            --print(s)
+            --print(s)
+        local n_s = spawn_sickle(p[1], p[2], {p[3][1] , p[3][2]}, speed) 
+        
         table.insert(active_sickles, n_s)
+       --end
     end
 end
-
-
-function load_sickles()
-    
-	new_sickle = sickle:new() 
-	new_sickle.dir=_dir
-	new_sickle.x=_x
-	new_sickle.y=_y
-	
-	add(dead_sickles,new_sickle)
-end
-
 
 
 function love.keypressed(key)
@@ -263,6 +280,12 @@ end
 
 function love.update(dt)
     my_timer:update()
+    tick = tick + 1
+    if tick == 60 then
+        seconds_in = seconds_in + 1
+        tick = 0
+        sickle_manager:update_checker(seconds_in)
+    end
     if gamestate == 0 then
         update_menu()
     elseif gamestate == 1 then
@@ -307,6 +330,7 @@ function love.draw()
     love.graphics.draw(background, 0, 0)
     player:draw()
     platfrom:draw()
+    love.graphics.print( seconds_in, 0, 0, 0, 1, 1)
     
     if gamestate == 0 then
         draw_menu()
