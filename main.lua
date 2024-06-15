@@ -25,6 +25,7 @@ love.graphics.setDefaultFilter("nearest", "nearest")
 
 local sickle_img = love.graphics.newImage("ice_sickle.png")
 local platform_img = love.graphics.newImage("platform.png")
+local player_img = love.graphics.newImage("player.png")
 
 local my_timer = Timer:new(60*5, function() print("Timer finished!") end, true)
 my_timer:start()
@@ -43,6 +44,12 @@ WAVES = {
     right_2sec = {
         {128 + 12, 96, {-1, 0}},
     },
+    left_all = {
+        {-20, 104, {1, 0}},
+        {-62, 59 - 8, {1, 0}},
+        {-131, 106 - 16, {1, 0}},
+        {-171, 61 - 16, {1, 0}},
+    }
 }
 
 
@@ -70,7 +77,6 @@ local sickle = obj:new({
             self.x = (self.x + (self.moving_dir[1] * self.speed * dt))
             self.y = (self.y + (self.moving_dir[2] * self.speed * dt))
             self.life_timer = self.life_timer - 1
-            print(self.y)
         end,
         draw=function(self)
             love.graphics.draw(self.image, self.x, self.y)
@@ -96,7 +102,7 @@ sickle_manager = {
             [1] = update_for_1_second,
             [2] = update_for_2_seconds,
             [3] = update_for_3_seconds,
-            [4] = function() spawn_sickles(WAVES.all_top, 200) end,
+            [4] = function() spawn_sickles(WAVES.left_all, 200) end,
             [5] = nil,
             [6] = nil,
             [7] = nil,
@@ -179,32 +185,81 @@ function love.load()
     
         x = 50,
         y = 50,
+        is_moving_left=false,
+        is_moving_right=false,
+        hitbox = {0,0,0,0},
+        jump= false,
+        jumps_left =2,
         speed = 150, 
-        image = love.graphics.newImage("player.png"),
-        update=function(self)
+        vel_y = 0,
+        image = player_img,
+        w= player_img:getWidth(),
+        h= player_img:getHeight(),
+        init=function(self)
+            self.hitbox = {x = self.x, y= self.y, w= self.w-8, h =self.h-3}
+        end,
+        update=function(self, dt)
+            dx=0
+            dy=0
+            if self.is_moving_left then
+                self.x = self.x - self.speed * dt
+            end
+            if self.is_moving_right then
+                self.x = self.x + self.speed * dt
+            end
+
+            -- Jump
+            if self.jump and self.jumps_left >=1 then
+                self.vel_y = -7
+                self.y = self.y - 30
+                self.jumps_left = self.jumps_left - 1
+                self.jump = false 
+            end
+
+            self.x = (self.x + dx) --* dt
+            self.y = (self.y + dy) --* dt
+
+            if not check_collision(self.hitbox, platfrom.hitbox) then
+                --self.vel_y = self.vel_y + 60
+                --dy = dy + self.vel_y
+                self.y = self.y + 70 * dt
+                else
+                    self.jumps_left = 2
+            end
+
+            
+            self.hitbox.x = self.x+3
+            self.hitbox.y = self.y+2
             
         end,
         draw=function(self)
+            draw_hitbox(self, "#FF0000")
             love.graphics.draw(self.image, self.x, self.y)
         end,
     }
+    player:init()
 
     
 
     platfrom = {
         x=40,
-        y=110,
+        y=120,
         image = platform_img,
         w= platform_img:getWidth(),
         h= platform_img:getHeight(),
+        init=function(self)
+            self.hitbox = {x = self.x, y= self.y, w= self.w, h =self.h}
+        end,
         draw=function(self)
             love.graphics.draw(self.image, self.x, self.y)
-            love.graphics.push("all")
-            changeFontColor("#FF0000")
-            love.graphics.rectangle( "line", self.x, self.y, self.w, self.h) 
-            love.graphics.pop()
+            draw_hitbox(self, "#FF0000")
+            --love.graphics.push("all")
+            --changeFontColor("#FF0000")
+            --love.graphics.rectangle("line", self.hitbox.x, self.hitbox.y, self.hitbox.w, self.hitbox.h) 
+            --love.graphics.pop()
         end,
     }
+    platfrom:init()
 
     test_sickle = sickle:new()
     table.insert(active_sickles, test_sickle)
@@ -217,7 +272,14 @@ function love.load()
     resize(240*4, 136*4)
 end
 
-print('player')
+
+--TODO: Move to speperate file
+function draw_hitbox(obj, color)
+    love.graphics.push("all")
+    changeFontColor(color)
+    love.graphics.rectangle("line", obj.hitbox.x, obj.hitbox.y, obj.hitbox.w, obj.hitbox.h)
+    love.graphics.pop()
+end
 
 
 function spawn_sickle(_x, _y, _dir, _speed)
@@ -227,7 +289,7 @@ function spawn_sickle(_x, _y, _dir, _speed)
 	new_sickle.x=_x
 	new_sickle.y=_y
     new_sickle.speed = _speed
-    new_sickle.life_timer = 60
+    new_sickle.life_timer = 150
 	--add(active_sickles, new_sickle)
     return new_sickle
 end
@@ -236,12 +298,12 @@ function spawn_sickles(pattern, speed)
     --print(#pattern)
     for p in all(pattern) do
         --print(p)
-        print("------")
-        print("x: ".. p[1])
-        print("y: ".. p[2])
-        print("moving_dir: {"..p[3][1]..","..p[3][2].."}")
-        print("speed: "..speed)
-        print("------")
+        --print("------")
+        --print("x: ".. p[1])
+       -- print("y: ".. p[2])
+        --print("moving_dir: {"..p[3][1]..","..p[3][2].."}")
+        --print("speed: "..speed)
+       -- print("------")
         --for s in all(p) do
             --print(s)
             --print(sickle[1])
@@ -273,7 +335,9 @@ function love.keypressed(key)
     end
 
     if gamestate == 1 then
-        return
+        if key == "space" then
+            player.jump = true
+        end
     end
 end
 
@@ -304,11 +368,23 @@ end
 
 
 function update_game(dt)
-    if love.keyboard.isDown('d') then                    -- When the player presses and holds down the "D" button:
-		player.x = player.x + (player.speed * dt)    -- The player moves to the right.
-	elseif love.keyboard.isDown('a') then                -- When the player presses and holds down the "A" button:
-		player.x = player.x - (player.speed * dt)    -- The player moves to the left.
+    
+    if love.keyboard.isDown('d') then
+        player.is_moving_right = true 
+    else
+        player.is_moving_right = false   
+    end            -- When the player presses and holds down the "D" button:
+		--player.x = player.x + (player.speed * dt)    -- The player moves to the right.
+	if love.keyboard.isDown('a') then
+        player.is_moving_left = true  
+        else
+            player.is_moving_left = false                 -- When the player presses and holds down the "A" button:
+		--player.x = player.x - (player.speed * dt)    -- The player moves to the left.
 	end
+
+
+
+    player:update(dt)
     for s in all(active_sickles) do
         s:update(dt)
         if s.life_timer <= 0 then
@@ -423,3 +499,9 @@ function del(t,a)
 	end
 end
 
+function check_collision(a, b)
+    return a.x < b.x+b.w and
+           b.x < a.x+a.w and
+           a.y < b.y+b.h and
+           b.y < a.y+a.h
+  end
