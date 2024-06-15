@@ -1,6 +1,10 @@
 --! main.lua
 
+
+world = love.physics.newWorld(0, 200, true)  --Gravity is being set to 0 in the x direction and 200 in the y direction.
+
 require("lib.color")
+require("player")
 
 local Timer = require("timer")
 
@@ -25,7 +29,12 @@ love.graphics.setDefaultFilter("nearest", "nearest")
 
 local sickle_img = love.graphics.newImage("ice_sickle.png")
 local platform_img = love.graphics.newImage("platform.png")
-local player_img = love.graphics.newImage("player.png")
+
+
+
+
+local player = Player:new()
+
 
 local my_timer = Timer:new(60*5, function() print("Timer finished!") end, true)
 my_timer:start()
@@ -174,71 +183,13 @@ sickle_manager = {
 --create loadFont() function in lib
 
 function love.load()
+    
     print('set filter')
     window = {translateX = 40, translateY = 40, scale = 4, width = 240, height = 136}
     --love.window.setMode(screenWidth*4, screenHeight*4)
     
     font = love.graphics.newFont("font/mago2.ttf", 64)
     background = love.graphics.newImage("TEMP_background.png")
-    
-    player = {
-    
-        x = 50,
-        y = 105,
-        is_moving_left=false,
-        is_moving_right=false,
-        hitbox = {0,0,0,0},
-        jump= false,
-        jumps_left =2,
-        speed = 150, 
-        vel_y = 0,
-        image = player_img,
-        w= player_img:getWidth(),
-        h= player_img:getHeight(),
-        init=function(self)
-            self.hitbox = {x = self.x, y= self.y, w= self.w-8, h =self.h-3}
-        end,
-        update=function(self, dt)
-            dx=0
-            dy=0
-            if self.is_moving_left then
-                self.x = self.x - self.speed * dt
-            end
-            if self.is_moving_right then
-                self.x = self.x + self.speed * dt
-            end
-
-            -- Jump
-            if self.jump and self.jumps_left >=1 then
-                self.vel_y = -7
-                self.y = self.y - 30
-                self.jumps_left = self.jumps_left - 1
-                self.jump = false 
-            end
-
-            self.x = (self.x + dx) --* dt
-            self.y = (self.y + dy) --* dt
-
-            if not check_collision(self.hitbox, platfrom.hitbox) then
-                --self.vel_y = self.vel_y + 60
-                --dy = dy + self.vel_y
-                self.y = self.y + 70 * dt
-                else
-                    self.jumps_left = 2
-            end
-
-            
-            self.hitbox.x = self.x+3
-            self.hitbox.y = self.y+2
-            
-        end,
-        draw=function(self)
-            draw_hitbox(self, "#FF0000")
-            love.graphics.draw(self.image, self.x, self.y)
-        end,
-    }
-    player:init()
-
     
 
     platfrom = {
@@ -354,6 +305,7 @@ function love.update(dt)
         update_menu()
     elseif gamestate == 1 then
         if not is_paused then
+            world:update(dt)
             update_game(dt)
         end
         
