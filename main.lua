@@ -11,6 +11,7 @@ local screenHeight = 136
 
 dead_sickles = {}
 local active_sickles = {}
+local is_paused = false
 
 love.graphics.setDefaultFilter("nearest", "nearest")
 
@@ -145,7 +146,10 @@ function love.update(dt)
     if gamestate == 0 then
         update_menu()
     elseif gamestate == 1 then
-        update_game(dt)
+        if not is_paused then
+            update_game(dt)
+        end
+        
     else
         update_gameover(dt)
     end
