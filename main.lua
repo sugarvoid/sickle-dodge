@@ -14,6 +14,8 @@ local active_sickles = {}
 
 love.graphics.setDefaultFilter("nearest", "nearest")
 
+local sickle_img = love.graphics.newImage("ice_sickle.png")
+
 local obj= {
     new=function(self,tbl)
             tbl=tbl or {}
@@ -27,7 +29,7 @@ local obj= {
 local sickle = obj:new({
         x=30,
         y=30,
-        image = love.graphics.newImage("player.png"),
+        image = sickle_img,
         moving_dir={0,0},
         life_timer=60,
         speed=0,
