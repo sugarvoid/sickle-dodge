@@ -9,6 +9,32 @@ local gamestate -- 0 = menu, 1 = game, 2 = gameover
 local screenWidth = 240
 local screenHeight = 136
 
+dead_sickles = {}
+local active_sickles = {}
+
+love.graphics.setDefaultFilter("nearest", "nearest")
+
+local obj= {
+    new=function(self,tbl)
+            tbl=tbl or {}
+            setmetatable(tbl,{
+                __index=self
+            })
+            return tbl
+        end
+}
+
+local sickle = obj:new({
+        x=30,
+        y=30,
+        image = love.graphics.newImage("player.png"),
+        moving_dir={0,0},
+        life_timer=60,
+        speed=0,
+        draw=function(self)
+            love.graphics.draw(self.image, self.x, self.y)
+        end
+})
 
 --create loadFont() function in lib
 
@@ -17,7 +43,7 @@ function love.load()
     print('set filter')
     window = {translateX = 40, translateY = 40, scale = 4, width = 240, height = 136}
     --love.window.setMode(screenWidth*4, screenHeight*4)
-    love.graphics.setDefaultFilter("nearest", "nearest")
+    
     font = love.graphics.newFont("font/mago2.ttf", 64)
     background = love.graphics.newImage("TEMP_background.png")
     
@@ -25,6 +51,7 @@ function love.load()
     
         x = 50,
         y = 50,
+        speed = 150, 
         image = love.graphics.newImage("player.png"),
         update=function(self)
             
@@ -33,6 +60,8 @@ function love.load()
             love.graphics.draw(self.image, self.x, self.y)
         end,
     }
+
+    
 
     platfrom = {
         x=40,
@@ -43,7 +72,9 @@ function love.load()
         end,
     }
 
-    gamestate = 0
+    test_sickle = sickle:new()
+
+    gamestate = 1
     score = 0
     font:setFilter("nearest")
     love.graphics.setFont(font)
@@ -54,7 +85,25 @@ end
 print('player')
 
 
+function spawn_sickle(_x, _y, _dir)
 
+	local new_sickle = table.remove(dead_sickles, 1)
+	new_sickle.dir=_dir
+	new_sickle.x=_x
+	new_sickle.y=_y
+
+	add(active_sickles, new_sickle)
+end
+
+function load_sickles()
+    
+	new_sickle = sickle:new() 
+	new_sickle.dir=_dir
+	new_sickle.x=_x
+	new_sickle.y=_y
+	
+	add(dead_sickles,new_sickle)
+end
 
 
 
@@ -97,7 +146,11 @@ end
 
 
 function update_game(dt)
-    return
+    if love.keyboard.isDown('d') then                    -- When the player presses and holds down the "D" button:
+		player.x = player.x + (player.speed * dt)    -- The player moves to the right.
+	elseif love.keyboard.isDown('a') then                -- When the player presses and holds down the "A" button:
+		player.x = player.x - (player.speed * dt)    -- The player moves to the left.
+	end
 end
 
 
@@ -111,6 +164,7 @@ function love.draw()
     love.graphics.draw(background, 0, 0)
     player:draw()
     platfrom:draw()
+    test_sickle:draw()
     if gamestate == 0 then
         draw_menu()
     end
@@ -130,7 +184,9 @@ end
 
 
 function draw_game()
-    return
+    for s in all(active_sickles) do
+        s:draw()
+    end
 end
 
 
@@ -176,4 +232,27 @@ end
 
 
 
+--tables
+add=table.insert
+
+function all(list)
+  local i = 0
+  return function() i = i + 1; return list[i] end
+end
+
+--for v in all(t) do
+--    print(v)  -- prints 1, 3, 5, 7, 9
+--end
+
+count=table.getn
+
+function del(t,a)
+	for i,v in ipairs(t) do
+		if v==a then
+			t[i]=t[#t]
+			t[#t]=nil
+			return
+		end
+	end
+end
 
