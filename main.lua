@@ -184,7 +184,7 @@ function love.load()
     player = {
     
         x = 50,
-        y = 50,
+        y = 105,
         is_moving_left=false,
         is_moving_right=false,
         hitbox = {0,0,0,0},
@@ -406,7 +406,7 @@ function love.draw()
     love.graphics.draw(background, 0, 0)
     player:draw()
     platfrom:draw()
-    love.graphics.print( seconds_in, 0, 0, 0, 1, 1)
+    love.graphics.print( seconds_in, 60, -20, 0)
     
     if gamestate == 0 then
         draw_menu()
