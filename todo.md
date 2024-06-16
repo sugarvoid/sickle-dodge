@@ -1,0 +1,10 @@
+## Todo
+- Add animations for player
+- Add crown for player
+- Add jump animation to player's second jump
+- Add rest of wave layouts to table
+- Clean up `main.lua`; use gamestate
+- Add game reset on hitting sickle
+- Add title
+- Add gameover
+- Limit timer to 60 sec
