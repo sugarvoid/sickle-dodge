@@ -2,14 +2,15 @@
 
 wf = require 'lib.windfield'
 
-world = wf.newWorld(0, 0, false)
-world:setGravity(0, 900)
+world = wf.newWorld(0, 900, false)
+--world:setGravity(0, 900)
 world:addCollisionClass('Player')
-world:addCollisionClass('Sickle')
+world:addCollisionClass('Sickle', {ignores = {"Player"}})
 world:addCollisionClass('Ground')
 
 require("lib.color")
 require("player")
+require("sickle")
 
 local Timer = require("timer")
 
@@ -44,6 +45,11 @@ local player = Player:new()
 local my_timer = Timer:new(60*5, function() print("Timer finished!") end, true)
 my_timer:start()
 
+local every_2s = Timer:new(60*2, function() spawn_sickles(WAVES.right_2sec, 150)end, true)
+every_2s:start()
+
+
+
 WAVES = {
     all_top = {
         {20, -10, {0, 1}},
@@ -56,7 +62,7 @@ WAVES = {
         {-6, 96 - 16, {1, 0}},
     },
     right_2sec = {
-        {128 + 12, 96, {-1, 0}},
+        {240+10, 96, {-1, 0}},
     },
     left_all = {
         {-20, 104, {1, 0}},
@@ -190,10 +196,10 @@ sickle_manager = {
 function love.load()
     
     print('set filter')
-    window = {translateX = 40, translateY = 40, scale = 4, width = 240, height = 136}
+    --window = {translateX = 40, translateY = 40, scale = 4, width = 240, height = 136}
     --love.window.setMode(screenWidth*4, screenHeight*4)
     
-    font = love.graphics.newFont("font/mago2.ttf", 64)
+    font = love.graphics.newFont("font/mago2.ttf", 16)
     background = love.graphics.newImage("TEMP_background.png")
     
 
@@ -209,6 +215,7 @@ function love.load()
             self.hitbox = {x = self.x, y= self.y, w= self.w, h =self.h}
             body = world:newRectangleCollider(self.hitbox.x, self.hitbox.y, self.hitbox.w, self.hitbox.h)
             body:setType("static")
+            body:setCollisionClass('Ground')
         end,
         draw=function(self)
             love.graphics.draw(self.image, self.x, self.y)
@@ -229,7 +236,7 @@ function love.load()
     font:setFilter("nearest")
     love.graphics.setFont(font)
     --sounds = load_sounds()
-    resize(240*4, 136*4)
+    --resize(240*4, 136*4)
 end
 
 
@@ -244,10 +251,12 @@ end
 
 function spawn_sickle(_x, _y, _dir, _speed)
 
-	local new_sickle = sickle:new()
+	local new_sickle = Sickle:new()
+    print(_x, _y)
 	new_sickle.moving_dir=_dir
-	new_sickle.x=_x
-	new_sickle.y=_y
+	--new_sickle.x=_x
+	--new_sickle.y=_y
+    new_sickle.body:setPosition(_x, _y)
     new_sickle.speed = _speed
     new_sickle.life_timer = 150
 	--add(active_sickles, new_sickle)
@@ -296,7 +305,7 @@ function love.keypressed(key)
 
     if gamestate == 1 then
         if key == "space" then
-            player.jump = true
+            player:jump()
         end
     end
 end
@@ -304,6 +313,7 @@ end
 
 function love.update(dt)
     my_timer:update()
+    every_2s:update()
     tick = tick + 1
     if tick == 60 then
         seconds_in = seconds_in + 1
@@ -363,18 +373,27 @@ end
 
 
 function love.draw()
+    
     love.graphics.scale(4)
+
+    
+
     love.graphics.draw(background, 0, 0)
+    love.graphics.push("all")
+    love.graphics.print("FPS: "..tostring(love.timer.getFPS( )), 0, 0, 0, 1, 1)
+    love.graphics.pop()
     player:draw()
     platfrom:draw()
-    love.graphics.print( seconds_in, 60, -20, 0)
-
+    world:draw()
+    love.graphics.print( seconds_in, 60, 20, 0, 3, 3)
+    --love.graphics.pop()
+   
     
     if gamestate == 0 then
         draw_menu()
     end
     if gamestate == 1 then
-        world:draw()
+        
         draw_game()
     end
     if gamestate == 2 then

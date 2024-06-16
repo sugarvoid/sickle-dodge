@@ -19,7 +19,7 @@ function Player:new()
     instance.is_moving_left=false
     instance.is_moving_right=false
     
-    instance.jump= false
+    --instance.jump= false
     instance.jumps_left = 2
     instance.speed = 140
     instance.vel_y = 50
@@ -34,11 +34,24 @@ function Player:new()
     instance.body = world:newRectangleCollider(instance.x, instance.y, instance.hitbox.w, instance.hitbox.h)
     instance.body:setType("dynamic")
     instance.body:setCollisionClass('Player')
+    instance.body:setObject(self)
     return instance
 end
 
 function Player:update(dt)
 
+    if self.body:enter("Ground") then
+        print("on floor")
+        self.jumps_left = 2
+    end
+
+    if self.body:enter("Sickle") then
+        local collision_data = self.body:getEnterCollisionData("Sickle")
+        local sickle = collision_data.collider:getObject()
+        print(collision_data.collider:getObject())
+        --sickle:on_hit()
+        self:die()
+    end
                 
     local vel_x, vel_y = self.body:getLinearVelocity()
     --local vel_y=0
@@ -53,15 +66,7 @@ function Player:update(dt)
                 --self.body.x = self.body.x + self.speed * dt
              end
 
-            -- Jump
-            if self.jump then
-                print("jump")
-                self.body:applyLinearImpulse(0, -55)
-                vel_y = -50
-                --self.y = self.y - 30
-                self.jumps_left = self.jumps_left - 1
-                self.jump = false 
-            end
+            
 
             
     --         self.x = (self.x + dx) --* dt
@@ -80,11 +85,28 @@ function Player:update(dt)
             --self.hitbox.y = self.y+2
             self.x = self.body:getX()
             self.y = self.body:getY()
+            --print(self.x, self.y)
             
 end
 
-function Player:sync_physics()
+function Player:jump()
+    -- Jump
+    if self.jumps_left == 2 then
+        print("jump")
+        self.body:applyLinearImpulse(0, -55)
+        --vel_y = -50
+        --self.y = self.y - 30
+        self.jumps_left = self.jumps_left - 1
+        --self.jump = false
+        elseif self.jumps_left == 1 then
+            print("double jump")
+            self.body:applyLinearImpulse(0, (-55*0.8))
+            self.jumps_left = self.jumps_left - 1
+    end
+end
 
+function Player:die()
+    print("Player death animation")
 end
 
 function Player:resetPos()
