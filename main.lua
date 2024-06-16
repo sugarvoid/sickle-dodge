@@ -20,11 +20,13 @@ local debug = ""
 local gamestate -- 0 = menu, 1 = game, 2 = gameover
 local screenWidth = 240
 local screenHeight = 136
+player_attempt = 1
 
 
 
 dead_sickles = {}
 local active_sickles = {}
+local death_markers = {}
 local is_paused = false
 
 
@@ -38,6 +40,7 @@ love.graphics.setDefaultFilter("nearest", "nearest")
 local sickle_img = love.graphics.newImage("ice_sickle.png")
 local platform_img = love.graphics.newImage("platform.png")
 local snow_flake = love.graphics.newImage('snow.png')
+local death_marker = love.graphics.newImage('death_marker.png')
 
 local snow_system = love.graphics.newParticleSystem(snow_flake, 1000 )
 snow_system:setParticleLifetime(2, 10) -- Particles live at least 2s and at most 5s.
@@ -390,6 +393,9 @@ function update_gameover(dt)
     return
 end
 
+function spawn_death_marker(_x, _y)
+    add(death_markers, {_x,_y})
+end
 
 function love.draw()
     
@@ -398,14 +404,7 @@ function love.draw()
     --print(#active_sickles)
 
     love.graphics.draw(background, 0, 0)
-    love.graphics.push("all")
-    love.graphics.print("FPS: "..tostring(love.timer.getFPS( )), 0, 0, 0, 1, 1)
-    love.graphics.pop()
-    love.graphics.draw(snow_system, 50, 50)
-    player:draw()
-    platfrom:draw()
-    world:draw()
-    love.graphics.print( seconds_in, 60, 20, 0, 3, 3)
+    
     --love.graphics.pop()
    
     
@@ -429,9 +428,22 @@ end
 
 
 function draw_game()
+    love.graphics.push("all")
+    love.graphics.print("FPS: "..tostring(love.timer.getFPS( )), 0, 0, 0, 1, 1)
+    love.graphics.print("Attempt: "..tostring(player_attempt), 180, 0, 0, 1, 1)
+    love.graphics.pop()
+    love.graphics.draw(snow_system, 50, 50)
+    player:draw()
+    platfrom:draw()
+    world:draw()
     for s in all(active_sickles) do
         s:draw()
     end
+    for dm in all(death_markers) do
+        love.graphics.draw(death_marker, dm[1], dm[2],0,0.2, 0.2)
+    end
+    love.graphics.print( seconds_in, 60, 20, 0, 3, 3)
+    
 end
 
 

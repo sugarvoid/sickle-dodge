@@ -56,6 +56,9 @@ function Player:update(dt)
         local sickle = collision_data.collider:getObject()
         print(collision_data.collider:getObject())
         --sickle:on_hit()
+        --TODO: Fix death marker placement. If player is on top of sickle, it spawns too high. 
+        spawn_death_marker(self.x, self.y - self.h/2)
+        player_attempt = player_attempt + 1
         self:die()
     end
                 
