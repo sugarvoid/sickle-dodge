@@ -39,7 +39,7 @@ local update_actions = {
     [1] = update_for_1_second,
     [2] = update_for_2_seconds,
     [3] = update_for_3_seconds,
-   -- [4] = function() spawn_sickles(WAVES.left_all, 200) end,
+    --[4] = function() spawn_sickles(WAVES.left_all, 200) end,
     [5] = nil,
     [6] = nil,
     [7] = nil,
@@ -98,7 +98,10 @@ local update_actions = {
     [60] = nil,
 }
 
-sickle_manager = {}
+sickle_manager = {
+    --TODO: bring in sec timer
+    --TODO: Make left side timer for sickle
+}
 
 function sickle_manager:update(dt)
     for s in all(active_sickles) do

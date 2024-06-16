@@ -4,9 +4,18 @@
 Player = {}
 Player.__index = Player
 
+local anim8 = require("lib.anim8")
+
 function Player:new()
     local instance = setmetatable({}, Player)
+    instance.spr_sheet = love.graphics.newImage("asset/image/player_sheet.png")
     instance.image = love.graphics.newImage("asset/image/player.png")
+    local s_grid = anim8.newGrid(16, 16, instance.spr_sheet:getWidth(),instance.spr_sheet:getHeight())
+    instance.animations = {
+        idle = anim8.newAnimation(s_grid(('1-6'), 1), 0.1),
+        death = nil
+    }
+    --TODO: create way for current animation. and way to change them
     instance.alpha = 255
     instance.is_alive = true
     instance.is_ghost = false
@@ -39,6 +48,7 @@ end
 
 function Player:update(dt)
     if self.is_alive then
+        self.animations.idle:update(dt)
         self.tmr_standing_still:update()
         self.is_moving = (self.is_moving_left or self.is_moving_right)
         if self.body:enter("Ground") then
@@ -122,7 +132,8 @@ end
 function Player:draw()
     --draw_hitbox(self, "#FF0000")
     love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, self.alpha))
-    love.graphics.draw(self.image, self.x, self.y, 0, 1, 1, self.w/2, self.h/2)
+    self.animations.idle:draw(self.spr_sheet, self.x, self.y, 0, 1, 1, self.w/2, self.h/2)
+    --love.graphics.draw(self.image, self.x, self.y, 0, 1, 1, self.w/2, self.h/2)
     love.graphics.setColor(255,255,255)
 end
 
