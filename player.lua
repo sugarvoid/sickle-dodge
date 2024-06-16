@@ -21,7 +21,7 @@ function Player:new()
     
     instance.jump= false
     instance.jumps_left = 2
-    instance.speed = 200
+    instance.speed = 140
     instance.vel_y = 50
     instance.vel_x = 0
     instance.max_speed = 200
@@ -39,29 +39,31 @@ end
 
 function Player:update(dt)
 
-    local vel_x=0
-    local vel_y=0
+                
+    local vel_x, vel_y = self.body:getLinearVelocity()
+    --local vel_y=0
              if self.is_moving_left then
                 vel_x = -self.speed
+                self.body:setLinearVelocity(vel_x,vel_y)
                  --self.body.x = self.body.x - self.speed * dt
              end
              if self.is_moving_right then
                 vel_x = self.speed
+                self.body:setLinearVelocity(vel_x,vel_y)
                 --self.body.x = self.body.x + self.speed * dt
              end
 
             -- Jump
             if self.jump then
                 print("jump")
-                vel_y = -2000
+                self.body:applyLinearImpulse(0, -55)
+                vel_y = -50
                 --self.y = self.y - 30
                 self.jumps_left = self.jumps_left - 1
                 self.jump = false 
-            else
-                vel_y = 100
             end
 
-            self.body:setLinearVelocity(vel_x,vel_y)
+            
     --         self.x = (self.x + dx) --* dt
     --         self.y = (self.y + dy) --* dt
 

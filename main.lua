@@ -3,7 +3,7 @@
 wf = require 'lib.windfield'
 
 world = wf.newWorld(0, 0, false)
---world:setGravity(0, 250)
+world:setGravity(0, 900)
 world:addCollisionClass('Player')
 world:addCollisionClass('Sickle')
 world:addCollisionClass('Ground')
