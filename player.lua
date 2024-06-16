@@ -18,15 +18,18 @@ function Player:new()
     instance.y = 10
     instance.is_moving_left=false
     instance.is_moving_right=false
+    instance.tmr_standing_still = Timer:new(60*4, function() print("player frozen")end, true)
+    instance.tmr_standing_still:start()
     
     --instance.jump= false
     instance.jumps_left = 2
-    instance.speed = 140
+    instance.speed = 100
     instance.vel_y = 50
     instance.vel_x = 0
-    instance.max_speed = 200
-    instance.acceleration = 4000
+    instance.max_speed = 120
+    instance.acceleration = 30
     instance.friction = 3500
+    instance.is_moving = false
 
     instance.w= instance.image:getWidth()
     instance.h= instance.image:getHeight()
@@ -35,11 +38,14 @@ function Player:new()
     instance.body:setType("dynamic")
     instance.body:setCollisionClass('Player')
     instance.body:setObject(self)
+    
+    instance.body:setFixedRotation(true)
     return instance
 end
 
 function Player:update(dt)
-
+    self.tmr_standing_still:update()
+    self.is_moving = (self.is_moving_left or self.is_moving_right)
     if self.body:enter("Ground") then
         print("on floor")
         self.jumps_left = 2
@@ -54,21 +60,20 @@ function Player:update(dt)
     end
                 
     local vel_x, vel_y = self.body:getLinearVelocity()
-    --local vel_y=0
              if self.is_moving_left then
-                vel_x = -self.speed
+                
+                vel_x = clamp(-self.max_speed, vel_x + -self.acceleration, 0)
                 self.body:setLinearVelocity(vel_x,vel_y)
                  --self.body.x = self.body.x - self.speed * dt
              end
              if self.is_moving_right then
-                vel_x = self.speed
+                vel_x = clamp(self.max_speed, vel_x + self.acceleration, 0)
                 self.body:setLinearVelocity(vel_x,vel_y)
                 --self.body.x = self.body.x + self.speed * dt
              end
 
-            
 
-            
+            --print(self.is_moving)
     --         self.x = (self.x + dx) --* dt
     --         self.y = (self.y + dy) --* dt
 

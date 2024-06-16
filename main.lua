@@ -21,6 +21,8 @@ local gamestate -- 0 = menu, 1 = game, 2 = gameover
 local screenWidth = 240
 local screenHeight = 136
 
+
+
 dead_sickles = {}
 local active_sickles = {}
 local is_paused = false
@@ -35,6 +37,14 @@ love.graphics.setDefaultFilter("nearest", "nearest")
 
 local sickle_img = love.graphics.newImage("ice_sickle.png")
 local platform_img = love.graphics.newImage("platform.png")
+local snow_flake = love.graphics.newImage('snow.png')
+
+local snow_system = love.graphics.newParticleSystem(snow_flake, 1000 )
+snow_system:setParticleLifetime(2, 10) -- Particles live at least 2s and at most 5s.
+snow_system:setEmissionRate(50)
+snow_system:setSizeVariation(1)
+snow_system:setLinearAcceleration(3, 9, -3, 16) -- Random movement in all directions.
+snow_system:setColors(1, 1, 1, 1, 1, 1, 1, 0) -- Fade to transparency.
 
 
 
@@ -122,7 +132,7 @@ sickle_manager = {
             [1] = update_for_1_second,
             [2] = update_for_2_seconds,
             [3] = update_for_3_seconds,
-            [4] = function() spawn_sickles(WAVES.left_all, 200) end,
+           -- [4] = function() spawn_sickles(WAVES.left_all, 200) end,
             [5] = nil,
             [6] = nil,
             [7] = nil,
@@ -188,6 +198,13 @@ sickle_manager = {
             -- Handle invalid input
         end
     end,
+    update=function(self)
+        for s in all(active_sickles) do
+            if s.life_timer <= 0 then
+                del(active_sickles, s)
+            end
+        end
+    end
 
 }
 
@@ -200,7 +217,7 @@ function love.load()
     --love.window.setMode(screenWidth*4, screenHeight*4)
     
     font = love.graphics.newFont("font/mago2.ttf", 16)
-    background = love.graphics.newImage("TEMP_background.png")
+    background = love.graphics.newImage("background.png")
     
 
     platfrom = {
@@ -251,14 +268,14 @@ end
 
 function spawn_sickle(_x, _y, _dir, _speed)
 
-	local new_sickle = Sickle:new()
-    print(_x, _y)
-	new_sickle.moving_dir=_dir
+	local new_sickle = Sickle:new(_x, _y, _dir, _speed)
+    --print(_x, _y)
+	--new_sickle.moving_dir=_dir
 	--new_sickle.x=_x
 	--new_sickle.y=_y
-    new_sickle.body:setPosition(_x, _y)
-    new_sickle.speed = _speed
-    new_sickle.life_timer = 150
+    --new_sickle.body:setPosition(_x, _y)
+    --new_sickle.speed = _speed
+    --new_sickle.life_timer = 150
 	--add(active_sickles, new_sickle)
     return new_sickle
 end
@@ -312,6 +329,7 @@ end
 
 
 function love.update(dt)
+    snow_system:update(dt)
     my_timer:update()
     every_2s:update()
     tick = tick + 1
@@ -362,6 +380,7 @@ function update_game(dt)
             local _s = s
             table.insert(dead_sickles, s)
             del(active_sickles, s)
+            print("deleted a sickle")
         end
     end
 end
@@ -376,12 +395,13 @@ function love.draw()
     
     love.graphics.scale(4)
 
-    
+    --print(#active_sickles)
 
     love.graphics.draw(background, 0, 0)
     love.graphics.push("all")
     love.graphics.print("FPS: "..tostring(love.timer.getFPS( )), 0, 0, 0, 1, 1)
     love.graphics.pop()
+    love.graphics.draw(snow_system, 50, 50)
     player:draw()
     platfrom:draw()
     world:draw()
@@ -487,3 +507,7 @@ function check_collision(a, b)
            a.y < b.y+b.h and
            b.y < a.y+a.h
   end
+
+  function do_tables_match( a, b )
+    return table.concat(a) == table.concat(b)
+end
