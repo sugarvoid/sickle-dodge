@@ -14,6 +14,8 @@ love.graphics.setDefaultFilter("nearest", "nearest")
 function Player:new()
     local instance = setmetatable({}, Player)
     instance.image = love.graphics.newImage("player.png")
+    instance.alpha = 255
+    instance.is_ghost = false
     instance.x = 50
     instance.y = 10
     instance.is_moving_left=false
@@ -51,7 +53,7 @@ function Player:update(dt)
         self.jumps_left = 2
     end
 
-    if self.body:enter("Sickle") then
+    if self.body:enter("Sickle") and not self.is_ghost then
         local collision_data = self.body:getEnterCollisionData("Sickle")
         local sickle = collision_data.collider:getObject()
         print(collision_data.collider:getObject())
@@ -124,7 +126,9 @@ end
 
 function Player:draw()
     --draw_hitbox(self, "#FF0000")
+    love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, self.alpha))
     love.graphics.draw(self.image, self.x, self.y, 0, 1, 1, self.w/2, self.h/2)
+    love.graphics.setColor(255,255,255)
 end
 
 
