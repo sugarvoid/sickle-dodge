@@ -1,7 +1,12 @@
 --! main.lua
 
+wf = require 'lib.windfield'
 
-world = love.physics.newWorld(0, 200, true)  --Gravity is being set to 0 in the x direction and 200 in the y direction.
+world = wf.newWorld(0, 0, false)
+--world:setGravity(0, 250)
+world:addCollisionClass('Player')
+world:addCollisionClass('Sickle')
+world:addCollisionClass('Ground')
 
 require("lib.color")
 require("player")
@@ -198,8 +203,12 @@ function love.load()
         image = platform_img,
         w= platform_img:getWidth(),
         h= platform_img:getHeight(),
+        physics = {},
+        
         init=function(self)
             self.hitbox = {x = self.x, y= self.y, w= self.w, h =self.h}
+            body = world:newRectangleCollider(self.hitbox.x, self.hitbox.y, self.hitbox.w, self.hitbox.h)
+            body:setType("static")
         end,
         draw=function(self)
             love.graphics.draw(self.image, self.x, self.y)
@@ -359,11 +368,13 @@ function love.draw()
     player:draw()
     platfrom:draw()
     love.graphics.print( seconds_in, 60, -20, 0)
+
     
     if gamestate == 0 then
         draw_menu()
     end
     if gamestate == 1 then
+        world:draw()
         draw_game()
     end
     if gamestate == 2 then
