@@ -101,6 +101,7 @@ end
 
 function Player:jump()
     -- Jump
+    local vel_x, vel_y = self.body:getLinearVelocity()
     if self.jumps_left == 2 then
         print("jump")
         self.body:applyLinearImpulse(0, -55, self.body:getX(), self.body:getY() + (self.h / 2))
@@ -110,6 +111,7 @@ function Player:jump()
         --self.jump = false
         elseif self.jumps_left == 1 then
             print("double jump")
+            self.body:setLinearVelocity(vel_x,0)
             self.body:applyLinearImpulse(0, (-55*0.8))
             self.jumps_left = self.jumps_left - 1
     end
