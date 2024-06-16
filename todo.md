@@ -8,3 +8,8 @@
 - Add title
 - Add gameover
 - Limit timer to 60 sec
+- Add folder for assets 
+- Remove old debug prints
+- Move snow emitter 
+- Move sicklemanager to its own file
+- Move platform to its own file

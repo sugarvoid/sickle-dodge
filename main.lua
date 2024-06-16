@@ -1,18 +1,26 @@
 --! main.lua
 
+require("lib.color")
+require("src.player")
+require("src.sickle_manager")
+require("src.sickle")
+
+
+Timer = require("lib.kgo.timer")
 wf = require 'lib.windfield'
 
+
+
 world = wf.newWorld(0, 900, false)
---world:setGravity(0, 900)
 world:addCollisionClass('Player')
 world:addCollisionClass('Sickle', {ignores = {"Player"}})
 world:addCollisionClass('Ground')
 
-require("lib.color")
-require("player")
-require("sickle")
 
-local Timer = require("timer")
+
+love.graphics.setDefaultFilter("nearest", "nearest")
+
+
 
 local font
 local sounds
@@ -23,24 +31,19 @@ local screenHeight = 136
 player_attempt = 1
 
 
-
-dead_sickles = {}
 local active_sickles = {}
 local death_markers = {}
 local is_paused = false
-
-
 local seconds_in = 0
 local frames = 0
 local tick = 0
 
-love.graphics.setDefaultFilter("nearest", "nearest")
 
+local platform_img = love.graphics.newImage("asset/image/platform.png")
+local snow_flake = love.graphics.newImage('asset/image/snow.png')
+local death_marker = love.graphics.newImage('asset/image/death_marker.png')
+local background = love.graphics.newImage("asset/image/background.png")
 
-local sickle_img = love.graphics.newImage("ice_sickle.png")
-local platform_img = love.graphics.newImage("platform.png")
-local snow_flake = love.graphics.newImage('snow.png')
-local death_marker = love.graphics.newImage('death_marker.png')
 
 local snow_system = love.graphics.newParticleSystem(snow_flake, 1000 )
 snow_system:setParticleLifetime(2, 10) -- Particles live at least 2s and at most 5s.
@@ -51,9 +54,7 @@ snow_system:setColors(1, 1, 1, 1, 1, 1, 1, 0) -- Fade to transparency.
 
 
 
-
 local player = Player:new()
-
 
 local my_timer = Timer:new(60*5, function() print("Timer finished!") end, true)
 my_timer:start()
@@ -63,27 +64,7 @@ every_2s:start()
 
 
 
-WAVES = {
-    all_top = {
-        {20, -10, {0, 1}},
-        {50, -10, {0, 1}},
-        {80, -10, {0, 1}},
-    },
-    bottom_left = {
-        {-6, 96, {1, 0}},
-        {-6, 96 - 8, {1, 0}},
-        {-6, 96 - 16, {1, 0}},
-    },
-    right_2sec = {
-        {240+10, 96, {-1, 0}},
-    },
-    left_all = {
-        {-20, 104, {1, 0}},
-        {-62, 59 - 8, {1, 0}},
-        {-131, 106 - 16, {1, 0}},
-        {-171, 61 - 16, {1, 0}},
-    }
-}
+
 
 
 local obj= {
@@ -96,133 +77,12 @@ local obj= {
         end
 }
 
-local sickle = obj:new({
-        x=30,
-        y=30,
-        image = sickle_img,
-        w= sickle_img:getWidth(),
-        h= sickle_img:getHeight(),
-        moving_dir={1,0},
-        rotation = 0,
-        life_timer=120,
-        speed=200,
-        update=function(self, dt)
-            self.x = (self.x + (self.moving_dir[1] * self.speed * dt))
-            self.y = (self.y + (self.moving_dir[2] * self.speed * dt))
-            self.life_timer = self.life_timer - 1
-        end,
-        draw=function(self)
-            love.graphics.draw(self.image, self.x, self.y)
-        end,
-})
-
-function update_for_1_second()
-    print('1 sec')
-end
-
-function update_for_2_seconds()
-    print('2 sec')
-end
-
-function update_for_3_seconds()
-    print('3 sec')
-end
-
-
-sickle_manager = {
-    update_checker = function(self, seconds_in)
-        local update_actions = {
-            [1] = update_for_1_second,
-            [2] = update_for_2_seconds,
-            [3] = update_for_3_seconds,
-           -- [4] = function() spawn_sickles(WAVES.left_all, 200) end,
-            [5] = nil,
-            [6] = nil,
-            [7] = nil,
-            [8] = nil,
-            [9] = nil,
-            [10] = nil,
-            [11] = nil,
-            [12] = nil,
-            [13] = nil,
-            [14] = nil,
-            [15] = nil,
-            [16] = nil,
-            [17] = nil,
-            [18] = nil,
-            [19] = nil,
-            [20] = nil,
-            [21] = nil,
-            [22] = nil,
-            [23] = nil,
-            [24] = nil,
-            [25] = nil,
-            [26] = nil,
-            [27] = nil,
-            [28] = nil,
-            [29] = nil,
-            [30] = nil,
-            [31] = nil,
-            [32] = nil,
-            [33] = nil,
-            [34] = nil,
-            [35] = nil,
-            [36] = nil,
-            [37] = nil,
-            [38] = nil,
-            [39] = nil,
-            [40] = nil,
-            [41] = nil,
-            [42] = nil,
-            [43] = nil,
-            [44] = nil,
-            [45] = nil,
-            [46] = nil,
-            [47] = nil,
-            [48] = nil,
-            [49] = nil,
-            [50] = nil,
-            [51] = nil,
-            [52] = nil,
-            [53] = nil,
-            [54] = nil,
-            [55] = nil,
-            [56] = nil,
-            [57] = nil,
-            [58] = nil,
-            [59] = nil,
-            [60] = nil,
-        }
-    
-        local action = update_actions[seconds_in]
-        if action then
-            action()
-        else
-            -- Handle invalid input
-        end
-    end,
-    update=function(self)
-        for s in all(active_sickles) do
-            if s.life_timer <= 0 then
-                del(active_sickles, s)
-            end
-        end
-    end
-
-}
-
---create loadFont() function in lib
 
 function love.load()
-    
-    print('set filter')
     --window = {translateX = 40, translateY = 40, scale = 4, width = 240, height = 136}
     --love.window.setMode(screenWidth*4, screenHeight*4)
+    font = love.graphics.newFont("asset/font/mago2.ttf", 16)
     
-    font = love.graphics.newFont("font/mago2.ttf", 16)
-    background = love.graphics.newImage("background.png")
-    
-
     platfrom = {
         x=40,
         y=120,
@@ -247,10 +107,6 @@ function love.load()
         end,
     }
     platfrom:init()
-
-    test_sickle = sickle:new()
-    table.insert(active_sickles, test_sickle)
-
     gamestate = 1
     score = 0
     font:setFilter("nearest")
@@ -259,6 +115,9 @@ function love.load()
     --resize(240*4, 136*4)
 end
 
+function reset_game()
+    
+end
 
 --TODO: Move to speperate file
 function draw_hitbox(obj, color)
@@ -319,7 +178,7 @@ function love.keypressed(key)
 
     if gamestate == 2 then
         if key == "r" then
-            love.load()
+            gamestate = 1
         end
     end
 
@@ -339,7 +198,7 @@ function love.update(dt)
     if tick == 60 then
         seconds_in = seconds_in + 1
         tick = 0
-        sickle_manager:update_checker(seconds_in)
+        sickle_manager:on_every_second(seconds_in)
     end
     if gamestate == 0 then
         update_menu()
@@ -380,8 +239,6 @@ function update_game(dt)
     for s in all(active_sickles) do
         s:update(dt)
         if s.life_timer <= 0 then
-            local _s = s
-            table.insert(dead_sickles, s)
             del(active_sickles, s)
             print("deleted a sickle")
         end
@@ -433,6 +290,7 @@ function draw_game()
     love.graphics.print("Attempt: "..tostring(player_attempt), 180, 0, 0, 1, 1)
     love.graphics.pop()
     love.graphics.draw(snow_system, 50, 50)
+
     player:draw()
     platfrom:draw()
     world:draw()
@@ -443,6 +301,10 @@ function draw_game()
         love.graphics.draw(death_marker, dm[1], dm[2],0,0.2, 0.2)
     end
     love.graphics.print( seconds_in, 60, 20, 0, 3, 3)
+
+    if not player.is_alive then
+        love.graphics.print("[jump] to try again",60, 70, 0, 1, 1)
+    end
     
 end
 
@@ -475,7 +337,9 @@ function playSound(sound)
 end
 
 
-
+function go_to_gameover(success)
+    gamestate = 2
+end
 
 ---
 -- Clamps a value to a certain range.

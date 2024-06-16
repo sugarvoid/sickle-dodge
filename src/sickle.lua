@@ -5,15 +5,9 @@ Sickle = {}
 Sickle.__index = Sickle
 
 
---love.graphics.setDefaultFilter("nearest", "nearest")
-
--- local Sickle_img = love.graphics.newImage("Sickle.png")
-
-
-
 function Sickle:new(_x, _y, _moving_dir, _speed)
     local instance = setmetatable({}, Sickle)
-    instance.image = love.graphics.newImage("ice_sickle.png")
+    instance.image = love.graphics.newImage("asset/image/ice_sickle.png")
     instance.x = 0
     instance.y = 0
     instance.moving_dir = _moving_dir

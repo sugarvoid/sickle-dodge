@@ -4,17 +4,11 @@
 Player = {}
 Player.__index = Player
 
-
-love.graphics.setDefaultFilter("nearest", "nearest")
-
--- local player_img = love.graphics.newImage("player.png")
-
-
-
 function Player:new()
     local instance = setmetatable({}, Player)
-    instance.image = love.graphics.newImage("player.png")
+    instance.image = love.graphics.newImage("asset/image/player.png")
     instance.alpha = 255
+    instance.is_alive = true
     instance.is_ghost = false
     instance.x = 50
     instance.y = 10
@@ -22,8 +16,6 @@ function Player:new()
     instance.is_moving_right=false
     instance.tmr_standing_still = Timer:new(60*4, function() print("player frozen")end, true)
     instance.tmr_standing_still:start()
-    
-    --instance.jump= false
     instance.jumps_left = 2
     instance.speed = 100
     instance.vel_y = 50
@@ -46,36 +38,39 @@ function Player:new()
 end
 
 function Player:update(dt)
-    self.tmr_standing_still:update()
-    self.is_moving = (self.is_moving_left or self.is_moving_right)
-    if self.body:enter("Ground") then
-        print("on floor")
-        self.jumps_left = 2
-    end
+    if self.is_alive then
+        self.tmr_standing_still:update()
+        self.is_moving = (self.is_moving_left or self.is_moving_right)
+        if self.body:enter("Ground") then
+            print("on floor")
+            self.jumps_left = 2
+        end
 
-    if self.body:enter("Sickle") and not self.is_ghost then
-        local collision_data = self.body:getEnterCollisionData("Sickle")
-        local sickle = collision_data.collider:getObject()
-        print(collision_data.collider:getObject())
-        --sickle:on_hit()
-        --TODO: Fix death marker placement. If player is on top of sickle, it spawns too high. 
-        spawn_death_marker(self.x, self.body:getY() - self.h/2)
-        player_attempt = player_attempt + 1
-        self:die()
-    end
+        if self.body:enter("Sickle") and not self.is_ghost then
+            local death_x, death_y = self.body:getPosition()
+            local collision_data = self.body:getEnterCollisionData("Sickle")
+            local sickle = collision_data.collider:getObject()
+            print(collision_data.collider:getObject())
+            self.is_alive = false
+            --sickle:on_hit()
+            --TODO: Fix death marker placement. If player is on top of sickle, it spawns too high. 
+            
+            self.body:setAwake(false)
+            self:die({death_x, death_y})
+        end
                 
-    local vel_x, vel_y = self.body:getLinearVelocity()
-             if self.is_moving_left then
-                
-                vel_x = clamp(-self.max_speed, vel_x + -self.acceleration, 0)
-                self.body:setLinearVelocity(vel_x,vel_y)
-                 --self.body.x = self.body.x - self.speed * dt
-             end
-             if self.is_moving_right then
-                vel_x = clamp(self.max_speed, vel_x + self.acceleration, 0)
-                self.body:setLinearVelocity(vel_x,vel_y)
-                --self.body.x = self.body.x + self.speed * dt
-             end
+        local vel_x, vel_y = self.body:getLinearVelocity()
+        if self.is_moving_left then
+        
+        vel_x = clamp(-self.max_speed, vel_x + -self.acceleration, 0)
+        self.body:setLinearVelocity(vel_x,vel_y)
+            --self.body.x = self.body.x - self.speed * dt
+        end
+        if self.is_moving_right then
+        vel_x = clamp(self.max_speed, vel_x + self.acceleration, 0)
+        self.body:setLinearVelocity(vel_x,vel_y)
+        --self.body.x = self.body.x + self.speed * dt
+        end
 
 
             --print(self.is_moving)
@@ -96,34 +91,32 @@ function Player:update(dt)
             self.x = self.body:getX()
             self.y = self.body:getY()
             --print(self.x, self.y)
+    end
+    
             
 end
 
 function Player:jump()
     -- Jump
     local vel_x, vel_y = self.body:getLinearVelocity()
-    if self.jumps_left == 2 then
-        print("jump")
+    if self.jumps_left == 2 then -- First jump
         self.body:applyLinearImpulse(0, -55, self.body:getX(), self.body:getY() + (self.h / 2))
         --vel_y = -50
         --self.y = self.y - 30
         self.jumps_left = self.jumps_left - 1
         --self.jump = false
-        elseif self.jumps_left == 1 then
-            print("double jump")
+        elseif self.jumps_left == 1 then -- Double jump
             self.body:setLinearVelocity(vel_x,0)
             self.body:applyLinearImpulse(0, (-55*0.8))
             self.jumps_left = self.jumps_left - 1
     end
 end
 
-function Player:die()
+function Player:die(pos)
     print("Player death animation")
-end
-
-function Player:resetPos()
-    self.x = -400
-    self.y= 300
+    player_attempt = player_attempt + 1
+    spawn_death_marker(pos[1], pos[2])
+    -- go_to_gameover(false)
 end
 
 function Player:draw()
@@ -132,7 +125,6 @@ function Player:draw()
     love.graphics.draw(self.image, self.x, self.y, 0, 1, 1, self.w/2, self.h/2)
     love.graphics.setColor(255,255,255)
 end
-
 
 
 function Player:reset()
