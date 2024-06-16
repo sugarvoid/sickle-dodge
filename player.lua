@@ -57,7 +57,7 @@ function Player:update(dt)
         print(collision_data.collider:getObject())
         --sickle:on_hit()
         --TODO: Fix death marker placement. If player is on top of sickle, it spawns too high. 
-        spawn_death_marker(self.x, self.y - self.h/2)
+        spawn_death_marker(self.x, self.body:getY() - self.h/2)
         player_attempt = player_attempt + 1
         self:die()
     end
@@ -101,7 +101,7 @@ function Player:jump()
     -- Jump
     if self.jumps_left == 2 then
         print("jump")
-        self.body:applyLinearImpulse(0, -55)
+        self.body:applyLinearImpulse(0, -55, self.body:getX(), self.body:getY() + (self.h / 2))
         --vel_y = -50
         --self.y = self.y - 30
         self.jumps_left = self.jumps_left - 1
