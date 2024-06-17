@@ -44,25 +44,28 @@ local frames = 0
 local tick = 0
 
 
+
 local platform_img = love.graphics.newImage("asset/image/platform.png")
 local snow_flake = love.graphics.newImage('asset/image/snow.png')
 local death_marker = love.graphics.newImage('asset/image/death_marker.png')
 local background = love.graphics.newImage("asset/image/background.png")
 
 local snow_system = love.graphics.newParticleSystem(snow_flake, 1000)
-snow_system:setParticleLifetime(2, 10) -- Particles live at least 2s and at most 5s.
+snow_system:setParticleLifetime(5, 15) -- Particles live at least 2s and at most 5s.
 snow_system:setEmissionRate(50)
 snow_system:setSizeVariation(1)
-snow_system:setLinearAcceleration(3, 9, -3, 16) -- Random movement in all directions.
+snow_system:setSpinVariation(1)
+snow_system:setLinearAcceleration(2, 1, -2, 10) -- Random movement in all directions.
 snow_system:setColors(1, 1, 1, 1, 1, 1, 1, 0)   -- Fade to transparency.
+
+local snow_system2 = snow_system:clone()
 
 local player = Player:new()
 
-local my_timer = Timer:new(60*5, function() print("Timer finished!") end, true)
-my_timer:start()
+
 
 local every_2s = Timer:new(60*2, function() spawn_sickles(WAVES.right_2sec, 150)end, true)
-every_2s:start()
+--every_2s:start()
 
 
 
@@ -133,7 +136,7 @@ end
 function spawn_sickle(_x, _y, _dir, _speed)
 
 	local new_sickle = Sickle:new(_x, _y, _dir, _speed)
-    --print(_x, _y)
+
 	--new_sickle.moving_dir=_dir
 	--new_sickle.x=_x
 	--new_sickle.y=_y
@@ -145,7 +148,6 @@ function spawn_sickle(_x, _y, _dir, _speed)
 end
 
 function spawn_sickles(pattern, speed)
-    --print(#pattern)
     for p in all(pattern) do
         --print(p)
         --print("------")
@@ -194,7 +196,8 @@ end
 
 function love.update(dt)
     snow_system:update(dt)
-    my_timer:update()
+    snow_system2:update(dt)
+
     every_2s:update()
     tick = tick + 1
     if tick == 60 then
@@ -245,7 +248,6 @@ function update_game(dt)
         s:update(dt)
         if s.life_timer <= 0 then
             del(active_sickles, s)
-            print("deleted a sickle")
         end
     end
 end
@@ -263,7 +265,7 @@ function love.draw()
     
     love.graphics.scale(4)
 
-    --print(#active_sickles)
+ 
 
     love.graphics.draw(background, 0, 0)
     
@@ -294,7 +296,10 @@ function draw_game()
     love.graphics.print("FPS: "..tostring(love.timer.getFPS( )), 0, 0, 0, 1, 1)
     love.graphics.print("Attempt: "..tostring(player_attempt), 180, 0, 0, 1, 1)
     love.graphics.pop()
-    love.graphics.draw(snow_system, 50, 50)
+    
+    
+    love.graphics.draw(snow_system, 150, -20)
+    love.graphics.draw(snow_system, 50, -20)
 
     player:draw()
     platfrom:draw()

@@ -28,7 +28,7 @@ function Player:new()
     instance.y = 10
     instance.is_moving_left=false
     instance.is_moving_right=false
-    instance.tmr_standing_still = Timer:new(60*4, function() print("player frozen") end, true)
+    instance.tmr_standing_still = Timer:new(60*3, function() instance:inactive_die() end, true)
     instance.tmr_standing_still:start()
     instance.tmr_ghost_mode = Timer:new(15, function() instance:exit_ghost_mode() end, false)
     
@@ -74,9 +74,13 @@ function Player:update(dt)
         end
         flux.update(dt)
         --self.animations.idle:update(dt)
-        self.tmr_standing_still:update()
+        
         self.tmr_ghost_mode:update()
-        self.is_moving = (self.is_moving_left or self.is_moving_right)
+        if not (self.is_moving_left or self.is_moving_right) then
+            self.tmr_standing_still:update()
+        else
+            self.tmr_standing_still:start()
+        end
         if self.body:enter("Ground") then
             print("on floor")
             self.jumps_left = 2
@@ -141,6 +145,11 @@ function Player:jump()
             self.jumps_left = self.jumps_left - 1
         end
     end
+end
+
+function Player:inactive_die()
+    local death_x, death_y = self.body:getPosition()
+    self:die({ death_x, death_y })
 end
 
 function Player:die(pos)
