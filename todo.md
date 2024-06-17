@@ -1,5 +1,5 @@
 ## Todo
-- Add animations for player
+- ~~Add animations for player~~
 - Add crown for player
 - Add jump animation to player's second jump
 - Add rest of wave layouts to table
@@ -13,3 +13,10 @@
 - Move snow emitter 
 - Move sicklemanager to its own file
 - Move platform to its own file
+- ~~Add flipping on second jump~~
+- Add timer holder for sickle manager
+- Add timer holder for player
+
+## Possible additions
+- Hats
+- Endless/random mode

@@ -10,22 +10,27 @@ Timer = require("lib.kgo.timer")
 wf = require 'lib.windfield'
 
 
-
-world = wf.newWorld(0, 900, false)
+world = wf.newWorld(0, 950, false)
 world:addCollisionClass('Player')
-world:addCollisionClass('Sickle', {ignores = {"Player"}})
+world:addCollisionClass('Sickle', { ignores = { "Player" } })
 world:addCollisionClass('Ground')
 
 
 
 love.graphics.setDefaultFilter("nearest", "nearest")
 
-
-
 local font
 local sounds
 local debug = ""
-local gamestate -- 0 = menu, 1 = game, 2 = gameover
+local gamestate
+--[[
+    0=title,
+    0.1=credit,
+    0.2=info,
+    1 = game,
+    1.1 = retry,
+    2=win
+]]
 local screenWidth = 240
 local screenHeight = 136
 player_attempt = 1
@@ -44,15 +49,12 @@ local snow_flake = love.graphics.newImage('asset/image/snow.png')
 local death_marker = love.graphics.newImage('asset/image/death_marker.png')
 local background = love.graphics.newImage("asset/image/background.png")
 
-
-local snow_system = love.graphics.newParticleSystem(snow_flake, 1000 )
+local snow_system = love.graphics.newParticleSystem(snow_flake, 1000)
 snow_system:setParticleLifetime(2, 10) -- Particles live at least 2s and at most 5s.
 snow_system:setEmissionRate(50)
 snow_system:setSizeVariation(1)
 snow_system:setLinearAcceleration(3, 9, -3, 16) -- Random movement in all directions.
-snow_system:setColors(1, 1, 1, 1, 1, 1, 1, 0) -- Fade to transparency.
-
-
+snow_system:setColors(1, 1, 1, 1, 1, 1, 1, 0)   -- Fade to transparency.
 
 local player = Player:new()
 
@@ -200,6 +202,9 @@ function love.update(dt)
         tick = 0
         sickle_manager:on_every_second(seconds_in)
     end
+    if seconds_in == 60 then
+        -- TODO: Player has won
+    end
     if gamestate == 0 then
         update_menu()
     elseif gamestate == 1 then
@@ -298,7 +303,7 @@ function draw_game()
         s:draw()
     end
     for dm in all(death_markers) do
-        love.graphics.draw(death_marker, dm[1], dm[2],0,0.2, 0.2)
+        love.graphics.draw(death_marker, dm[1], dm[2],0,0.2, 0.2, death_marker:getWidth()/2, death_marker:getHeight()/2)
     end
     love.graphics.print( seconds_in, 60, 20, 0, 3, 3)
 
