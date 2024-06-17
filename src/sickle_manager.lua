@@ -23,22 +23,17 @@ WAVES = {
 }
 
 
-local function update_for_1_second()
-    print('1 sec')
-end
 
-local function update_for_2_seconds()
+
+local function test_function()
     print('2 sec')
 end
 
-local function update_for_3_seconds()
-    print('3 sec')
-end
 
 local update_actions = {
-    [1] = update_for_1_second,
-    [2] = update_for_2_seconds,
-    [3] = update_for_3_seconds,
+    [1] = nil,
+    [2] = test_function,
+    [3] = nil,
     --[4] = function() spawn_sickles(WAVES.left_all, 200) end,
     [5] = nil,
     [6] = nil,
