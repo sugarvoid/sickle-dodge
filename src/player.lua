@@ -182,7 +182,7 @@ end
 function Player:enter_ghost_mode()
     self.tmr_ghost_mode:start()
     self.body:setAwake(false)
-    self.alpha = 120
+    self.alpha = 150
 end
 
 function Player:exit_ghost_mode()

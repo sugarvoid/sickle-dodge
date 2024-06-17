@@ -310,7 +310,15 @@ function draw_game()
     for dm in all(death_markers) do
         love.graphics.draw(death_marker, dm[1], dm[2],0,0.2, 0.2, death_marker:getWidth()/2, death_marker:getHeight()/2)
     end
-    love.graphics.print( seconds_in, 60, 20, 0, 3, 3)
+
+    love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, 130))
+    --self.curr_animation:draw(self.spr_sheet, self.x, self.y, math.rad(self.rotation), self.facing_dir, 1, self.w/2, self.h/2)
+    --love.graphics.draw(self.image, self.x, self.y, 0, 1, 1, self.w/2, self.h/2)
+    love.graphics.print( seconds_in, 110, 15, 0, 3, 3)
+    love.graphics.setColor(255,255,255)
+
+
+    
 
     if not player.is_alive then
         love.graphics.print("[jump] to try again",60, 70, 0, 1, 1)

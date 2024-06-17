@@ -16,6 +16,7 @@
 - ~~Add flipping on second jump~~
 - Add timer holder for sickle manager
 - Add timer holder for player
+- Look into Fixtures to see if the player needs one
 
 ## Possible additions
 - Hats
