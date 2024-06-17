@@ -31,7 +31,7 @@ Original game: [link](https://sugarvoid.itch.io/sickle-dodge)
 ### Sprites
 - SugarVoid
 ### Font
-- Mago by [name](#) [license](#)
+- Mago by [nimblebeastscollective](https://nimblebeastscollective.itch.io) [CC0](https://creativecommons.org/publicdomain/zero/1.0/)
 - Equipe Basic by [Eeve Somepx](https://somepx.itch.io/) [CSL](http://www.palmentieri.it/somepx/license.txt)
 - Fibberish by [Nathan Scott](@caffi_nate) is licensed under [CC BY 3.0]()
 ### Music :musical_keyboard:
