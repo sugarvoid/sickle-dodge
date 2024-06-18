@@ -1,5 +1,6 @@
 --! main.lua
 
+love = require("love")
 require("lib.color")
 require("src.player")
 require("src.sickle_manager")
@@ -61,26 +62,12 @@ snow_system:setColors(1, 1, 1, 1, 1, 1, 1, 0)   -- Fade to transparency.
 local snow_system2 = snow_system:clone()
 
 local player = Player:new()
+local sickle_manager = SickleManager:new()
 
 
 
-local every_2s = Timer:new(60*2, function() spawn_sickles(WAVES.right_2sec, 150)end, true)
+--local every_2s = Timer:new(60*2, function() spawn_sickles(WAVES.right_2sec, 150)end, true)
 --every_2s:start()
-
-
-
-
-
-
-local obj= {
-    new=function(self,tbl)
-            tbl=tbl or {}
-            setmetatable(tbl,{
-                __index=self
-            })
-            return tbl
-        end
-}
 
 
 function love.load()
@@ -113,7 +100,6 @@ function love.load()
     }
     platfrom:init()
     gamestate = 1
-    score = 0
     font:setFilter("nearest")
     love.graphics.setFont(font)
     --sounds = load_sounds()
@@ -121,7 +107,8 @@ function love.load()
 end
 
 function reset_game()
-    
+    sickle_manager:reset()
+    player:reset()
 end
 
 --TODO: Move to speperate file
@@ -133,40 +120,28 @@ function draw_hitbox(obj, color)
 end
 
 
-function spawn_sickle(_x, _y, _dir, _speed)
 
-	local new_sickle = Sickle:new(_x, _y, _dir, _speed)
 
-	--new_sickle.moving_dir=_dir
-	--new_sickle.x=_x
-	--new_sickle.y=_y
-    --new_sickle.body:setPosition(_x, _y)
-    --new_sickle.speed = _speed
-    --new_sickle.life_timer = 150
-	--add(active_sickles, new_sickle)
-    return new_sickle
-end
-
-function spawn_sickles(pattern, speed)
-    for p in all(pattern) do
-        --print(p)
-        --print("------")
-        --print("x: ".. p[1])
-       -- print("y: ".. p[2])
-        --print("moving_dir: {"..p[3][1]..","..p[3][2].."}")
-        --print("speed: "..speed)
-       -- print("------")
-        --for s in all(p) do
-            --print(s)
-            --print(sickle[1])
-            --print(s)
-            --print(s)
-        local n_s = spawn_sickle(p[1], p[2], {p[3][1] , p[3][2]}, speed) 
+-- function spawn_sickles(pattern, speed)
+--     for p in all(pattern) do
+--         --print(p)
+--         --print("------")
+--         --print("x: ".. p[1])
+--        -- print("y: ".. p[2])
+--         --print("moving_dir: {"..p[3][1]..","..p[3][2].."}")
+--         --print("speed: "..speed)
+--        -- print("------")
+--         --for s in all(p) do
+--             --print(s)
+--             --print(sickle[1])
+--             --print(s)
+--             --print(s)
+--         local n_s = spawn_sickle(p[1], p[2], {p[3][1] , p[3][2]}, speed) 
         
-        table.insert(active_sickles, n_s)
-       --end
-    end
-end
+--         table.insert(active_sickles, n_s)
+--        --end
+--     end
+-- end
 
 
 function love.keypressed(key)
@@ -198,7 +173,7 @@ function love.update(dt)
     snow_system:update(dt)
     snow_system2:update(dt)
 
-    every_2s:update()
+    --every_2s:update()
     tick = tick + 1
     if tick == 60 then
         seconds_in = seconds_in + 1
@@ -213,6 +188,7 @@ function love.update(dt)
     elseif gamestate == 1 then
         if not is_paused then
             world:update(dt)
+            sickle_manager:update(dt)
             update_game(dt)
         end
         
@@ -244,12 +220,12 @@ function update_game(dt)
 
 
     player:update(dt)
-    for s in all(active_sickles) do
-        s:update(dt)
-        if s.life_timer <= 0 then
-            del(active_sickles, s)
-        end
-    end
+    -- for s in all(active_sickles) do
+    --     s:update(dt)
+    --     if s.life_timer <= 0 then
+    --         del(active_sickles, s)
+    --     end
+    -- end
 end
 
 
@@ -304,9 +280,10 @@ function draw_game()
     player:draw()
     platfrom:draw()
     world:draw()
-    for s in all(active_sickles) do
-        s:draw()
-    end
+    sickle_manager:draw()
+    -- for s in all(active_sickles) do
+    --     s:draw()
+    -- end
     for dm in all(death_markers) do
         love.graphics.draw(death_marker, dm[1], dm[2],0,0.2, 0.2, death_marker:getWidth()/2, death_marker:getHeight()/2)
     end

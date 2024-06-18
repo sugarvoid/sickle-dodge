@@ -7,10 +7,16 @@ Player.__index = Player
 local anim8 = require("lib.anim8")
 local flux = require("lib.flux")
 
+
+local function check_for_win()
+    return false
+end
+
 function Player:new()
     local instance = setmetatable({}, Player)
     instance.spr_sheet = love.graphics.newImage("asset/image/player_sheet.png")
     instance.image = love.graphics.newImage("asset/image/player.png")
+    instance.crown = love.graphics.newImage("asset/image/crown.png")
     local s_grid = anim8.newGrid(16, 16, instance.spr_sheet:getWidth(),instance.spr_sheet:getHeight())
     
     instance.animations = {
@@ -26,6 +32,7 @@ function Player:new()
     instance.facing_dir = 1
     instance.x = 50
     instance.y = 10
+    instance.has_won = check_for_win()
     instance.is_moving_left=false
     instance.is_moving_right=false
     instance.tmr_standing_still = Timer:new(60*3, function() instance:inactive_die() end, true)
@@ -168,6 +175,9 @@ function Player:draw()
     --draw_hitbox(self, "#FF0000")
     love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, self.alpha))
     self.curr_animation:draw(self.spr_sheet, self.x, self.y, math.rad(self.rotation), self.facing_dir, 1, self.w/2, self.h/2)
+    if self.is_alive and self.has_won then
+        love.graphics.draw(self.crown, self.x, self.y, math.rad(self.rotation), self.facing_dir, 1, self.w/2, self.h/2)
+    end
     --love.graphics.draw(self.image, self.x, self.y, 0, 1, 1, self.w/2, self.h/2)
     love.graphics.setColor(255,255,255)
     love.graphics.circle("fill", self.body:getX(), self.body:getY(), 2) -- Draw white circle with 100 segments.
