@@ -54,12 +54,18 @@ local background = love.graphics.newImage("asset/image/background.png")
 local snow_system = love.graphics.newParticleSystem(snow_flake, 1000)
 snow_system:setParticleLifetime(5, 15) -- Particles live at least 2s and at most 5s.
 snow_system:setEmissionRate(50)
+snow_system:setEmissionArea("uniform", 100, 0)
+snow_system:setSpeed(1, 3)
+snow_system:setPosition(0, -6)
+snow_system:setSizes(0.7, 0.6, 0.5)
+--snow_system:setDirection(.45)
 snow_system:setSizeVariation(1)
 snow_system:setSpinVariation(1)
-snow_system:setLinearAcceleration(2, 1, -2, 10) -- Random movement in all directions.
-snow_system:setColors(1, 1, 1, 1, 1, 1, 1, 0)   -- Fade to transparency.
+snow_system:setLinearAcceleration(-2, 3, 2, 10)
+--snow_system:setLinearAcceleration(-20, 50, 20, 100) -- Random movement in all directions.
+snow_system:setColors(1, 1, 1, 1, 1, 1, 1, 0) -- Fade to transparency.
 
-local snow_system2 = snow_system:clone()
+--local snow_system2 = snow_system:clone()
 
 local player = Player:new()
 local sickle_manager = SickleManager:new()
@@ -171,7 +177,7 @@ end
 
 function love.update(dt)
     snow_system:update(dt)
-    snow_system2:update(dt)
+    --snow_system2:update(dt)
 
     --every_2s:update()
     tick = tick + 1
