@@ -302,7 +302,7 @@ end
 function draw_game()
     love.graphics.push("all")
     love.graphics.print("FPS: "..tostring(love.timer.getFPS( )), 0, 0, 0, 1, 1)
-    love.graphics.print("Attempt: "..tostring(player_attempt), 180, 0, 0, 1, 1)
+    draw_hud()
     love.graphics.pop()
     
     
@@ -342,10 +342,15 @@ function draw_snow()
     
 end
 
+function draw_hud()
+    love.graphics.print("Attempt: "..tostring(player_attempt), 180, 0, 0, 1, 1)
+end
+
 function draw_gameover()
     draw_snow()
     draw_death_markers()
     platfrom:draw()
+    draw_hud()
     if math.floor(love.timer.getTime()) % 2 == 0 then
         love.graphics.print("[jump] to try again",60, 70, 0, 1, 1)
       end

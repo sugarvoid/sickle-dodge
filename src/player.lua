@@ -39,7 +39,7 @@ function Player:new()
     instance.tmr_standing_still = Timer:new(60*3, function() instance:inactive_die() end, true)
     instance.tmr_standing_still:start()
     instance.tmr_ghost_mode = Timer:new(15, function() instance:exit_ghost_mode() end, false)
-    instance.tmr_wait_for_animation = Timer:new(60*0.8, function() go_to_gameover() end, false)
+    instance.tmr_wait_for_animation = Timer:new(60*0.9, function() go_to_gameover() end, false)
     
     instance.jumps_left = 2
     instance.speed = 100
@@ -169,6 +169,9 @@ function Player:die(pos)
     self.body:setAwake(false)
     self.is_alive = false
     self.curr_animation = self.animations["death"]
+    print(self.animations["death"])
+    
+    --self.curr_animation:gotoFrame(0)
     --print("Player death animation")
     self.tmr_wait_for_animation:start()
     player_attempt = player_attempt + 1
@@ -209,9 +212,9 @@ function Player:reset()
     self.body:setType("dynamic")
     self.body:setAwake(true)
     self.body:setPosition(self.starting_pos.x, self.starting_pos.y)
-    self.animations["death"]:resume()
-    self.animations["death"]:gotoFrame(0)
     
+    self.animations["death"]:resume()
+    self.animations["death"]:gotoFrame(1)
     self.tmr_wait_for_animation:stop()
     self.is_alive = true
     --self.x = self.starting_pos.x

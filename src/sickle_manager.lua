@@ -107,7 +107,7 @@ local WAVES = {
 }
 
 local function test_function()
-    print('this is the 2sec test function')
+    
 end
 
 function SickleManager:new()
