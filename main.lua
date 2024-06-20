@@ -168,7 +168,7 @@ function love.keypressed(key)
     end
 
     if gamestate == 1 then
-        if key == "space" then
+        if key == "space" or key == "w" then
             player:jump()
         end
     end

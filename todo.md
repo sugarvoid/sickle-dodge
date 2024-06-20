@@ -12,7 +12,7 @@
 - Add folder for assets 
 - Remove old debug prints
 - Move snow emitter 
-- Move sicklemanager to its own file
+- Move sickle_manager to its own file
 - Move platform to its own file
 - ~~Add flipping on second jump~~
 - Add timer holder for sickle manager
@@ -20,7 +20,9 @@
 - Look into Fixtures to see if the player needs one
 - Add saving/loading function for if player has won before
 - Add longest run? (how many seconds the player has made it)
+- Reset player rotation before playing death animation 
+- Add break animation 
 
-## Possible additions
+## Possible Additions
 - Hats
 - Endless/random mode
