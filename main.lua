@@ -3,6 +3,7 @@
 love = require("love")
 require("lib.color")
 require("src.player")
+require("src.platform")
 require("src.sickle_manager")
 require("src.sickle")
 
@@ -23,6 +24,14 @@ love.graphics.setDefaultFilter("nearest", "nearest")
 local font
 local sounds
 local debug = ""
+local gamestates = {
+    title = 0,
+    credit = 0.1,
+    info = 0.2,
+    game = 1,
+    retry = 1.1,
+    win = 2
+}
 local gamestate
 --[[
     0=title,
@@ -39,12 +48,12 @@ player_attempt = 1
 
 local active_sickles = {}
 local death_markers = {}
-local is_paused = false
+local is_paused = true
 local seconds_in = 0
 local frames = 0
 local tick = 0
 
-
+local bg_music = love.audio.newSource("asset/audio/snowy_cottage_v_2.ogg", "stream") 
 
 local platform_img = love.graphics.newImage("asset/image/platform.png")
 local snow_flake = love.graphics.newImage('asset/image/snow.png')
@@ -67,7 +76,10 @@ snow_system:setColors(1, 1, 1, 1, 1, 1, 1, 0) -- Fade to transparency.
 
 --local snow_system2 = snow_system:clone()
 
+--TODO: test
+
 local player = Player:new()
+local platfrom = Platform:new()
 local sickle_manager = SickleManager:new()
 
 
@@ -80,32 +92,32 @@ function love.load()
     --window = {translateX = 40, translateY = 40, scale = 4, width = 240, height = 136}
     --love.window.setMode(screenWidth*4, screenHeight*4)
     font = love.graphics.newFont("asset/font/mago2.ttf", 16)
-    
-    platfrom = {
-        x=40,
-        y=120,
-        image = platform_img,
-        w= platform_img:getWidth(),
-        h= platform_img:getHeight(),
-        physics = {},
+
+    -- platfrom = {
+    --     x=40,
+    --     y=120,
+    --     image = platform_img,
+    --     w= platform_img:getWidth(),
+    --     h= platform_img:getHeight(),
+    --     physics = {},
         
-        init=function(self)
-            self.hitbox = {x = self.x, y= self.y, w= self.w, h =self.h}
-            body = world:newRectangleCollider(self.hitbox.x, self.hitbox.y, self.hitbox.w, self.hitbox.h)
-            body:setType("static")
-            body:setCollisionClass('Ground')
-        end,
-        draw=function(self)
-            love.graphics.draw(self.image, self.x, self.y)
-            draw_hitbox(self, "#FF0000")
-            --love.graphics.push("all")
-            --changeFontColor("#FF0000")
-            --love.graphics.rectangle("line", self.hitbox.x, self.hitbox.y, self.hitbox.w, self.hitbox.h) 
-            --love.graphics.pop()
-        end,
-    }
-    platfrom:init()
-    gamestate = 1
+    --     init=function(self)
+    --         self.hitbox = {x = self.x, y= self.y, w= self.w, h =self.h}
+    --         body = world:newRectangleCollider(self.hitbox.x, self.hitbox.y, self.hitbox.w, self.hitbox.h)
+    --         body:setType("static")
+    --         body:setCollisionClass('Ground')
+    --     end,
+    --     draw=function(self)
+    --         love.graphics.draw(self.image, self.x, self.y)
+    --         --draw_hitbox(self, "#FF0000")
+    --         --love.graphics.push("all")
+    --         --changeFontColor("#FF0000")
+    --         --love.graphics.rectangle("line", self.hitbox.x, self.hitbox.y, self.hitbox.w, self.hitbox.h) 
+    --         --love.graphics.pop()
+    --     end,
+    -- }
+    --platfrom:init()
+    gamestate = gamestates.title
     font:setFilter("nearest")
     love.graphics.setFont(font)
     --sounds = load_sounds()
@@ -113,20 +125,19 @@ function love.load()
 end
 
 function reset_game()
+    seconds_in = 0
     sickle_manager:reset()
     player:reset()
-end
-
---TODO: Move to speperate file
-function draw_hitbox(obj, color)
-    love.graphics.push("all")
-    changeFontColor(color)
-    love.graphics.rectangle("line", obj.hitbox.x, obj.hitbox.y, obj.hitbox.w, obj.hitbox.h)
-    love.graphics.pop()
+    bg_music:stop()
+    bg_music:play()
+    is_paused = false
 end
 
 
 
+function start_game()
+    reset_game()
+end
 
 -- function spawn_sickles(pattern, speed)
 --     for p in all(pattern) do
@@ -155,23 +166,30 @@ function love.keypressed(key)
             love.event.quit()
         end
 
-    if gamestate == 0 then
-        if key == "space" then
-            gamestate = 1
-        end
-    end
-
-    if gamestate == 2 then
-        if key == "r" then
-            gamestate = 1
-        end
-    end
-
-    if gamestate == 1 then
+    if gamestate == gamestates.game then
         if key == "space" or key == "w" then
             player:jump()
         end
     end
+
+    if gamestate == gamestates.retry then
+        if key == "space" then
+            reset_game()
+            gamestate = gamestates.game
+            
+        end
+    end
+
+    if gamestate == gamestates.title then
+        if key == "space" then
+            gamestate = gamestates.game
+            start_game()
+        end
+    end
+
+    
+
+    
 end
 
 
@@ -189,9 +207,9 @@ function love.update(dt)
     if seconds_in == 60 then
         -- TODO: Player has won
     end
-    if gamestate == 0 then
+    if gamestate == gamestates.title then
         update_menu()
-    elseif gamestate == 1 then
+    elseif gamestate == gamestates.game then
         if not is_paused then
             world:update(dt)
             sickle_manager:update(dt)
@@ -254,22 +272,24 @@ function love.draw()
     --love.graphics.pop()
    
     
-    if gamestate == 0 then
-        draw_menu()
+    if gamestate == gamestates.title then
+        draw_title()
     end
-    if gamestate == 1 then
+    if gamestate == gamestates.game then
         
         draw_game()
     end
-    if gamestate == 2 then
+    if gamestate == gamestates.retry then
         draw_gameover()
     end
 end
 
 
 --#region Draw Functions
-function draw_menu()
+function draw_title()
     --changeFontColor("#ffbf40")
+    love.graphics.print("Sickle Dodge",40, 40, 0, 1, 1)
+    love.graphics.print("[jump] to play",70, 80, 0, 1, 1)
 end
 
 
@@ -280,8 +300,7 @@ function draw_game()
     love.graphics.pop()
     
     
-    love.graphics.draw(snow_system, 150, -20)
-    love.graphics.draw(snow_system, 50, -20)
+    draw_snow()
 
     player:draw()
     platfrom:draw()
@@ -290,9 +309,7 @@ function draw_game()
     -- for s in all(active_sickles) do
     --     s:draw()
     -- end
-    for dm in all(death_markers) do
-        love.graphics.draw(death_marker, dm[1], dm[2],0,0.2, 0.2, death_marker:getWidth()/2, death_marker:getHeight()/2)
-    end
+    draw_death_markers()
 
     love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, 130))
     --self.curr_animation:draw(self.spr_sheet, self.x, self.y, math.rad(self.rotation), self.facing_dir, 1, self.w/2, self.h/2)
@@ -303,15 +320,27 @@ function draw_game()
 
     
 
-    if not player.is_alive then
-        love.graphics.print("[jump] to try again",60, 70, 0, 1, 1)
-    end
+    
     
 end
 
+function draw_death_markers()
+    for dm in all(death_markers) do
+        love.graphics.draw(death_marker, dm[1], dm[2],0,0.2, 0.2, death_marker:getWidth()/2, death_marker:getHeight()/2)
+    end
+end
+
+function draw_snow()
+    love.graphics.draw(snow_system, 150, -20)
+    love.graphics.draw(snow_system, 50, -20)
+    
+end
 
 function draw_gameover()
-    return
+    draw_snow()
+    draw_death_markers()
+    platfrom:draw()
+    love.graphics.print("[jump] to try again",60, 70, 0, 1, 1)
 end
 
 
@@ -338,8 +367,8 @@ function playSound(sound)
 end
 
 
-function go_to_gameover(success)
-    gamestate = 2
+function go_to_gameover()
+    gamestate = gamestates.retry
 end
 
 ---

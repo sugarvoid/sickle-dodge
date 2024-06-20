@@ -24,14 +24,15 @@ function Player:new()
         death = anim8.newAnimation(s_grid(('7-14'), 1), 0.1, 'pauseAtEnd')
     }
     --TODO: create way for current animation. and way to change them
+    instance.starting_pos = {x=50, y=10}
     instance.curr_animation = instance.animations["idle"]
     instance.alpha = 255
     instance.rotation = 0
     instance.is_alive = true
     instance.is_ghost = false
     instance.facing_dir = 1
-    instance.x = 50
-    instance.y = 10
+    instance.x = instance.starting_pos.x
+    instance.y = instance.starting_pos.y
     instance.has_won = check_for_win()
     instance.is_moving_left=false
     instance.is_moving_right=false
@@ -168,7 +169,7 @@ function Player:die(pos)
     print("Player death animation")
     player_attempt = player_attempt + 1
     spawn_death_marker(pos[1], pos[2])
-    -- go_to_gameover(false)
+    go_to_gameover()
 end
 
 function Player:draw()
@@ -205,5 +206,7 @@ function Player:reset()
     self.body:setType("dynamic")
     self.body:setAwake(true)
     self.is_alive = true
+    self.x = self.starting_pos.x
+    self.y = self.starting_pos.y
     self.curr_animation = self.animations["idle"]
 end

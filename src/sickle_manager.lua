@@ -114,7 +114,7 @@ function SickleManager:new()
     local instance = setmetatable({}, SickleManager)
     instance.active_sickles = {}
     instance.timers ={}
-    instance.tmr_every_2s = Timer:new(60*2, function() instance:spawn_sickles(WAVES.right_2sec, 150)end, true)
+    instance.tmr_every_2s = Timer:new(60*2, function() instance:spawn_sickles(WAVES.right_low_single, 150)end, true)
     table.insert(instance.timers, instance.tmr_every_2s)
     
     --TODO: bring in sec timer
@@ -189,6 +189,12 @@ end
 
 
 function SickleManager:reset()
+    print("reset sickle_manager")
+    --self.active_sickles.clear()
+    for k in pairs (self.active_sickles) do
+        self.active_sickles[k].body:destroy()
+        self.active_sickles[k]  = nil
+    end
     self.tmr_every_2s:start()
 end
 
