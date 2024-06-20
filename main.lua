@@ -1,6 +1,7 @@
 --! main.lua
 
 love = require("love")
+
 require("lib.color")
 require("src.player")
 require("src.platform")
@@ -10,7 +11,7 @@ require("src.sickle")
 
 Timer = require("lib.kgo.timer")
 wf = require 'lib.windfield'
-
+lume = require("lib.lume")
 
 world = wf.newWorld(0, 950, false)
 world:addCollisionClass('Player')
@@ -53,6 +54,10 @@ local seconds_in = 0
 local frames = 0
 local tick = 0
 
+
+has_crown = nil
+longest_time = nil
+
 local bg_music = love.audio.newSource("asset/audio/snowy_cottage_v_2.ogg", "stream") 
 
 local platform_img = love.graphics.newImage("asset/image/platform.png")
@@ -89,6 +94,7 @@ local sickle_manager = SickleManager:new()
 
 
 function love.load()
+    load_game()
     --window = {translateX = 40, translateY = 40, scale = 4, width = 240, height = 136}
     --love.window.setMode(screenWidth*4, screenHeight*4)
     font = love.graphics.newFont("asset/font/mago2.ttf", 16)
@@ -340,7 +346,9 @@ function draw_gameover()
     draw_snow()
     draw_death_markers()
     platfrom:draw()
-    love.graphics.print("[jump] to try again",60, 70, 0, 1, 1)
+    if math.floor(love.timer.getTime()) % 2 == 0 then
+        love.graphics.print("[jump] to try again",60, 70, 0, 1, 1)
+      end
 end
 
 
@@ -416,4 +424,25 @@ function check_collision(a, b)
 
   function do_tables_match( a, b )
     return table.concat(a) == table.concat(b)
+end
+
+
+function save_game()
+    data = {}
+    data.longest_time = 13
+    data.has_crown = false
+    serialized = lume.serialize(data)
+    love.filesystem.write("sickle.sav", serialized)
+end
+
+function load_game()
+
+    if love.filesystem.getInfo("sickle.sav") then
+        file = love.filesystem.read("sickle.sav")
+        data = lume.deserialize(file)
+
+        longest_time = data.longest_time
+        has_crown = data.has_crown
+
+    end
 end

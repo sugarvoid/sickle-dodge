@@ -39,6 +39,7 @@ function Player:new()
     instance.tmr_standing_still = Timer:new(60*3, function() instance:inactive_die() end, true)
     instance.tmr_standing_still:start()
     instance.tmr_ghost_mode = Timer:new(15, function() instance:exit_ghost_mode() end, false)
+    instance.tmr_wait_for_animation = Timer:new(60*0.8, function() go_to_gameover() end, false)
     
     instance.jumps_left = 2
     instance.speed = 100
@@ -64,6 +65,7 @@ end
 function Player:update(dt)
     --print(self.curr_animation.status)
     self.curr_animation:update(dt)
+    self.tmr_wait_for_animation:update()
     
     if self.is_alive then
         if self.body:enter("Sickle") and not self.is_ghost then
@@ -71,7 +73,7 @@ function Player:update(dt)
             self:die({ death_x, death_y })
             local collision_data = self.body:getEnterCollisionData("Sickle")
             local sickle = collision_data.collider:getObject()
-            print(collision_data.collider:getObject())
+            --print(collision_data.collider:getObject())
             
             --sickle:on_hit()
             --TODO: Fix death marker placement. If player is on top of sickle, it spawns too high.
@@ -84,13 +86,14 @@ function Player:update(dt)
         --self.animations.idle:update(dt)
         
         self.tmr_ghost_mode:update()
+        
         if not (self.is_moving_left or self.is_moving_right) then
             self.tmr_standing_still:update()
         else
             self.tmr_standing_still:start()
         end
         if self.body:enter("Ground") then
-            print("on floor")
+
             self.jumps_left = 2
             self.rotation = 0
         end
@@ -166,10 +169,11 @@ function Player:die(pos)
     self.body:setAwake(false)
     self.is_alive = false
     self.curr_animation = self.animations["death"]
-    print("Player death animation")
+    --print("Player death animation")
+    self.tmr_wait_for_animation:start()
     player_attempt = player_attempt + 1
     spawn_death_marker(pos[1], pos[2])
-    go_to_gameover()
+    --go_to_gameover()
 end
 
 function Player:draw()
@@ -181,7 +185,7 @@ function Player:draw()
     end
     --love.graphics.draw(self.image, self.x, self.y, 0, 1, 1, self.w/2, self.h/2)
     love.graphics.setColor(255,255,255)
-    love.graphics.circle("fill", self.body:getX(), self.body:getY(), 2) -- Draw white circle with 100 segments.
+    --love.graphics.circle("fill", self.body:getX(), self.body:getY(), 2) -- Draw white circle with 100 segments.
 end
 
 
@@ -197,7 +201,6 @@ function Player:enter_ghost_mode()
 end
 
 function Player:exit_ghost_mode()
-    print("exit ghost mode")
     self.body:setAwake(true)
     self.alpha = 255
 end
@@ -205,8 +208,13 @@ end
 function Player:reset()
     self.body:setType("dynamic")
     self.body:setAwake(true)
+    self.body:setPosition(self.starting_pos.x, self.starting_pos.y)
+    self.animations["death"]:resume()
+    self.animations["death"]:gotoFrame(0)
+    
+    self.tmr_wait_for_animation:stop()
     self.is_alive = true
-    self.x = self.starting_pos.x
-    self.y = self.starting_pos.y
+    --self.x = self.starting_pos.x
+    --self.y = self.starting_pos.y
     self.curr_animation = self.animations["idle"]
 end

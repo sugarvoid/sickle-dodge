@@ -189,7 +189,7 @@ end
 
 
 function SickleManager:reset()
-    print("reset sickle_manager")
+    --print("reset sickle_manager")
     --self.active_sickles.clear()
     for k in pairs (self.active_sickles) do
         self.active_sickles[k].body:destroy()

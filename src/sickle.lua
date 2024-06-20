@@ -72,7 +72,6 @@ function Sickle:set_rotation()
     elseif do_tables_match(self.moving_dir,{0,1})then
             self.rotation = -90
     end
-    print(self.rotation)
 end
 
 
