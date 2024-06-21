@@ -14,9 +14,10 @@ wf = require 'lib.windfield'
 lume = require("lib.lume")
 
 world = wf.newWorld(0, 950, false)
-world:addCollisionClass('Player')
-world:addCollisionClass('Sickle', { ignores = { "Player" } })
-world:addCollisionClass('Ground')
+world:addCollisionClass("Player")
+world:addCollisionClass("Ground")
+world:addCollisionClass('Sickle', { ignores = { "Player"} })
+
 
 
 
@@ -89,6 +90,10 @@ function start_game()
     reset_game()
 end
 
+function on_player_win()
+    
+end
+
 function love.keypressed(key)
     if key == "escape" then
             love.event.quit()
@@ -123,13 +128,12 @@ end
 function love.update(dt)
     snow_system:update(dt)
     tick = tick + 1
-    if tick == 60 then
-        seconds_in = seconds_in + 1
-        tick = 0
-        sickle_manager:on_every_second(seconds_in)
-    end
-    if seconds_in == 60 then
-        -- TODO: Player has won
+    if seconds_in < 60 then
+        if tick == 60 then
+            seconds_in = seconds_in + 1
+            tick = 0
+            sickle_manager:on_every_second(seconds_in)
+        end
     end
     if gamestate == gamestates.title then
         update_menu()
@@ -159,7 +163,7 @@ function update_game(dt)
         else
             player.is_moving_left = false
 	end
-
+    platfrom:update(dt)
     player:update(dt)
 end
 

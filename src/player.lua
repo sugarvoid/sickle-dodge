@@ -57,8 +57,8 @@ function Player:new()
     --instance.hitbox = {x = instance.x, y= instance.y, w= instance.w, h =instance.h}
     instance.body = world:newRectangleCollider(instance.x, instance.y, instance.hitbox.w, instance.hitbox.h)
     instance.body:setType("dynamic")
-    instance.body:setCollisionClass('Player')
-    instance.body:setObject(self)
+    instance.body:setCollisionClass("Player")
+    instance.body:setObject(instance)
     
     instance.body:setFixedRotation(true)
     instance.body:setMass(player_mass)
