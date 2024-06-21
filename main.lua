@@ -16,7 +16,7 @@ lume = require("lib.lume")
 world = wf.newWorld(0, 950, false)
 world:addCollisionClass("Player")
 world:addCollisionClass("Ground")
-world:addCollisionClass('Sickle', { ignores = { "Player"} })
+world:addCollisionClass('Sickle', { ignores = { "Player" } })
 
 
 
@@ -69,7 +69,7 @@ function reset_game()
     seconds_in = 0
     sickle_manager:reset()
     player:reset()
-    
+
     is_paused = false
 end
 
@@ -91,13 +91,13 @@ function start_game()
 end
 
 function on_player_win()
-    
+
 end
 
 function love.keypressed(key)
     if key == "escape" then
-            love.event.quit()
-        end
+        love.event.quit()
+    end
 
     if gamestate == gamestates.game then
         if key == "space" or key == "w" then
@@ -108,9 +108,8 @@ function love.keypressed(key)
     if gamestate == gamestates.retry then
         if key == "space" then
             reset_game()
-            
+
             gamestate = gamestates.game
-            
         end
     end
 
@@ -123,7 +122,6 @@ function love.keypressed(key)
         end
     end
 end
-
 
 function love.update(dt)
     snow_system:update(dt)
@@ -154,26 +152,25 @@ end
 
 function update_game(dt)
     if love.keyboard.isDown('d') then
-        player.is_moving_right = true 
+        player.is_moving_right = true
     else
-        player.is_moving_right = false   
+        player.is_moving_right = false
     end
-	if love.keyboard.isDown('a') then
-        player.is_moving_left = true  
-        else
-            player.is_moving_left = false
-	end
-    platfrom:update(dt)
+    if love.keyboard.isDown('a') then
+        player.is_moving_left = true
+    else
+        player.is_moving_left = false
+    end
+
     player:update(dt)
 end
-
 
 function update_gameover(dt)
     return
 end
 
 function spawn_death_marker(_x, _y)
-    add(death_markers, {_x,_y})
+    add(death_markers, { _x, _y })
 end
 
 function love.draw()
@@ -183,14 +180,13 @@ function love.draw()
     if gamestate == gamestates.title then
         draw_title()
     end
-    if gamestate == gamestates.game then    
+    if gamestate == gamestates.game then
         draw_game()
     end
     if gamestate == gamestates.retry then
         draw_gameover()
     end
 end
-
 
 --#region Draw Functions
 function draw_title()
@@ -201,7 +197,7 @@ end
 
 function draw_game()
     love.graphics.push("all")
-    love.graphics.print("FPS: "..tostring(love.timer.getFPS( )), 0, 0, 0, 1, 1)
+    love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), 0, 0, 0, 1, 1)
     draw_hud()
     love.graphics.pop()
     draw_snow()
@@ -211,13 +207,14 @@ function draw_game()
     sickle_manager:draw()
     draw_death_markers()
     love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, 130))
-    love.graphics.print( seconds_in, 110, 15, 0, 3, 3)
-    love.graphics.setColor(255,255,255)
+    love.graphics.print(seconds_in, 110, 15, 0, 3, 3)
+    love.graphics.setColor(255, 255, 255)
 end
 
 function draw_death_markers()
     for dm in all(death_markers) do
-        love.graphics.draw(death_marker, dm[1], dm[2],0,0.2, 0.2, death_marker:getWidth()/2, death_marker:getHeight()/2)
+        love.graphics.draw(death_marker, dm[1], dm[2], 0, 0.2, 0.2, death_marker:getWidth() / 2,
+            death_marker:getHeight() / 2)
     end
 end
 
@@ -226,7 +223,7 @@ function draw_snow()
 end
 
 function draw_hud()
-    love.graphics.print("Attempt: "..tostring(player_attempt), 180, 0, 0, 1, 1)
+    love.graphics.print("Attempt: " .. tostring(player_attempt), 180, 0, 0, 1, 1)
 end
 
 function draw_gameover()
@@ -235,22 +232,19 @@ function draw_gameover()
     platfrom:draw()
     draw_hud()
     if math.floor(love.timer.getTime()) % 2 == 0 then
-        love.graphics.print("[jump] to try again",60, 70, 0, 1, 1)
-      end
+        love.graphics.print("[jump] to try again", 60, 70, 0, 1, 1)
+    end
 end
 
-
-function resize (w, h) -- update new translation and scale:
-	local w1, h1 = window.width, window.height -- target rendering resolution
-	local scale = math.min (w/w1, h/h1)
-	window.translateX, window.translateY, window.scale = (w-w1*scale)/2, (h-h1*scale)/2, scale
+function resize(w, h)                       -- update new translation and scale:
+    local w1, h1 = window.width, window.height -- target rendering resolution
+    local scale = math.min(w / w1, h / h1)
+    window.translateX, window.translateY, window.scale = (w - w1 * scale) / 2, (h - h1 * scale) / 2, scale
 end
 
-function love.resize (w, h)
-	resize (w, h) -- update new translation and scale
+function love.resize(w, h)
+    resize(w, h) -- update new translation and scale
 end
-
-
 
 --#endregion Draw Functions
 
@@ -261,7 +255,6 @@ function playSound(sound)
     love.audio.stop(sound)
     love.audio.play(sound)
 end
-
 
 function go_to_gameover()
     gamestate = gamestates.retry
@@ -277,42 +270,40 @@ function clamp(min, val, max)
     return math.max(min, math.min(val, max));
 end
 
-
-
 --tables
-add=table.insert
+add = table.insert
 
 function all(list)
-  local i = 0
-  return function() i = i + 1; return list[i] end
+    local i = 0
+    return function()
+        i = i + 1; return list[i]
+    end
 end
 
 --for v in all(t) do
 --    print(v)  -- prints 1, 3, 5, 7, 9
 --end
 
-function del(t,a)
-	for i,v in ipairs(t) do
-		if v==a then
-			t[i]=t[#t]
-			t[#t]=nil
-			return
-		end
-	end
+function del(t, a)
+    for i, v in ipairs(t) do
+        if v == a then
+            t[i] = t[#t]
+            t[#t] = nil
+            return
+        end
+    end
 end
 
 function check_collision(a, b)
-    return a.x < b.x+b.w and
-           b.x < a.x+a.w and
-           a.y < b.y+b.h and
-           b.y < a.y+a.h
+    return a.x < b.x + b.w and
+        b.x < a.x + a.w and
+        a.y < b.y + b.h and
+        b.y < a.y + a.h
 end
 
-
-function do_tables_match( a, b )
+function do_tables_match(a, b)
     return table.concat(a) == table.concat(b)
 end
-
 
 function save_game()
     data = {}
@@ -323,13 +314,11 @@ function save_game()
 end
 
 function load_game()
-
     if love.filesystem.getInfo("sickle.sav") then
         file = love.filesystem.read("sickle.sav")
         data = lume.deserialize(file)
 
         longest_time = data.longest_time
         player.has_won = data.has_won or false
-
     end
 end

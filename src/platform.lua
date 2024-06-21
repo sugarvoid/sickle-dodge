@@ -16,7 +16,7 @@ function Platform:new()
     instance.body = world:newRectangleCollider(instance.hitbox.x, instance.hitbox.y, instance.hitbox.w, instance.hitbox.h)
     instance.body:setType("static")
     instance.body:setCollisionClass("Ground")
-    instance.body:setObject(instance)
+    instance.body:setObject(self)
 
     return instance
 end

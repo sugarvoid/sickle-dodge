@@ -25,7 +25,7 @@ function Player:new()
         death = anim8.newAnimation(s_grid(('7-14'), 1), 0.1, 'pauseAtEnd')
     }
     --TODO: create way for current animation. and way to change them
-    instance.starting_pos = {x=50, y=10}
+    instance.starting_pos = {x=60, y=111}
     instance.curr_animation = instance.animations["idle"]
     instance.alpha = 255
     instance.rotation = 0
@@ -58,7 +58,7 @@ function Player:new()
     instance.body = world:newRectangleCollider(instance.x, instance.y, instance.hitbox.w, instance.hitbox.h)
     instance.body:setType("dynamic")
     instance.body:setCollisionClass("Player")
-    instance.body:setObject(instance)
+    instance.body:setObject(self)
     
     instance.body:setFixedRotation(true)
     instance.body:setMass(player_mass)
@@ -197,7 +197,6 @@ end
 
 
 function Player:flip()
-    print("fliping")
     flux.to(self, 0.3, { rotation = -360 })
     
 end
