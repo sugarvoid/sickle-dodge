@@ -5,13 +5,13 @@
 - Add rest of wave layouts to table
 - Clean up `main.lua`; use gamestate
 - Add game reset on hitting sickle
-- Add title
+- ~~Add title~~
 - Add gameover
 - Add way to make game reset
 - Limit timer to 60 sec
 - ~~Add folder for assets~~
 - Remove old debug prints
-- Move snow emitter 
+- ~~Move snow emitter~~ 
 - ~~Move sickle_manager to its own file~~
 - ~~Move platform to its own file~~
 - ~~Add flipping on second jump~~
@@ -20,7 +20,7 @@
 - ~~Look into Fixtures to see if the player needs one~~
 - Add saving/loading function for if player has won before
 - Add longest run? (how many seconds the player has made it)
-- Reset player rotation before playing death animation 
+- ~~Reset player rotation before playing death animation~~ 
 - Add break animation to sickles 
 
 ## Possible Additions
