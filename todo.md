@@ -23,6 +23,10 @@
 - ~~Reset player rotation before playing death animation~~ 
 - Add break animation to sickles 
 
+## Bug
+- Sometimes sickles pass through ground
+- Player's rotation is not getting set to 0 when death animation starts
+
 ## Possible Additions
 - Hats
 - Endless/random mode

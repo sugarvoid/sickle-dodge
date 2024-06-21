@@ -7,6 +7,7 @@ require("src.player")
 require("src.platform")
 require("src.sickle_manager")
 require("src.sickle")
+require("lib.kgo.rename")
 
 
 Timer = require("lib.kgo.timer")
@@ -16,7 +17,7 @@ lume = require("lib.lume")
 world = wf.newWorld(0, 950, false)
 world:addCollisionClass("Player")
 world:addCollisionClass("Ground")
-world:addCollisionClass('Sickle', { ignores = { "Player" } })
+world:addCollisionClass('Sickle', { ignores = { "Player", "Sickle", "Ground" } })
 
 
 

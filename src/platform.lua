@@ -21,12 +21,6 @@ function Platform:new()
     return instance
 end
 
-function Platform:update(dt)
-    
-end
-
-
-
 
 function Platform:draw()
     love.graphics.draw(self.image, self.x, self.y)

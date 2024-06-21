@@ -17,27 +17,28 @@ function Sickle:new(_x, _y, _moving_dir, _speed)
     instance.friction = 3500
     instance.w = instance.image:getWidth()
     instance.h = instance.image:getHeight()
-    --instance.hitbox = { x = instance.x, y = instance.y, w = instance.w - 12, h = instance.h - 3 }
+    instance.hitbox = { x = instance.x, y = instance.y, w = instance.w - 12, h = instance.h - 3 }
     instance.body = world:newRectangleCollider(instance.x, instance.y, instance.w - 12, instance.h - 3)
-    instance.body:setType("kinematic")
+    instance.body:setType("dynamic")
     instance.body:setCollisionClass("Sickle")
+    instance.body:setGravityScale(0)
     instance.body:setObject(self)
     instance.body:setFixedRotation(true)
     instance.body:setPosition(_x, _y)
     instance:set_rotation()
+    instance.body:setLinearVelocity(instance.speed * instance.moving_dir[1], instance.speed * instance.moving_dir[2])
 
     return instance
 end
 
 function Sickle:update(dt)
-    self.body:setLinearVelocity(self.speed * self.moving_dir[1], self.speed * self.moving_dir[2])
-    self.x = self.body:getX()
-    self.y = self.body:getY()
-    self.life_timer = self.life_timer - 1
     if self.body:enter("Ground") then 
         --todo: Play break animation 
         self.life_timer=0
     end
+    self.x = self.body:getX()
+    self.y = self.body:getY()
+    self.life_timer = self.life_timer - 1
 end
 
 function Sickle:on_hit()
