@@ -16,16 +16,16 @@ local WAVES = {
         { 80, -10, { 0, 1 } },
     },
     left_low = {
-        { -18,  87,      { 1, 0 } },
-        { -77,  88,      { 1, 0 } },
-        { -76,  88 - 16, { 1, 0 } },
-        { -141, 87,      { 1, 0 } },
+        { -10,  100,      { 1, 0 } },
+        { -70,  100,      { 1, 0 } },
+        { -120, 100,      { 1, 0 } },
+        { -170, 100,      { 1, 0 } },
     },
     right_low_single = {
-        { 250, 112, { -1, 0 } },
+        { 250, 114, { -1, 0 } },
     },
     left_high_single = {
-
+        { 50, -10, { 0, 1 } },
     },
     left_full = {
         { -20,  104,      { 1, 0 } },
@@ -34,9 +34,9 @@ local WAVES = {
         { -171, 61 - 16,  { 1, 0 } },
     },
     top_right = {
-        { 79,  -80,  { 0, 1 } },
         { 121, -21,  { 0, 1 } },
         { 184, -21,  { 0, 1 } },
+        { 79,  -80,  { 0, 1 } },
         { 145, -80,  { 0, 1 } },
         { 121, -136, { 0, 1 } },
         { 187, -136, { 0, 1 } },
@@ -103,87 +103,98 @@ function SickleManager:new(win_func)
     --TODO: bring in sec timer
     --TODO: Make left side timer for sickle
     instance.update_actions = {
-        [1] = nil,
-        [2] = function() instance:spawn_sickles(WAVES.top_left, 100) end,
-        [3] = nil,
-        [4] = function() instance:spawn_sickles(WAVES.top_right, 100) end,
-        [5] = function() instance.tmr_every_2s:start() end,
-        [6] = function() instance:spawn_sickles(WAVES.left_low, 110) end,
-        [7] = nil,
-        [8] = nil,
-        [9] = nil,
-        [10] = function() instance:spawn_sickles(WAVES.left_high, 100) end,
-        [11] = nil,
-        [12] = nil,
-        [13] = nil,
-        [14] = nil,
-        [15] = nil,
-        [16] = function() instance:spawn_sickles(WAVES.top_right, 120) end,
-        [17] = nil,
-        [18] = function() instance:spawn_sickles(WAVES.top_all, 120) end,
-        [19] = nil,
-        [20] = function() instance:spawn_sickles(WAVES.top_left, 150) end,
-        [21] = nil,
-        [22] = nil,
-        [23] = nil,
-        [24] = function() instance:spawn_sickles(WAVES.left_low, 120) end,
-        [25] = nil,
-        [26] = function() instance:spawn_sickles(WAVES.top_full, 200) end,
-        [27] = nil,
-        [28] = function() instance:spawn_sickles(WAVES.right_high, 80) end,
-        [29] = nil,
-        [30] = function() instance:spawn_sickles(WAVES.left_full, 150) end,
-        [31] = nil,
-        [32] = nil,
-        [33] = function() instance:spawn_sickles(WAVES.top_all, 200) end,
-        [34] = nil,
-        [35] = nil,
-        [36] = nil,
-        [37] = function() instance:spawn_sickles(WAVES.top_all, 130) end,
-        [38] = nil,
-        [39] = nil,
-        [40] = function() instance:spawn_sickles(WAVES.left_low, 200) end,
-        [41] = nil,
-        [42] = nil,
-        [43] = nil,
-        [44] = function() instance:spawn_sickles(WAVES.right_low, 150) end,
-        [45] = nil,
-        [46] = nil,
-        [47] = nil,
-        [48] = nil,
-        [49] = nil,
-        [50] = nil,
-        [51] = nil,
-        [52] = nil,
-        [53] = nil,
-        [54] = nil,
-        [55] = nil,
-        [56] = nil,
-        [57] = nil,
-        [58] = nil,
-        [59] = nil,
-        [60] = on_player_win,
-    }
+            [60] = nil,
+            [59] = function() instance:spawn_sickles(WAVES.top_left, 100) end,
+            [58] = nil,
+            [57] = function() instance:spawn_sickles(WAVES.top_right, 100) end,
+            [56] = function() instance.tmr_every_2s:start() end,
+            [55] = function() instance:spawn_sickles(WAVES.left_low, 130) end,
+            [54] = nil,
+            [53] = nil,
+            [52] = nil,
+            [51] = function() instance:spawn_sickles(WAVES.left_high, 100) end,
+            [50] = nil,
+            [49] = nil,
+            [48] = nil,
+            [47] = nil,
+            [46] = nil,
+            [45] = function() instance:spawn_sickles(WAVES.top_right, 120) end,
+            [44] = nil,
+            [43] = function() instance:spawn_sickles(WAVES.top_all, 120) end,
+            [42] = nil,
+            [41] = function() instance:spawn_sickles(WAVES.top_left, 150) end,
+            [40] = nil,
+            [39] = nil,
+            [38] = nil,
+            [37] = function() instance:spawn_sickles(WAVES.left_low, 120) end,
+            [36] = nil,
+            [35] = function() instance:spawn_sickles(WAVES.top_full, 200) end,
+            [34] = nil,
+            [33] = function() instance:spawn_sickles(WAVES.right_high, 80) end,
+            [32] = nil,
+            [31] = function() instance:spawn_sickles(WAVES.left_full, 150) end,
+            [30] = nil,
+            [29] = nil,
+            [28] = function() instance:spawn_sickles(WAVES.top_all, 200) end,
+            [27] = nil,
+            [26] = nil,
+            [25] = nil,
+            [24] = function() instance:spawn_sickles(WAVES.top_all, 130) end,
+            [23] = nil,
+            [22] = nil,
+            [21] = function() instance:spawn_sickles(WAVES.left_low, 200) end,
+            [20] = nil,
+            [19] = nil,
+            [18] = nil,
+            [17] = function() instance:spawn_sickles(WAVES.right_low, 150) end,
+            [16] = nil,
+            [15] = nil,
+            [14] = nil,
+            [13] = nil,
+            [12] = nil,
+            [11] = nil,
+            [10] = nil,
+            [9] = nil,
+            [8] = nil,
+            [7] = nil,
+            [6] = nil,
+            [5] = nil,
+            [4] = nil,
+            [3] = nil,
+            [2] = nil,
+            [1] = on_player_win,
+        }
     return instance
 end
 
 function SickleManager:reset()
     self.tmr_every_2s:stop()
+
     for k in pairs(self.active_sickles) do
         self.active_sickles[k].body:destroy()
         self.active_sickles[k] = nil
     end
+
+    -- for s in all(self.active_sickles) do
+    --     print(s)
+    --     s.body:destroy()
+    --     del(self.active_sickles, s)
+    -- end
 end
 
 function SickleManager:update(dt)
+    print(#self.active_sickles)
     for t in all(self.timers) do
         t:update()
     end
+
     for s in all(self.active_sickles) do
         s:update(dt)
         if s.life_timer <= 0 then
             s.body:destroy()
             del(self.active_sickles, s)
+        else
+            
         end
     end
 end

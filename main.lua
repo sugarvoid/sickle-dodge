@@ -1,6 +1,11 @@
 --! main.lua
 
 love = require("love")
+wf = require 'lib.windfield'
+lume = require("lib.lume")
+anim8 = require("lib.anim8")
+
+love.graphics.setDefaultFilter("nearest", "nearest")
 
 require("lib.color")
 require("src.player")
@@ -8,11 +13,10 @@ require("src.platform")
 require("src.sickle_manager")
 require("src.sickle")
 require("lib.kgo.rename")
+require("lib.kgo.timer")
 
 
-Timer = require("lib.kgo.timer")
-wf = require 'lib.windfield'
-lume = require("lib.lume")
+
 
 world = wf.newWorld(0, 950, false)
 world:addCollisionClass("Player")
@@ -22,7 +26,7 @@ world:addCollisionClass('Sickle', { ignores = { "Player", "Sickle", "Ground" } }
 
 
 
-love.graphics.setDefaultFilter("nearest", "nearest")
+
 
 local font = nil
 local gamestates = {
@@ -36,7 +40,7 @@ local gamestates = {
 local gamestate = nil
 local death_markers = {}
 local is_paused = true
-local seconds_in = 0
+local seconds_in = 60
 local frames = 0
 local tick = 0
 
@@ -46,7 +50,7 @@ longest_time = nil
 player_attempt = 1
 
 local bg_music = love.audio.newSource("asset/audio/8_bit_iced_village.ogg", "stream")
-bg_music:setVolume(0.5)
+bg_music:setVolume(0.3)
 local snow_flake = love.graphics.newImage('asset/image/snow.png')
 local death_marker = love.graphics.newImage('asset/image/death_marker.png')
 local background = love.graphics.newImage("asset/image/background.png")
@@ -67,7 +71,7 @@ function love.load()
 end
 
 function reset_game()
-    seconds_in = 0
+    seconds_in = 60
     sickle_manager:reset()
     player:reset()
 
@@ -127,15 +131,15 @@ end
 function love.update(dt)
     snow_system:update(dt)
     tick = tick + 1
-    if seconds_in < 60 then
+    if seconds_in > 1 then
         if tick == 60 then
-            seconds_in = seconds_in + 1
+            seconds_in = seconds_in - 1
             tick = 0
             sickle_manager:on_every_second(seconds_in)
         end
     end
     if gamestate == gamestates.title then
-        update_menu()
+        update_title()
     elseif gamestate == gamestates.game then
         if not is_paused then
             world:update(dt)
@@ -147,7 +151,7 @@ function love.update(dt)
     end
 end
 
-function update_menu()
+function update_title()
     return
 end
 
@@ -192,7 +196,7 @@ end
 --#region Draw Functions
 function draw_title()
     --love.graphics.print("Sickle Dodge",40, 40, 0, 1, 1)
-    --love.graphics.print("[jump] to play",70, 80, 0, 1, 1)
+    love.graphics.print("[space] to play",70, 80, 0, 1, 1)
     love.graphics.draw(title_img, 50, 45, 0, 0.19, 0.19)
 end
 
@@ -204,7 +208,7 @@ function draw_game()
     draw_snow()
     player:draw()
     platfrom:draw()
-    world:draw()
+    --world:draw()
     sickle_manager:draw()
     draw_death_markers()
     love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, 130))

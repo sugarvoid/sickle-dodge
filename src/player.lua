@@ -4,7 +4,7 @@
 Player = {}
 Player.__index = Player
 
-local anim8 = require("lib.anim8")
+
 local flux = require("lib.flux")
 
 local player_mass = 0.22
@@ -19,7 +19,7 @@ function Player:new()
     instance.image = love.graphics.newImage("asset/image/player.png")
     instance.crown = love.graphics.newImage("asset/image/crown.png")
     local s_grid = anim8.newGrid(16, 16, instance.spr_sheet:getWidth(),instance.spr_sheet:getHeight())
-    
+
     instance.animations = {
         idle = anim8.newAnimation(s_grid(('1-6'), 1), 0.1),
         death = anim8.newAnimation(s_grid(('7-14'), 1), 0.1, 'pauseAtEnd')
@@ -46,8 +46,8 @@ function Player:new()
     instance.speed = 100
     instance.vel_y = 50
     instance.vel_x = 0
-    instance.max_speed = 120
-    instance.acceleration = 30
+    instance.max_speed = 100
+    instance.acceleration = 20
     instance.friction = 3500
     instance.is_moving = false
 
@@ -58,7 +58,7 @@ function Player:new()
     instance.body = world:newRectangleCollider(instance.x, instance.y, instance.hitbox.w, instance.hitbox.h)
     instance.body:setType("dynamic")
     instance.body:setCollisionClass("Player")
-    instance.body:setObject(self)
+    instance.body:setObject(instance)
     
     instance.body:setFixedRotation(true)
     instance.body:setMass(player_mass)
@@ -73,10 +73,12 @@ function Player:update(dt)
             if self.is_ghost then
                 print("player phased through sickle")
             else
-                local death_x, death_y = self.body:getPosition()
-                self:die({ death_x, death_y })
+                
                 local collision_data = self.body:getEnterCollisionData("Sickle")
                 local sickle = collision_data.collider:getObject()
+                sickle:shatter()
+                local death_x, death_y = self.body:getPosition()
+                self:die({ death_x, death_y })
                 --print(collision_data.collider:getObject())
                 
                 --sickle:on_hit()
