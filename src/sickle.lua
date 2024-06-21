@@ -17,8 +17,8 @@ function Sickle:new(_x, _y, _moving_dir, _speed)
     instance.friction = 3500
     instance.w = instance.image:getWidth()
     instance.h = instance.image:getHeight()
-    instance.hitbox = { x = instance.x, y = instance.y, w = instance.w - 12, h = instance.h - 3 }
-    instance.body = world:newRectangleCollider(instance.x, instance.y, instance.hitbox.w, instance.hitbox.h)
+    --instance.hitbox = { x = instance.x, y = instance.y, w = instance.w - 12, h = instance.h - 3 }
+    instance.body = world:newRectangleCollider(instance.x, instance.y, instance.w - 12, instance.h - 3)
     instance.body:setType("kinematic")
     instance.body:setCollisionClass("Sickle")
     instance.body:setObject(self)
