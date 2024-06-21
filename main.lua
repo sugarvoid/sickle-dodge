@@ -43,10 +43,12 @@ local tick = 0
 longest_time = nil
 player_attempt = 1
 
-local bg_music = love.audio.newSource("asset/audio/snowy_cottage_v_2.ogg", "stream")
+local bg_music = love.audio.newSource("asset/audio/8_bit_iced_village.ogg", "stream")
+bg_music:setVolume(0.5)
 local snow_flake = love.graphics.newImage('asset/image/snow.png')
 local death_marker = love.graphics.newImage('asset/image/death_marker.png')
 local background = love.graphics.newImage("asset/image/background.png")
+local title_img = love.graphics.newImage("asset/image/title.png")
 local snow_system = love.graphics.newParticleSystem(snow_flake, 1000)
 local player = Player:new()
 local platfrom = Platform:new()
@@ -66,8 +68,7 @@ function reset_game()
     seconds_in = 0
     sickle_manager:reset()
     player:reset()
-    bg_music:stop()
-    bg_music:play()
+    
     is_paused = false
 end
 
@@ -102,6 +103,7 @@ function love.keypressed(key)
     if gamestate == gamestates.retry then
         if key == "space" then
             reset_game()
+            
             gamestate = gamestates.game
             
         end
@@ -110,6 +112,8 @@ function love.keypressed(key)
     if gamestate == gamestates.title then
         if key == "space" then
             gamestate = gamestates.game
+            bg_music:stop()
+            bg_music:play()
             start_game()
         end
     end
@@ -186,8 +190,9 @@ end
 
 --#region Draw Functions
 function draw_title()
-    love.graphics.print("Sickle Dodge",40, 40, 0, 1, 1)
-    love.graphics.print("[jump] to play",70, 80, 0, 1, 1)
+    --love.graphics.print("Sickle Dodge",40, 40, 0, 1, 1)
+    --love.graphics.print("[jump] to play",70, 80, 0, 1, 1)
+    love.graphics.draw(title_img, 50, 45, 0, 0.19, 0.19)
 end
 
 function draw_game()

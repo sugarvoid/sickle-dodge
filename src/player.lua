@@ -7,6 +7,7 @@ Player.__index = Player
 local anim8 = require("lib.anim8")
 local flux = require("lib.flux")
 
+local player_mass = 0.22
 
 local function check_for_win()
     return false
@@ -52,7 +53,7 @@ function Player:new()
 
     instance.w= instance.image:getWidth()
     instance.h= instance.image:getHeight()
-    instance.hitbox = {x = instance.x, y= instance.y, w= instance.w-8, h =instance.h-3}
+    instance.hitbox = {x = instance.x, y= instance.y, w= instance.w-10, h =instance.h-4}
     --instance.hitbox = {x = instance.x, y= instance.y, w= instance.w, h =instance.h}
     instance.body = world:newRectangleCollider(instance.x, instance.y, instance.hitbox.w, instance.hitbox.h)
     instance.body:setType("dynamic")
@@ -60,28 +61,30 @@ function Player:new()
     instance.body:setObject(self)
     
     instance.body:setFixedRotation(true)
+    instance.body:setMass(player_mass)
     return instance
 end
 function Player:update(dt)
-    --print(self.curr_animation.status)
     self.curr_animation:update(dt)
     self.tmr_wait_for_animation:update()
     
     if self.is_alive then
-        if self.body:enter("Sickle") and not self.is_ghost then
-            local death_x, death_y = self.body:getPosition()
-            self:die({ death_x, death_y })
-            local collision_data = self.body:getEnterCollisionData("Sickle")
-            local sickle = collision_data.collider:getObject()
-            --print(collision_data.collider:getObject())
-            
-            --sickle:on_hit()
-            --TODO: Fix death marker placement. If player is on top of sickle, it spawns too high.
+        if self.body:enter("Sickle") then 
+            if self.is_ghost then
+                print("player phased through sickle")
+            else
+                local death_x, death_y = self.body:getPosition()
+                self:die({ death_x, death_y })
+                local collision_data = self.body:getEnterCollisionData("Sickle")
+                local sickle = collision_data.collider:getObject()
+                --print(collision_data.collider:getObject())
+                
+                --sickle:on_hit()
+                --TODO: Fix death marker placement. If player is on top of sickle, it spawns too high.
 
-            --self.body:setLinearVelocity(0, 0)
-            
-            
+                --self.body:setLinearVelocity(0, 0)
         end
+    end
         flux.update(dt)
         --self.animations.idle:update(dt)
         
@@ -93,7 +96,7 @@ function Player:update(dt)
             self.tmr_standing_still:start()
         end
         if self.body:enter("Ground") then
-
+            self.rotation = 0
             self.jumps_left = 2
             
         end
@@ -133,6 +136,12 @@ function Player:update(dt)
         --self.hitbox.y = self.y+2
         self.x = self.body:getX()
         self.y = self.body:getY()
+
+
+        if self.body:getY() >= 132 then
+            local death_x, death_y = self.body:getPosition()
+            self:die({ death_x, death_y })
+        end
     end
     
             
@@ -163,7 +172,7 @@ function Player:inactive_die()
     self:die({ death_x, death_y })
 end
 
-function Player:die(pos)
+function Player:die(pos, condition)
     self.rotation = 0
     self.body:setType("static")
     self.body:setAwake(false)
@@ -188,6 +197,7 @@ end
 
 
 function Player:flip()
+    print("fliping")
     flux.to(self, 0.3, { rotation = -360 })
     
 end
@@ -206,6 +216,7 @@ end
 function Player:reset()
     self.body:setType("dynamic")
     self.body:setAwake(true)
+    self.body:setMass(player_mass)
     self.body:setPosition(self.starting_pos.x, self.starting_pos.y)
     
     self.animations["death"]:resume()

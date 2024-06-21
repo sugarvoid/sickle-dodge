@@ -14,7 +14,7 @@ function Sickle:new(_x, _y, _moving_dir, _speed)
     instance.rotation = 0
     
     
-    instance.life_timer = 150
+    instance.life_timer = 200
     instance.speed = _speed
     
 
@@ -26,7 +26,7 @@ function Sickle:new(_x, _y, _moving_dir, _speed)
 
     instance.w= instance.image:getWidth()
     instance.h= instance.image:getHeight()
-    instance.hitbox = {x = instance.x, y= instance.y, w= instance.w-8, h =instance.h-3}
+    instance.hitbox = {x = instance.x, y= instance.y, w= instance.w-12, h =instance.h-3}
     instance.body = world:newRectangleCollider(instance.x, instance.y, instance.hitbox.w, instance.hitbox.h)
     instance.body:setType("kinematic")
     instance.body:setCollisionClass('Sickle')
@@ -65,12 +65,14 @@ end
 
 function Sickle:set_rotation()
     if do_tables_match(self.moving_dir,{1,0}) then
+        self.body:setAngle(math.rad(90))
         self.rotation = 0
     elseif do_tables_match(self.moving_dir,{-1,0}) then
             self.body:setAngle(math.rad(90))
             self.rotation = 180
     elseif do_tables_match(self.moving_dir,{0,1})then
-            self.rotation = -90
+            --self.body:setAngle(math.rad(90))
+            self.rotation = 90
     end
 end
 
