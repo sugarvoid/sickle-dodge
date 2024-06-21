@@ -1,5 +1,5 @@
 
---Player.lua
+--player.lua
 
 Player = {}
 Player.__index = Player
@@ -33,7 +33,7 @@ function Player:new()
     instance.facing_dir = 1
     instance.x = instance.starting_pos.x
     instance.y = instance.starting_pos.y
-    instance.has_won = check_for_win()
+    instance.has_won = nil
     instance.is_moving_left=false
     instance.is_moving_right=false
     instance.tmr_standing_still = Timer:new(60*3, function() instance:inactive_die() end, true)
@@ -95,7 +95,7 @@ function Player:update(dt)
         if self.body:enter("Ground") then
 
             self.jumps_left = 2
-            self.rotation = 0
+            
         end
 
         
@@ -164,19 +164,14 @@ function Player:inactive_die()
 end
 
 function Player:die(pos)
+    self.rotation = 0
     self.body:setType("static")
-    --self.body:setLinearVelocity(0, 0)
     self.body:setAwake(false)
     self.is_alive = false
     self.curr_animation = self.animations["death"]
-    print(self.animations["death"])
-    
-    --self.curr_animation:gotoFrame(0)
-    --print("Player death animation")
     self.tmr_wait_for_animation:start()
     player_attempt = player_attempt + 1
     spawn_death_marker(pos[1], pos[2])
-    --go_to_gameover()
 end
 
 function Player:draw()
