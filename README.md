@@ -11,6 +11,7 @@ Original game: [link](https://sugarvoid.itch.io/sickle-dodge)
 - The sickles are not random, they will always spawn in the same pattern/order.
 - The player will freeze if standing still for too long.
 - There is a double jump.
+- Player can phase through sickles while flipping.
 <hr>
 
 ## Controls :joystick: 
@@ -20,6 +21,7 @@ Original game: [link](https://sugarvoid.itch.io/sickle-dodge)
 |A|Move Left|
 |D|Move Right|
 |W/Space|Jump|
+|M|Mute Music|
 
 ~~<sub>Also has controller support</sub>~~
 <hr>

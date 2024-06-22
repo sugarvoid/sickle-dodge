@@ -83,6 +83,7 @@ function Player:update(dt)
         if self.body:enter("Sickle") then
             if self.is_ghost then
                 print("player phased through sickle")
+                return
             else
                 local collision_data = self.body:getEnterCollisionData("Sickle")
                 local sickle = collision_data.collider:getObject()
@@ -137,7 +138,7 @@ end
 function Player:die(pos, condition)
     self.rotation = 0
     self.body:setType("static")
-    self.body:setAwake(false)
+
     self.is_alive = false
     self.curr_animation = self.animations["death"]
     self.tmr_wait_for_animation:start()
@@ -151,7 +152,7 @@ function Player:draw()
         self.h / 2)
     if self.is_alive and self.has_won then
         love.graphics.draw(self.crown, self.x, self.y, math.rad(self.rotation), self.facing_dir, 1, self.w / 2, self.h /
-        2)
+            2)
     end
     love.graphics.setColor(255, 255, 255)
 end
@@ -161,18 +162,19 @@ function Player:flip()
 end
 
 function Player:enter_ghost_mode()
+    self.is_ghost = true
     self.tmr_ghost_mode:start()
-    self.body:setAwake(false)
     self.alpha = 150
 end
 
 function Player:exit_ghost_mode()
-    self.body:setAwake(true)
+    self.is_ghost = false
     self.alpha = 255
 end
 
 function Player:reset()
     self.body:setType("dynamic")
+    self.is_ghost = false
     self.body:setAwake(true)
     self.body:setMass(player_mass)
     self.body:setPosition(self.starting_pos.x, self.starting_pos.y)

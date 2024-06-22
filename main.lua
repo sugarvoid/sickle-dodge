@@ -19,7 +19,8 @@ require("lib.kgo.timer")
 world = wf.newWorld(0, 950, false)
 world:addCollisionClass("Player")
 world:addCollisionClass("Ground")
-world:addCollisionClass('Sickle', { ignores = { "Player", "Sickle", "Ground" } })
+world:addCollisionClass('Sickle', { ignores = { "Player", "Sickle", "Ground"} })
+world:addCollisionClass('Ghost', { ignores = {"Sickle"} })
 
 
 
@@ -94,6 +95,14 @@ function love.keypressed(key)
         love.event.quit()
     end
 
+    if key == "m" then
+        if bg_music:isPlaying() then
+            bg_music:pause()
+        else
+            bg_music:play()
+        end
+    end
+
     if gamestate == gamestates.game then
         if key == "space" or key == "w" then
             player:jump()
@@ -142,6 +151,10 @@ function update_game(dt)
             sickle_manager:on_every_second(seconds_in)
         end
     end
+    if seconds_in == 0 then
+        save_game()
+        gamestate = gamestates.win 
+    end
     world:update(dt)
     sickle_manager:update(dt)
     player:update(dt)
@@ -167,6 +180,9 @@ function love.draw()
     end
     if gamestate == gamestates.retry then
         draw_gameover()
+    end
+    if gamestate == gamestates.win then
+        draw_win()
     end
 end
 
@@ -217,17 +233,15 @@ function draw_gameover()
     end
 end
 
--- function resize(w, h)
---     local w1, h1 = window.width, window.height
---     local scale = math.min(w / w1, h / h1)
---     window.translateX, window.translateY, window.scale = (w - w1 * scale) / 2, (h - h1 * scale) / 2, scale
--- end
-
--- function love.resize(w, h)
---     resize(w, h)
--- end
-
-
+function draw_win()
+    draw_snow()
+    draw_death_markers()
+    platfrom:draw()
+    draw_hud()
+    if math.floor(love.timer.getTime()) % 2 == 0 then
+        love.graphics.print("you win", 60, 70, 0, 1, 1)
+    end
+end
 
 function playSound(sound)
     love.audio.stop(sound)
@@ -274,8 +288,8 @@ end
 
 function save_game()
     data = {}
-    data.longest_time = 13
-    data.has_won = false
+    data.longest_time = 0
+    data.has_won = true
     serialized = lume.serialize(data)
     love.filesystem.write("sickle.sav", serialized)
 end

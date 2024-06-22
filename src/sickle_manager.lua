@@ -11,9 +11,10 @@ end
 
 local WAVES = {
     top_full = {
-        { 20, -10, { 0, 1 } },
         { 50, -10, { 0, 1 } },
-        { 80, -10, { 0, 1 } },
+        { 60, -10, { 0, 1 } },
+        { 70, -10, { 0, 1 } },
+        { 90, -10, { 0, 1 } },
     },
     left_low = {
         { -10,  100, { 1, 0 } },
@@ -98,7 +99,7 @@ function SickleManager:new(win_func)
     _sickle_manager.active_sickles = {}
     _sickle_manager.timers = {}
     _sickle_manager.tmr_every_2s = Timer:new(60 * 2,
-        function() _sickle_manager:spawn_sickles(WAVES.right_low_single, 180) print("2 sec") end, true)
+        function() _sickle_manager:spawn_sickles(WAVES.right_low_single, 180) end, true)
     table.insert(_sickle_manager.timers, _sickle_manager.tmr_every_2s)
 
     --TODO: bring in sec timer
@@ -131,7 +132,7 @@ function SickleManager:new(win_func)
         [36] = nil,
         [35] = function() _sickle_manager:spawn_sickles(WAVES.top_full, 200) end,
         [34] = nil,
-        [33] = function() _sickle_manager:spawn_sickles(WAVES.right_high, 80) end,
+        [33] = function() _sickle_manager:spawn_sickles(WAVES.right_high, 130) end,
         [32] = nil,
         [31] = function() _sickle_manager:spawn_sickles(WAVES.left_full, 150) end,
         [30] = nil,
