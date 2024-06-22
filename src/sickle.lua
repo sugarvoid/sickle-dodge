@@ -21,7 +21,7 @@ function Sickle:new(_x, _y, _moving_dir, _speed)
     _sickle.moving_dir = _moving_dir
     _sickle.alive = true
     _sickle.rotation = 0
-    _sickle.life_timer = 200
+    _sickle.life_timer = 300
     _sickle.speed = _speed
     _sickle.max_speed = 200
     _sickle.acceleration = 4000

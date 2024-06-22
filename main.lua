@@ -211,6 +211,7 @@ function draw_gameover()
     draw_death_markers()
     platfrom:draw()
     draw_hud()
+    love.graphics.print(seconds_in, 110, 15, 0, 3, 3)
     if math.floor(love.timer.getTime()) % 2 == 0 then
         love.graphics.print("[jump] to try again", 60, 70, 0, 1, 1)
     end

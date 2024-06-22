@@ -33,7 +33,7 @@ function Player:new()
     _player.facing_dir = 1
     _player.x = _player.starting_pos.x
     _player.y = _player.starting_pos.y
-    _player.has_won = nil
+    _player.has_won = false
     _player.is_moving_left = false
     _player.is_moving_right = false
     _player.tmr_standing_still = Timer:new(60 * 3, function() _player:inactive_die() end, true)
