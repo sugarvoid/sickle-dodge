@@ -19,7 +19,7 @@ Original game: [link](https://sugarvoid.itch.io/sickle-dodge)
 |:---:|:---:|
 |A|Move Left|
 |D|Move Right|
-|Space|Jump|
+|W/Space|Jump|
 
 ~~<sub>Also has controller support</sub>~~
 <hr>
@@ -27,9 +27,9 @@ Original game: [link](https://sugarvoid.itch.io/sickle-dodge)
 
 ## Credits
 ### Programming :computer: 
-- SugarVoid
+- Dave
 ### Sprites
-- SugarVoid
+- Dave
 ### Font
 - Mago by [nimblebeastscollective](https://nimblebeastscollective.itch.io) [CC0](https://creativecommons.org/publicdomain/zero/1.0/)
 - Equipe Basic by [Eeve Somepx](https://somepx.itch.io/) [CSL](http://www.palmentieri.it/somepx/license.txt)
@@ -37,7 +37,6 @@ Original game: [link](https://sugarvoid.itch.io/sickle-dodge)
 ### Music :musical_keyboard:
 - Snowy Cottage 8bit ver 2 by [TAD](https://www.youtube.com/c/Tadon) is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
 - Iced Village by [TAD](https://www.youtube.com/c/Tadon) is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
-
 ### Libraries Used
 - Love2d [github](https://github.com/love2d/love)
 - Flux [github](https://github.com/rxi/flux)
