@@ -6,19 +6,19 @@ Platform.__index = Platform
 
 
 function Platform:new()
-    local instance = setmetatable({}, Platform)
-    instance.image = love.graphics.newImage("asset/image/platform.png")
-    instance.x = 40
-    instance.y = 120
-    instance.w = instance.image:getWidth()
-    instance.h = instance.image:getHeight()
-    instance.hitbox = { x = instance.x, y = instance.y, w = instance.w, h = instance.h }
-    instance.body = world:newRectangleCollider(instance.hitbox.x, instance.hitbox.y, instance.hitbox.w, instance.hitbox.h)
-    instance.body:setType("static")
-    instance.body:setCollisionClass("Ground")
-    instance.body:setObject(instance)
+    local _platform = setmetatable({}, Platform)
+    _platform.image = love.graphics.newImage("asset/image/platform.png")
+    _platform.x = 40
+    _platform.y = 120
+    _platform.w = _platform.image:getWidth()
+    _platform.h = _platform.image:getHeight()
+    _platform.hitbox = { x = _platform.x, y = _platform.y, w = _platform.w, h = _platform.h }
+    _platform.body = world:newRectangleCollider(_platform.hitbox.x, _platform.hitbox.y, _platform.hitbox.w, _platform.hitbox.h)
+    _platform.body:setType("static")
+    _platform.body:setCollisionClass("Ground")
+    _platform.body:setObject(_platform)
 
-    return instance
+    return _platform
 end
 
 

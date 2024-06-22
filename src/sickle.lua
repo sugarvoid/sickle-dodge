@@ -8,40 +8,37 @@ local ice_sickle_sheet= love.graphics.newImage("asset/image/ice_sickle_sheet.png
 local sickle_grid = anim8.newGrid(16, 16, ice_sickle_sheet:getWidth(), ice_sickle_sheet:getHeight())
 
 function Sickle:new(_x, _y, _moving_dir, _speed)
-    local instance = setmetatable({}, Sickle)
+    local _sickle = setmetatable({}, Sickle)
 
-    instance.animations = {
-        regular = anim8.newAnimation(sickle_grid(('1-2'), 1), 0.1),
+    _sickle.animations = {
+        default = anim8.newAnimation(sickle_grid(('1-2'), 1), 0.1),
         shatter = anim8.newAnimation(sickle_grid(('3-8'), 1), 0.02, 'pauseAtEnd')
     }
 
-    instance.curr_animation = instance.animations["regular"]
+    _sickle.curr_animation = _sickle.animations["default"]
+    _sickle.x = 0
+    _sickle.y = 0
+    _sickle.moving_dir = _moving_dir
+    _sickle.alive = true
+    _sickle.rotation = 0
+    _sickle.life_timer = 200
+    _sickle.speed = _speed
+    _sickle.max_speed = 200
+    _sickle.acceleration = 4000
+    _sickle.friction = 3500
+    _sickle.w, _sickle.h = _sickle.curr_animation:getDimensions()
+    _sickle.hitbox = { x = _sickle.x, y = _sickle.y, w = _sickle.w - 12, h = _sickle.h - 3 }
+    _sickle.body = world:newRectangleCollider(_sickle.x, _sickle.y, _sickle.w - 12, _sickle.h - 3)
+    _sickle.body:setType("dynamic")
+    _sickle.body:setCollisionClass("Sickle")
+    _sickle.body:setGravityScale(0)
+    _sickle.body:setObject(_sickle)
+    _sickle.body:setFixedRotation(true)
+    _sickle.body:setPosition(_x, _y)
+    _sickle:set_rotation()
+    _sickle.body:setLinearVelocity(_sickle.speed * _sickle.moving_dir[1], _sickle.speed * _sickle.moving_dir[2])
 
-    --instance.image = love.graphics.newImage("asset/image/ice_sickle.png")
-    instance.x = 0
-    instance.y = 0
-    instance.moving_dir = _moving_dir
-    instance.alive = true
-    instance.rotation = 0
-    instance.life_timer = 200
-    instance.speed = _speed
-    instance.max_speed = 200
-    instance.acceleration = 4000
-    instance.friction = 3500
-    instance.w = 16--instance.image:getWidth()
-    instance.h = 16--instance.image:getHeight()
-    instance.hitbox = { x = instance.x, y = instance.y, w = instance.w - 12, h = instance.h - 3 }
-    instance.body = world:newRectangleCollider(instance.x, instance.y, instance.w - 12, instance.h - 3)
-    instance.body:setType("dynamic")
-    instance.body:setCollisionClass("Sickle")
-    instance.body:setGravityScale(0)
-    instance.body:setObject(instance)
-    instance.body:setFixedRotation(true)
-    instance.body:setPosition(_x, _y)
-    instance:set_rotation()
-    instance.body:setLinearVelocity(instance.speed * instance.moving_dir[1], instance.speed * instance.moving_dir[2])
-
-    return instance
+    return _sickle
 end
 
 function Sickle:update(dt)

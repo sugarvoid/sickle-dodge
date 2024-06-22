@@ -16,15 +16,10 @@ require("lib.kgo.rename")
 require("lib.kgo.timer")
 
 
-
-
 world = wf.newWorld(0, 950, false)
 world:addCollisionClass("Player")
 world:addCollisionClass("Ground")
 world:addCollisionClass('Sickle', { ignores = { "Player", "Sickle", "Ground" } })
-
-
-
 
 
 
@@ -39,11 +34,8 @@ local gamestates = {
 }
 local gamestate = nil
 local death_markers = {}
-local is_paused = true
 local seconds_in = 60
-local frames = 0
 local tick = 0
-
 
 
 longest_time = nil
@@ -65,17 +57,15 @@ function love.load()
     init_snow()
     load_game()
     font = love.graphics.newFont("asset/font/mago2.ttf", 16)
+    love.graphics.setFont(font)
     gamestate = gamestates.title
     font:setFilter("nearest")
-    love.graphics.setFont(font)
 end
 
 function reset_game()
     seconds_in = 60
     sickle_manager:reset()
     player:reset()
-
-    is_paused = false
 end
 
 function init_snow()
@@ -96,7 +86,7 @@ function start_game()
 end
 
 function on_player_win()
-
+    gamestate = gamestates.win
 end
 
 function love.keypressed(key)
@@ -113,7 +103,6 @@ function love.keypressed(key)
     if gamestate == gamestates.retry then
         if key == "space" then
             reset_game()
-
             gamestate = gamestates.game
         end
     end
@@ -130,22 +119,11 @@ end
 
 function love.update(dt)
     snow_system:update(dt)
-    tick = tick + 1
-    if seconds_in > 1 then
-        if tick == 60 then
-            seconds_in = seconds_in - 1
-            tick = 0
-            sickle_manager:on_every_second(seconds_in)
-        end
-    end
+    
     if gamestate == gamestates.title then
         update_title()
     elseif gamestate == gamestates.game then
-        if not is_paused then
-            world:update(dt)
-            sickle_manager:update(dt)
-            update_game(dt)
-        end
+        update_game(dt)
     else
         update_gameover(dt)
     end
@@ -156,17 +134,16 @@ function update_title()
 end
 
 function update_game(dt)
-    if love.keyboard.isDown('d') then
-        player.is_moving_right = true
-    else
-        player.is_moving_right = false
+    tick = tick + 1
+    if seconds_in > 1 then
+        if tick == 60 then
+            seconds_in = seconds_in - 1
+            tick = 0
+            sickle_manager:on_every_second(seconds_in)
+        end
     end
-    if love.keyboard.isDown('a') then
-        player.is_moving_left = true
-    else
-        player.is_moving_left = false
-    end
-
+    world:update(dt)
+    sickle_manager:update(dt)
     player:update(dt)
 end
 
@@ -193,9 +170,8 @@ function love.draw()
     end
 end
 
---#region Draw Functions
+
 function draw_title()
-    --love.graphics.print("Sickle Dodge",40, 40, 0, 1, 1)
     love.graphics.print("[space] to play",70, 80, 0, 1, 1)
     love.graphics.draw(title_img, 50, 45, 0, 0.19, 0.19)
 end
@@ -241,18 +217,15 @@ function draw_gameover()
     end
 end
 
-function resize(w, h)                       -- update new translation and scale:
-    local w1, h1 = window.width, window.height -- target rendering resolution
-    local scale = math.min(w / w1, h / h1)
-    window.translateX, window.translateY, window.scale = (w - w1 * scale) / 2, (h - h1 * scale) / 2, scale
-end
+-- function resize(w, h)                       
+--     local w1, h1 = window.width, window.height 
+--     local scale = math.min(w / w1, h / h1)
+--     window.translateX, window.translateY, window.scale = (w - w1 * scale) / 2, (h - h1 * scale) / 2, scale
+-- end
 
-function love.resize(w, h)
-    resize(w, h) -- update new translation and scale
-end
-
---#endregion Draw Functions
-
+-- function love.resize(w, h)
+--     resize(w, h) 
+-- end
 
 
 
@@ -265,17 +238,11 @@ function go_to_gameover()
     gamestate = gamestates.retry
 end
 
----
--- Clamps a value to a certain range.
--- @param min - The minimum value.
--- @param val - The value to clamp.
--- @param max - The maximum value.
---
 function clamp(min, val, max)
     return math.max(min, math.min(val, max));
 end
 
---tables
+
 add = table.insert
 
 function all(list)
@@ -284,10 +251,6 @@ function all(list)
         i = i + 1; return list[i]
     end
 end
-
---for v in all(t) do
---    print(v)  -- prints 1, 3, 5, 7, 9
---end
 
 function del(t, a)
     for i, v in ipairs(t) do
@@ -322,7 +285,6 @@ function load_game()
     if love.filesystem.getInfo("sickle.sav") then
         file = love.filesystem.read("sickle.sav")
         data = lume.deserialize(file)
-
         longest_time = data.longest_time
         player.has_won = data.has_won or false
     end

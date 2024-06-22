@@ -7,7 +7,7 @@ Original game: [link](https://sugarvoid.itch.io/sickle-dodge)
 <hr>
 
 ## Info :dart:
-- Dodge the ice sickles for 1 minute.
+- Dodge the ice sickles for 60 seconds.
 - The sickles are not random, they will always spawn in the same pattern/order.
 - The player will freeze if standing still for too long.
 - There is a double jump.
@@ -32,7 +32,6 @@ Original game: [link](https://sugarvoid.itch.io/sickle-dodge)
 - Dave
 ### Font
 - Mago by [nimblebeastscollective](https://nimblebeastscollective.itch.io) [CC0](https://creativecommons.org/publicdomain/zero/1.0/)
-- Equipe Basic by [Eeve Somepx](https://somepx.itch.io/) [CSL](http://www.palmentieri.it/somepx/license.txt)
 - Fibberish by [Nathan Scott](@caffi_nate) is licensed under [CC BY 3.0]()
 ### Music :musical_keyboard:
 - Snowy Cottage 8bit ver 2 by [TAD](https://www.youtube.com/c/Tadon) is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)

@@ -1,4 +1,5 @@
 ## Todo
+- Rename "instance" in :new() functions
 - ~~Add animations for player~~
 - ~~Add crown for player~~
 - ~~Add jump animation to player's second jump~~
@@ -21,7 +22,7 @@
 - Add saving/loading function for if player has won before
 - Add longest run? (how many seconds the player has made it)
 - ~~Reset player rotation before playing death animation~~ 
-- Add break animation to sickles 
+- ~~Add break animation to sickles~~
 
 ## Bug
 - Sometimes sickles pass through ground
