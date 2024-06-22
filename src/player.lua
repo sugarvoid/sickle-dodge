@@ -39,7 +39,7 @@ function Player:new()
     _player.tmr_standing_still = Timer:new(60 * 3, function() _player:inactive_die() end, true)
     _player.tmr_standing_still:start()
     _player.tmr_ghost_mode = Timer:new(15, function() _player:exit_ghost_mode() end, false)
-    _player.tmr_wait_for_animation = Timer:new(60 * 0.9, function() print("bug?") go_to_gameover() end, false)
+    _player.tmr_wait_for_animation = Timer:new(60 * 0.9, function() go_to_gameover() end, false)
 
     _player.jumps_left = 2
     _player.speed = 100
@@ -135,7 +135,6 @@ function Player:inactive_die()
 end
 
 function Player:die(pos, condition)
-    print("dying")
     self.rotation = 0
     self.body:setType("static")
     self.body:setAwake(false)

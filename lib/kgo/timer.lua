@@ -4,15 +4,15 @@ Timer = {}
 Timer.__index = Timer
 
 function Timer:new(finished_time, callback, _loop)
-    local obj = setmetatable({}, Timer)
-    obj.time = 0
-    obj.loop = _loop
-    obj.is_paused = true
-    obj.finished_time = finished_time or 1
-    obj.is_finished = false
-    obj.is_running = false
-    obj.on_done_func = callback or function() obj:print_done() end
-    return obj
+    local _timer = setmetatable({}, Timer)
+    _timer.time = 0
+    _timer.loop = _loop
+    _timer.is_paused = true
+    _timer.finished_time = finished_time or 1
+    _timer.is_finished = false
+    _timer.is_running = false
+    _timer.on_done_func = callback or function() _timer:print_done() end
+    return _timer
 end
 
 function Timer:update()
@@ -36,6 +36,7 @@ end
 function Timer:stop()
     self.time = 0
     self.is_running = false
+    self.is_paused = true
 end
 
 function Timer:pause()
