@@ -4,7 +4,7 @@ Sickle = {}
 Sickle.__index = Sickle
 
 
-local ice_sickle_sheet= love.graphics.newImage("asset/image/ice_sickle_sheet.png")
+local ice_sickle_sheet = love.graphics.newImage("asset/image/ice_sickle_sheet.png")
 local sickle_grid = anim8.newGrid(16, 16, ice_sickle_sheet:getWidth(), ice_sickle_sheet:getHeight())
 
 function Sickle:new(_x, _y, _moving_dir, _speed)
@@ -44,29 +44,27 @@ end
 function Sickle:update(dt)
     self.curr_animation:update(dt)
 
-    
+
     self.x = self.body:getX()
     self.y = self.body:getY()
     self.life_timer = self.life_timer - 1
-    
+
 
     if self.body:enter("Ground") then
-       self:shatter()
-
+        self:shatter()
     end
     if self.curr_animation.status == "paused" then
         self.life_timer = 0
-
     end
 end
 
 function Sickle:shatter()
-     --todo: Play break animation
-     self.alive = false
-     self.body:setLinearVelocity(0, 0)
-     
-     self.curr_animation = self.animations["shatter"]
-     self.body:setActive(false)
+    --todo: Play break animation
+    self.alive = false
+    self.body:setLinearVelocity(0, 0)
+
+    self.curr_animation = self.animations["shatter"]
+    self.body:setActive(false)
 end
 
 function Sickle:on_hit()

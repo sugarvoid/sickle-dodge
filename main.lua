@@ -119,7 +119,7 @@ end
 
 function love.update(dt)
     snow_system:update(dt)
-    
+
     if gamestate == gamestates.title then
         update_title()
     elseif gamestate == gamestates.game then
@@ -170,9 +170,8 @@ function love.draw()
     end
 end
 
-
 function draw_title()
-    love.graphics.print("[space] to play",70, 80, 0, 1, 1)
+    love.graphics.print("[space] to play", 70, 80, 0, 1, 1)
     love.graphics.draw(title_img, 50, 45, 0, 0.19, 0.19)
 end
 
@@ -217,14 +216,14 @@ function draw_gameover()
     end
 end
 
--- function resize(w, h)                       
---     local w1, h1 = window.width, window.height 
+-- function resize(w, h)
+--     local w1, h1 = window.width, window.height
 --     local scale = math.min(w / w1, h / h1)
 --     window.translateX, window.translateY, window.scale = (w - w1 * scale) / 2, (h - h1 * scale) / 2, scale
 -- end
 
 -- function love.resize(w, h)
---     resize(w, h) 
+--     resize(w, h)
 -- end
 
 
@@ -241,7 +240,6 @@ end
 function clamp(min, val, max)
     return math.max(min, math.min(val, max));
 end
-
 
 add = table.insert
 
