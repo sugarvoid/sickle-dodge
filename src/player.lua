@@ -1,5 +1,7 @@
 --player.lua
 
+require("src.jump_sfx")
+
 Player = {}
 Player.__index = Player
 
@@ -42,6 +44,7 @@ function Player:new()
     _player.tmr_wait_for_animation = Timer:new(60 * 0.9, function() go_to_gameover() end, false)
 
     _player.jumps_left = 2
+    _player.jump_effect = JumpSfx:new()
     _player.speed = 100
     _player.vel_y = 50
     _player.vel_x = 0
@@ -77,6 +80,7 @@ function Player:update(dt)
 
     self.body:setLinearVelocity(vel_x, vel_y)
     self.curr_animation:update(dt)
+    self.jump_effect:update(dt)
     self.tmr_wait_for_animation:update()
 
     if self.is_alive then
@@ -121,6 +125,7 @@ function Player:jump()
             self.body:applyLinearImpulse(0, -55, self.body:getX(), self.body:getY() + (self.h / 2))
             self.jumps_left = self.jumps_left - 1
         elseif self.jumps_left == 1 then -- Double jump
+            self.jump_effect:do_animation(self.x, self.y)
             self:enter_ghost_mode()
             self:flip()
             self.body:setLinearVelocity(vel_x, 0)
@@ -147,7 +152,9 @@ function Player:die(pos, condition)
 end
 
 function Player:draw()
+    self.jump_effect:draw()
     love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, self.alpha))
+    
     self.curr_animation:draw(self.spr_sheet, self.x, self.y, math.rad(self.rotation), self.facing_dir, 1, self.w / 2,
         self.h / 2)
     if self.is_alive and self.has_won then

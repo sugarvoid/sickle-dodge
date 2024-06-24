@@ -18,6 +18,7 @@
 - ~~Add flipping on second jump~~
 - Add timer holder for sickle manager
 - Add timer holder for player
+- ~~Add jump effect to player~~
 - ~~Look into Fixtures to see if the player needs one~~
 - Add saving/loading function for if player has won before
 - Add longest run? (how many seconds the player has made it)
@@ -25,7 +26,7 @@
 - ~~Add break animation to sickles~~
 
 ## Bug
-- Sometimes sickles pass through ground
+- ~~Sometimes sickles pass through ground~~
 - Player's rotation is not getting set to 0 when death animation starts
 
 ## Possible Additions
