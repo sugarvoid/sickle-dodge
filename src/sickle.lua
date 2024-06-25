@@ -43,7 +43,7 @@ end
 
 function Sickle:update(dt)
     self.curr_animation:update(dt)
-    
+
 
     self.x = self.body:getX()
     self.y = self.body:getY()

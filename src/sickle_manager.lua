@@ -117,7 +117,7 @@ function SickleManager:new(win_func)
         [51] = function() _sickle_manager:spawn_sickles(WAVES.left_high, 100) end,
         [50] = nil,
         [49] = nil,
-        [48] = nil,
+        [48] = function() _sickle_manager:spawn_sickles(WAVES.left_full, 150) end,
         [47] = nil,
         [46] = nil,
         [45] = function() _sickle_manager:spawn_sickles(WAVES.top_right, 120) end,

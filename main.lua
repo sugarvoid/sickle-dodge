@@ -43,7 +43,6 @@ longest_time = nil
 player_attempt = 1
 
 local bg_music = love.audio.newSource("asset/audio/8_bit_iced_village.ogg", "stream")
-bg_music:setVolume(0.3)
 local snow_flake = love.graphics.newImage('asset/image/snow.png')
 local death_marker = love.graphics.newImage('asset/image/death_marker.png')
 local background = love.graphics.newImage("asset/image/background.png")
@@ -57,6 +56,7 @@ local sickle_manager = SickleManager:new()
 function love.load()
     init_snow()
     load_game()
+    bg_music:setVolume(0.3)
     font = love.graphics.newFont("asset/font/mago2.ttf", 16)
     love.graphics.setFont(font)
     gamestate = gamestates.title
@@ -193,7 +193,7 @@ end
 
 function draw_game()
     love.graphics.push("all")
-    love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), 0, 0, 0, 1, 1)
+    --love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), 0, 0, 0, 1, 1)
     draw_hud()
     love.graphics.pop()
     draw_snow()
@@ -202,7 +202,7 @@ function draw_game()
     --world:draw()
     sickle_manager:draw()
     draw_death_markers()
-    love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, 130))
+    love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, 100))
     love.graphics.print(seconds_in, 110, 15, 0, 3, 3)
     love.graphics.setColor(255, 255, 255)
 end
