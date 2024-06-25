@@ -100,9 +100,8 @@ function SickleManager:new(win_func)
     _sickle_manager.timers = {}
     _sickle_manager.tmr_every_2s = Timer:new(60 * 2,
         function() _sickle_manager:spawn_sickles(WAVES.right_low_single, 180) end, true)
+    
     table.insert(_sickle_manager.timers, _sickle_manager.tmr_every_2s)
-
-    --TODO: bring in sec timer
     --TODO: Make left side timer for sickle
     _sickle_manager.update_actions = {
         [60] = nil,

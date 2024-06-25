@@ -25,7 +25,7 @@ function Player:new()
         idle = anim8.newAnimation(s_grid(('1-6'), 1), 0.1),
         death = anim8.newAnimation(s_grid(('7-14'), 1), 0.1, 'pauseAtEnd')
     }
-    --TODO: create way for current animation. and way to change them
+    
     _player.starting_pos = { x = 60, y = 111 }
     _player.curr_animation = _player.animations["idle"]
     _player.alpha = 255
