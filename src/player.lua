@@ -14,6 +14,14 @@ local function check_for_win()
     return false
 end
 
+local jump_sfx = love.audio.newSource("asset/audio/jump1.wav", "static")
+local jump_sfx2 = love.audio.newSource("asset/audio/jump2.wav", "static")
+local death_sfx = love.audio.newSource("asset/audio/player_death.wav", "static")
+
+jump_sfx:setVolume(0.3)
+jump_sfx2:setVolume(0.2)
+death_sfx:setVolume(0.5)
+
 function Player:new()
     local _player = setmetatable({}, Player)
     _player.spr_sheet = love.graphics.newImage("asset/image/player_sheet.png")
@@ -111,7 +119,7 @@ function Player:update(dt)
         self.x = self.body:getX()
         self.y = self.body:getY()
 
-        if self.body:getY() >= 132 then
+        if self.body:getY() >= 132 or self.body:getX() <= 2 or self.body:getX() >= 239 then
             local death_x, death_y = self.body:getPosition()
             self:die({ death_x, death_y })
         end
@@ -122,9 +130,11 @@ function Player:jump()
     if self.is_alive then
         local vel_x, vel_y = self.body:getLinearVelocity()
         if self.jumps_left == 2 then -- First jump
+            jump_sfx:play()
             self.body:applyLinearImpulse(0, -55, self.body:getX(), self.body:getY() + (self.h / 2))
             self.jumps_left = self.jumps_left - 1
         elseif self.jumps_left == 1 then -- Double jump
+            jump_sfx2:play()
             self.jump_effect:do_animation(self.x, self.y)
             self:enter_ghost_mode()
             self:flip()
@@ -147,7 +157,9 @@ function Player:die(pos, condition)
     self.is_alive = false
     self.curr_animation = self.animations["death"]
     self.tmr_wait_for_animation:start()
-    player_attempt = player_attempt + 1
+    
+    
+    death_sfx:play()
     spawn_death_marker(pos[1], pos[2])
 end
 

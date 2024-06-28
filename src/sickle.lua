@@ -6,6 +6,9 @@ Sickle.__index = Sickle
 
 local ice_sickle_sheet = love.graphics.newImage("asset/image/ice_sickle_sheet.png")
 local sickle_grid = anim8.newGrid(16, 16, ice_sickle_sheet:getWidth(), ice_sickle_sheet:getHeight())
+local break_sfx = love.audio.newSource("asset/audio/ice_break.wav", "static")
+
+break_sfx:setVolume(0.1)
 
 function Sickle:new(_x, _y, _moving_dir, _speed)
     local _sickle = setmetatable({}, Sickle)
@@ -52,6 +55,8 @@ function Sickle:update(dt)
 
     if self.body:enter("Ground") then
         self:shatter()
+        break_sfx:stop()
+        break_sfx:play()
     end
     if self.curr_animation.status == "paused" then
         self.life_timer = 0
@@ -64,6 +69,7 @@ function Sickle:shatter()
     self.body:setLinearVelocity(0, 0)
 
     self.curr_animation = self.animations["shatter"]
+    
     self.body:setActive(false)
 end
 

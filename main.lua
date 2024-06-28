@@ -40,8 +40,9 @@ local tick = 0
 
 
 longest_time = nil
-player_attempt = 1
+local player_attempt = 0
 
+local title_music = love.audio.newSource("asset/audio/snowy_c.ogg", "stream")
 local bg_music = love.audio.newSource("asset/audio/8_bit_iced_village.ogg", "stream")
 local snow_flake = love.graphics.newImage('asset/image/snow.png')
 local death_marker = love.graphics.newImage('asset/image/death_marker.png')
@@ -56,6 +57,8 @@ local sickle_manager = SickleManager:new()
 function love.load()
     init_snow()
     load_game()
+    title_music:play()
+    title_music:setVolume(0.3)
     bg_music:setVolume(0.3)
     font = love.graphics.newFont("asset/font/mago2.ttf", 16)
     love.graphics.setFont(font)
@@ -64,6 +67,7 @@ function love.load()
 end
 
 function reset_game()
+    player_attempt = player_attempt + 1
     seconds_in = 60
     sickle_manager:reset()
     player:reset()
@@ -119,6 +123,7 @@ function love.keypressed(key)
     if gamestate == gamestates.title then
         if key == "space" then
             gamestate = gamestates.game
+            title_music:stop()
             bg_music:stop()
             bg_music:play()
             start_game()
@@ -229,7 +234,7 @@ function draw_gameover()
     draw_hud()
     love.graphics.print(seconds_in, 110, 15, 0, 3, 3)
     if math.floor(love.timer.getTime()) % 2 == 0 then
-        love.graphics.print("[jump] to try again", 60, 70, 0, 1, 1)
+        love.graphics.print("jump to try again", 65, 70, 0, 1, 1)
     end
 end
 
