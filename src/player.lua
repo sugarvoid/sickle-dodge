@@ -64,7 +64,7 @@ function Player:new()
     _player.w, _player.h = _player.curr_animation:getDimensions()
 
     _player.hitbox = { x = _player.x, y = _player.y, w = _player.w - 10, h = _player.h - 4 }
-    _player.body = world:newRectangleCollider(_player.x, _player.y, _player.hitbox.w, _player.hitbox.h)
+    _player.body = world:newRectangleCollider(_player.x, _player.y-2, _player.hitbox.w, _player.hitbox.h-2)
     _player.body:setType("dynamic")
     _player.body:setCollisionClass("Player")
     _player.body:setObject(_player)
@@ -167,10 +167,10 @@ function Player:draw()
     self.jump_effect:draw()
     love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, self.alpha))
 
-    self.curr_animation:draw(self.spr_sheet, self.x, self.y, math.rad(self.rotation), self.facing_dir, 1, self.w / 2,
+    self.curr_animation:draw(self.spr_sheet, self.x, self.y-2, math.rad(self.rotation), self.facing_dir, 1, self.w / 2,
         self.h / 2)
     if self.is_alive and self.has_won then
-        love.graphics.draw(self.crown, self.x, self.y, math.rad(self.rotation), self.facing_dir, 1, self.w / 2, self.h /
+        love.graphics.draw(self.crown, self.x, self.y-2, math.rad(self.rotation), self.facing_dir, 1, self.w / 2, self.h /
             2)
     end
     love.graphics.setColor(255, 255, 255)

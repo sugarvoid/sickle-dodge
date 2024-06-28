@@ -5,6 +5,7 @@ wf = require 'lib.windfield'
 lume = require("lib.lume")
 anim8 = require("lib.anim8")
 
+
 love.graphics.setDefaultFilter("nearest", "nearest")
 
 require("lib.color")
@@ -21,7 +22,6 @@ world:addCollisionClass("Player")
 world:addCollisionClass("Ground")
 world:addCollisionClass('Sickle', { ignores = { "Player", "Sickle", "Ground"} })
 world:addCollisionClass('Ghost', { ignores = {"Sickle"} })
-
 
 
 local font = nil
