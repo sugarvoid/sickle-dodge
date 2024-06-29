@@ -13,15 +13,15 @@ require("src.player")
 require("src.platform")
 require("src.sickle_manager")
 require("src.sickle")
-require("lib.kgo.rename")
+require("lib.kgo.debug")
 require("lib.kgo.timer")
 
 
 world = wf.newWorld(0, 950, false)
 world:addCollisionClass("Player")
 world:addCollisionClass("Ground")
-world:addCollisionClass('Sickle', { ignores = { "Player", "Sickle", "Ground"} })
-world:addCollisionClass('Ghost', { ignores = {"Sickle"} })
+world:addCollisionClass('Sickle', { ignores = { "Player", "Sickle", "Ground" } })
+world:addCollisionClass('Ghost', { ignores = { "Sickle" } })
 
 
 local font = nil
@@ -37,9 +37,6 @@ local gamestate = nil
 local death_markers = {}
 local seconds_in = 60
 local tick = 0
-
-
-longest_time = nil
 local player_attempt = 0
 
 local title_music = love.audio.newSource("asset/audio/snowy_c.ogg", "stream")
@@ -52,7 +49,6 @@ local snow_system = love.graphics.newParticleSystem(snow_flake, 1000)
 local player = Player:new()
 local platfrom = Platform:new()
 local sickle_manager = SickleManager:new()
-
 
 function love.load()
     init_snow()
@@ -158,7 +154,7 @@ function update_game(dt)
     end
     if seconds_in == 0 then
         save_game()
-        gamestate = gamestates.win 
+        gamestate = gamestates.win
     end
     world:update(dt)
     sickle_manager:update(dt)
@@ -170,7 +166,7 @@ function update_gameover(dt)
 end
 
 function spawn_death_marker(_x, _y)
-    add(death_markers, { _x, _y })
+    table.insert(death_markers, { _x, _y })
 end
 
 function love.draw()
@@ -198,7 +194,6 @@ end
 
 function draw_game()
     love.graphics.push("all")
-    --love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), 0, 0, 0, 1, 1)
     draw_hud()
     love.graphics.pop()
     draw_snow()
@@ -261,8 +256,6 @@ function clamp(min, val, max)
     return math.max(min, math.min(val, max));
 end
 
-add = table.insert
-
 function all(list)
     local i = 0
     return function()
@@ -293,7 +286,6 @@ end
 
 function save_game()
     data = {}
-    data.longest_time = 0
     data.has_won = true
     serialized = lume.serialize(data)
     love.filesystem.write("sickle.sav", serialized)
@@ -303,7 +295,6 @@ function load_game()
     if love.filesystem.getInfo("sickle.sav") then
         file = love.filesystem.read("sickle.sav")
         data = lume.deserialize(file)
-        longest_time = data.longest_time
         player.has_won = data.has_won or false
     end
 end

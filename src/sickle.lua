@@ -17,7 +17,6 @@ function Sickle:new(_x, _y, _moving_dir, _speed)
         default = anim8.newAnimation(sickle_grid(('1-2'), 1), 0.1),
         shatter = anim8.newAnimation(sickle_grid(('3-8'), 1), 0.02, 'pauseAtEnd')
     }
-
     _sickle.curr_animation = _sickle.animations["default"]
     _sickle.x = 0
     _sickle.y = 0
@@ -46,18 +45,16 @@ end
 
 function Sickle:update(dt)
     self.curr_animation:update(dt)
-
-
     self.x = self.body:getX()
     self.y = self.body:getY()
     self.life_timer = self.life_timer - 1
-
 
     if self.body:enter("Ground") then
         self:shatter()
         break_sfx:stop()
         break_sfx:play()
     end
+
     if self.curr_animation.status == "paused" then
         self.life_timer = 0
     end
@@ -67,14 +64,8 @@ function Sickle:shatter()
     --todo: Play break animation
     self.alive = false
     self.body:setLinearVelocity(0, 0)
-
     self.curr_animation = self.animations["shatter"]
-    
     self.body:setActive(false)
-end
-
-function Sickle:on_hit()
-    print("I hit the player")
 end
 
 function Sickle:draw()
@@ -92,7 +83,4 @@ function Sickle:set_rotation()
     elseif do_tables_match(self.moving_dir, { 0, 1 }) then
         self.rotation = 90
     end
-end
-
-function Sickle:reset()
 end
