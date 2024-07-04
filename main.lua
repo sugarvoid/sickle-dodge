@@ -145,7 +145,7 @@ end
 
 function update_game(dt)
     tick = tick + 1
-    if seconds_in > 1 then
+    if seconds_in >= 1 then
         if tick == 60 then
             seconds_in = seconds_in - 1
             tick = 0
@@ -240,6 +240,7 @@ function draw_win()
     draw_hud()
     if math.floor(love.timer.getTime()) % 2 == 0 then
         love.graphics.print("you win", 60, 70, 0, 1, 1)
+        love.graphics.print("thnaks for playing", 60, 80, 0, 1, 1)
     end
 end
 
