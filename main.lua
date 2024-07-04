@@ -35,7 +35,7 @@ local gamestates = {
 }
 local gamestate = nil
 local death_markers = {}
-local seconds_in = 60
+local seconds_left = 60
 local tick = 0
 local player_attempt = 0
 
@@ -64,7 +64,7 @@ end
 
 function reset_game()
     player_attempt = player_attempt + 1
-    seconds_in = 60
+    seconds_left = 30
     sickle_manager:reset()
     player:reset()
 end
@@ -145,14 +145,14 @@ end
 
 function update_game(dt)
     tick = tick + 1
-    if seconds_in >= 1 then
+    if seconds_left >= 1 then
         if tick == 60 then
-            seconds_in = seconds_in - 1
+            seconds_left = seconds_left - 1
             tick = 0
-            sickle_manager:on_every_second(seconds_in)
+            sickle_manager:on_every_second(seconds_left)
         end
     end
-    if seconds_in == 0 then
+    if seconds_left == 0 then
         save_game()
         gamestate = gamestates.win
     end
@@ -203,7 +203,7 @@ function draw_game()
     sickle_manager:draw()
     draw_death_markers()
     love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, 100))
-    love.graphics.print(seconds_in, 110, 15, 0, 3, 3)
+    love.graphics.print(seconds_left, 110, 15, 0, 3, 3)
     love.graphics.setColor(255, 255, 255)
 end
 
@@ -227,7 +227,7 @@ function draw_gameover()
     draw_death_markers()
     platfrom:draw()
     draw_hud()
-    love.graphics.print(seconds_in, 110, 15, 0, 3, 3)
+    love.graphics.print(seconds_left, 110, 15, 0, 3, 3)
     if math.floor(love.timer.getTime()) % 2 == 0 then
         love.graphics.print("jump to try again", 65, 70, 0, 1, 1)
     end
