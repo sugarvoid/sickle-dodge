@@ -125,6 +125,12 @@ function love.keypressed(key)
             start_game()
         end
     end
+
+    for i = 1, 9 do
+        if key == (tostring(i)) then
+            sickle_manager.debug_key_functions[key]()
+        end
+    end
 end
 
 function love.update(dt)
@@ -147,7 +153,7 @@ function update_game(dt)
     tick = tick + 1
     if seconds_left >= 1 then
         if tick == 60 then
-            seconds_left = seconds_left - 1
+            --seconds_left = seconds_left - 1
             tick = 0
             sickle_manager:on_every_second(seconds_left)
         end

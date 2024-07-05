@@ -4,23 +4,27 @@ SickleManager = {}
 SickleManager.__index = SickleManager
 
 
+-- Define the functions for each key
+
+
+
 local function make_sickle(_x, _y, _dir, _speed)
     local new_sickle = Sickle:new(_x, _y, _dir, _speed)
     return new_sickle
 end
 
 local WAVES = {
-    top_full = {
+    top_left = {
         { 50, -10, { 0, 1 } },
         { 60, -10, { 0, 1 } },
         { 70, -10, { 0, 1 } },
-        { 90, -10, { 0, 1 } },
+        { 100, -10, { 0, 1 } },
     },
     left_low = {
-        { -10,  100, { 1, 0 } },
-        { -70,  100, { 1, 0 } },
-        { -120, 100, { 1, 0 } },
-        { -170, 100, { 1, 0 } },
+        { -10,  110, { 1, 0 } },
+        { -80,  110, { 1, 0 } },
+        { -150, 110, { 1, 0 } },
+        { -190, 110, { 1, 0 } },
     },
     right_low_single = {
         { 250, 114, { -1, 0 } },
@@ -29,20 +33,21 @@ local WAVES = {
         { 50, -10, { 0, 1 } },
     },
     left_full = {
-        { -20,  104,      { 1, 0 } },
-        { -62,  59 - 8,   { 1, 0 } },
-        { -131, 106 - 16, { 1, 0 } },
-        { -171, 61 - 16,  { 1, 0 } },
+        { -20,  110,      { 1, 0 } },
+        { -62,  80,   { 1, 0 } },
+        { -130, 110, { 1, 0 } },
+        { -150, 110,  { 1, 0 } },
+        { -170, 110,  { 1, 0 } },
     },
     top_right = {
         { 121, -21,  { 0, 1 } },
         { 184, -21,  { 0, 1 } },
-        { 79,  -80,  { 0, 1 } },
-        { 145, -80,  { 0, 1 } },
+        { 121, -80, { 0, 1 } },
+        { 184, -80,  { 0, 1 } },
         { 121, -136, { 0, 1 } },
         { 187, -136, { 0, 1 } },
     },
-    top_left = {
+    top_full_a = {
         { 87,  -17,  { 0, 1 } },
         { 56,  -133, { 0, 1 } },
         { 141, -132, { 0, 1 } },
@@ -52,7 +57,7 @@ local WAVES = {
         { 170, -184, { 0, 1 } },
         { 142, -58,  { 0, 1 } },
     },
-    top_all = {
+    top_full_b = {
         { 59,  -99,  { 0, 1 } },
         { 117, -47,  { 0, 1 } },
         { 119, -155, { 0, 1 } },
@@ -76,10 +81,10 @@ local WAVES = {
         { 473, 59,  { -1, 0 } },
     },
     left_high = {
-        { -266, 80, { 1, 0 } },
-        { -177, 80, { 1, 0 } },
-        { -93,  80, { 1, 0 } },
-        { -11,  80, { 1, 0 } },
+        { -200, 90, { 1, 0 } },
+        { -150, 100, { 1, 0 } },
+        { -80,  90, { 1, 0 } },
+        { -10,  100, { 1, 0 } },
     },
     final_wave = {
         {},
@@ -104,7 +109,7 @@ function SickleManager:new(win_func)
     table.insert(_sickle_manager.timers, _sickle_manager.tmr_every_2s)
     --TODO: Make left side timer for sickle
     _sickle_manager.update_actions = {
-        [20] = nil,
+        [30] = nil,
         [29] = function() _sickle_manager:spawn_sickles(WAVES.top_left, 100) end,
         [28] = nil,
         [27] = function() _sickle_manager:spawn_sickles(WAVES.top_right, 100) end,
@@ -121,7 +126,7 @@ function SickleManager:new(win_func)
         [16] = nil,
         [15] = function() _sickle_manager:spawn_sickles(WAVES.top_right, 120) end,
         [14] = nil,
-        [13] = function() _sickle_manager:spawn_sickles(WAVES.top_all, 120) end,
+        [13] = function() _sickle_manager:spawn_sickles(WAVES.top_full_a, 120) end,
         [12] = nil,
         [11] = function() _sickle_manager:spawn_sickles(WAVES.top_left, 150) end,
         [10] = nil,
@@ -129,12 +134,24 @@ function SickleManager:new(win_func)
         [8] = nil,
         [7] = function() _sickle_manager:spawn_sickles(WAVES.left_low, 120) end,
         [6] = nil,
-        [5] = function() _sickle_manager:spawn_sickles(WAVES.top_full, 200) end,
+        [5] = function() _sickle_manager:spawn_sickles(WAVES.top_full_a, 200) end,
         [4] = nil,
         [3] = function() _sickle_manager:spawn_sickles(WAVES.right_high, 130) end,
         [2] = function() _sickle_manager:spawn_sickles(WAVES.left_full, 150) end,
         [1] = on_player_win,
     }
+    _sickle_manager.debug_key_functions = {
+        ["1"] = function() _sickle_manager:spawn_sickles(WAVES.top_full_a, 90) end,
+        ["2"] = function() _sickle_manager:spawn_sickles(WAVES.top_full_b, 90) end,
+        ["3"] = function() _sickle_manager:spawn_sickles(WAVES.top_left, 90) end,
+        ["4"] = function() _sickle_manager:spawn_sickles(WAVES.top_right, 90) end,
+        ["5"] = function() _sickle_manager:spawn_sickles(WAVES.left_full, 90) end,
+        ["6"] = function() _sickle_manager:spawn_sickles(WAVES.left_high, 90) end,
+        ["7"] = function() _sickle_manager:spawn_sickles(WAVES.left_low, 90) end,
+        ["8"] = function() _sickle_manager:spawn_sickles(WAVES.right_high, 90) end,
+        ["9"] = function() _sickle_manager:spawn_sickles(WAVES.right_low, 90) end,
+    }
+    
     return _sickle_manager
 end
 
@@ -148,6 +165,7 @@ function SickleManager:reset()
 end
 
 function SickleManager:update(dt)
+
     for t in all(self.timers) do
         t:update()
     end
