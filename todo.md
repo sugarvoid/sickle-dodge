@@ -19,7 +19,7 @@
 - ~~Add timer holder for sickle manager~~
 - ~~Add jump effect to player~~
 - ~~Look into Fixtures to see if the player needs one~~
-- Add saving/loading function for if player has won before
+- ~~Add saving/loading function for if player has won before~~
 - ~~Reset player rotation before playing death animation~~ 
 - ~~Add break animation to sickles~~
 

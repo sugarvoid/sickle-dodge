@@ -23,7 +23,6 @@ Original game: [link](https://sugarvoid.itch.io/sickle-dodge)
 |W/Space|Jump|
 |M|Mute Music|
 
-~~<sub>Also has controller support</sub>~~
 <hr>
 
 
