@@ -153,7 +153,7 @@ function update_game(dt)
     tick = tick + 1
     if seconds_left >= 1 then
         if tick == 60 then
-            --seconds_left = seconds_left - 1
+            seconds_left = seconds_left - 1
             tick = 0
             sickle_manager:on_every_second(seconds_left)
         end

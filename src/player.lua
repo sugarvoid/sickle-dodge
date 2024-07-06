@@ -107,9 +107,9 @@ function Player:update(dt)
         flux.update(dt)
         self.tmr_ghost_mode:update()
         if vel_x == 0 then
-            --self.tmr_standing_still:update()
+            self.tmr_standing_still:update()
         else
-            --self.tmr_standing_still:start()
+            self.tmr_standing_still:start()
         end
         if self.body:enter("Ground") then
             self.rotation = 0
