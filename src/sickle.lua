@@ -61,7 +61,6 @@ function Sickle:update(dt)
 end
 
 function Sickle:shatter()
-    --todo: Play break animation
     self.alive = false
     self.body:setLinearVelocity(0, 0)
     self.curr_animation = self.animations["shatter"]
@@ -69,7 +68,6 @@ function Sickle:shatter()
 end
 
 function Sickle:draw()
-    --self.curr_animation:draw(self.spr_sheet, self.x, self.y, math.rad(self.rotation), self.facing_dir, 1, self.w/2, self.h/2)
     self.curr_animation:draw(ice_sickle_sheet, self.x, self.y, math.rad(self.rotation), 1, 1, self.w / 2, self.h / 2)
 end
 

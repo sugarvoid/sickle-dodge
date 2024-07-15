@@ -250,31 +250,31 @@ function draw_win()
     end
 end
 
-function playSound(sound)
-    love.audio.stop(sound)
-    love.audio.play(sound)
+function playSound(_sound)
+    love.audio.stop(_sound)
+    love.audio.play(_sound)
 end
 
 function go_to_gameover()
     gamestate = gamestates.retry
 end
 
-function clamp(min, val, max)
-    return math.max(min, math.min(val, max));
+function clamp(_min, _val, _max)
+    return math.max(_min, math.min(_val, _max));
 end
 
-function all(list)
+function all(_list)
     local i = 0
     return function()
-        i = i + 1; return list[i]
+        i = i + 1; return _list[i]
     end
 end
 
-function del(t, a)
-    for i, v in ipairs(t) do
-        if v == a then
-            t[i] = t[#t]
-            t[#t] = nil
+function del(_table, _item)
+    for i, v in ipairs(_table) do
+        if v == _item then
+            _table[i] = _table[#_table]
+            _table[#_table] = nil
             return
         end
     end
@@ -287,8 +287,8 @@ function check_collision(a, b)
         b.y < a.y + a.h
 end
 
-function do_tables_match(a, b)
-    return table.concat(a) == table.concat(b)
+function do_tables_match(_table_1, _table_2)
+    return table.concat(_table_1) == table.concat(_table_2)
 end
 
 function save_game()

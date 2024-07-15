@@ -194,8 +194,8 @@ function SickleManager:draw()
     end
 end
 
-function SickleManager:on_every_second(seconds_in)
-    local action = self.update_actions[seconds_in]
+function SickleManager:on_every_second(_seconds_in)
+    local action = self.update_actions[_seconds_in]
     if action then
         action()
     else
@@ -203,9 +203,9 @@ function SickleManager:on_every_second(seconds_in)
     end
 end
 
-function SickleManager:spawn_sickles(pattern, speed)
-    for p in all(pattern) do
-        local n_s = make_sickle(p[1], p[2], { p[3][1], p[3][2] }, speed)
+function SickleManager:spawn_sickles(_pattern, _speed)
+    for p in all(_pattern) do
+        local n_s = make_sickle(p[1], p[2], { p[3][1], p[3][2] }, _speed)
         table.insert(self.active_sickles, n_s)
     end
 end

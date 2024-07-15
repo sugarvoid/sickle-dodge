@@ -7,13 +7,7 @@ Player.__index = Player
 
 
 local flux = require("lib.flux")
-
 local player_mass = 0.22
-
-local function check_for_win()
-    return false
-end
-
 local jump_sfx = love.audio.newSource("asset/audio/jump1.wav", "static")
 local jump_sfx2 = love.audio.newSource("asset/audio/jump2.wav", "static")
 local death_sfx = love.audio.newSource("asset/audio/player_death.wav", "static")
@@ -28,12 +22,11 @@ function Player:new()
     _player.image = love.graphics.newImage("asset/image/player.png")
     _player.crown = love.graphics.newImage("asset/image/crown.png")
     local s_grid = anim8.newGrid(16, 16, _player.spr_sheet:getWidth(), _player.spr_sheet:getHeight())
-
+    
     _player.animations = {
         idle = anim8.newAnimation(s_grid(('1-6'), 1), 0.1),
         death = anim8.newAnimation(s_grid(('7-14'), 1), 0.1, 'pauseAtEnd')
     }
-
     _player.starting_pos = { x = 60, y = 111 }
     _player.curr_animation = _player.animations["idle"]
     _player.alpha = 255
@@ -50,7 +43,6 @@ function Player:new()
     _player.tmr_standing_still:start()
     _player.tmr_ghost_mode = Timer:new(15, function() _player:exit_ghost_mode() end, false)
     _player.tmr_wait_for_animation = Timer:new(60 * 0.9, function() go_to_gameover() end, false)
-
     _player.jumps_left = 2
     _player.jump_effect = JumpSfx:new()
     _player.speed = 100
@@ -60,15 +52,12 @@ function Player:new()
     _player.acceleration = 20
     _player.friction = 3500
     _player.is_moving = false
-
     _player.w, _player.h = _player.curr_animation:getDimensions()
-
     _player.hitbox = { x = _player.x, y = _player.y, w = _player.w - 10, h = _player.h - 4 }
     _player.body = world:newRectangleCollider(_player.x, _player.y - 2, _player.hitbox.w, _player.hitbox.h - 2)
     _player.body:setType("dynamic")
     _player.body:setCollisionClass("Player")
     _player.body:setObject(_player)
-
     _player.body:setFixedRotation(true)
     _player.body:setMass(player_mass)
     return _player
@@ -153,12 +142,9 @@ end
 function Player:die(pos, condition)
     self.rotation = 0
     self.body:setType("static")
-
     self.is_alive = false
     self.curr_animation = self.animations["death"]
     self.tmr_wait_for_animation:start()
-
-
     death_sfx:play()
     spawn_death_marker(pos[1], pos[2])
 end
@@ -166,7 +152,6 @@ end
 function Player:draw()
     self.jump_effect:draw()
     love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, self.alpha))
-
     self.curr_animation:draw(self.spr_sheet, self.x, self.y - 2, math.rad(self.rotation), self.facing_dir, 1, self.w / 2,
         self.h / 2)
     if self.is_alive and self.has_won then
