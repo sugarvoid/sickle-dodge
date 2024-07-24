@@ -27,7 +27,7 @@ local WAVES = {
     },
     left_low = {
         { -10,  110, DIRECTIONS.RIGHT },
-        { -80,  110, DIRECTIONS.RIGHT },
+        --{ -80,  110, DIRECTIONS.RIGHT },
         { -150, 110, DIRECTIONS.RIGHT },
         { -190, 110, DIRECTIONS.RIGHT },
     },
@@ -111,22 +111,22 @@ function SickleManager:new()
     _sickle_manager.tmr_every_2s = Timer:new(60 * 2,
         function() _sickle_manager:spawn_sickles(WAVES.right_low_single, 160) end, true)
     _sickle_manager.tmr_every_4s = Timer:new(60 * 4,
-        function() _sickle_manager:spawn_sickles(WAVES.left_high_single, 190) end, true)
+        function() _sickle_manager:spawn_sickles(WAVES.left_high_single, 160) end, true)
 
     table.insert(_sickle_manager.timers, _sickle_manager.tmr_every_2s)
     table.insert(_sickle_manager.timers, _sickle_manager.tmr_every_4s)
 
     _sickle_manager.update_actions = {
         [30] = nil,
-        [29] = function() _sickle_manager:spawn_sickles(WAVES.top_left, 100) end,
+        [29] = function() _sickle_manager:spawn_sickles(WAVES.top_left, 100) _sickle_manager.tmr_every_4s:start() print("4") end,
         [28] = nil,
-        [27] = function() _sickle_manager:spawn_sickles(WAVES.top_right, 100) end,
+        [27] = function() _sickle_manager:spawn_sickles(WAVES.top_right, 150) end,
         [26] = function() _sickle_manager.tmr_every_2s:start() end,
         [25] = function() _sickle_manager:spawn_sickles(WAVES.left_high, 150) end,
         [24] = nil,
-        [23] = function() _sickle_manager:spawn_sickles(WAVES.left_low, 130) end,
+        [23] = nil,
         [22] = nil,
-        [21] = function() _sickle_manager:spawn_sickles(WAVES.left_high, 100) end,
+        [21] = function() _sickle_manager:spawn_sickles(WAVES.left_high, 160) end,
         [20] = nil,
         [19] = nil,
         [18] = function() _sickle_manager:spawn_sickles(WAVES.left_full, 150) end,
@@ -137,7 +137,7 @@ function SickleManager:new()
         [13] = function() _sickle_manager:spawn_sickles(WAVES.top_full_a, 120) end,
         [12] = nil,
         [11] = function() _sickle_manager:spawn_sickles(WAVES.top_left, 150) end,
-        [10] = nil,
+        [10] = function() _sickle_manager:spawn_sickles(WAVES.left_low, 170) end,
         [9] = nil,
         [8] = nil,
         [7] = function() _sickle_manager:spawn_sickles(WAVES.left_low, 120) end,
@@ -165,6 +165,7 @@ end
 
 function SickleManager:reset()
     self.tmr_every_2s:stop()
+    self.tmr_every_4s:stop()
 
     for k in pairs(self.active_sickles) do
         self.active_sickles[k].body:destroy()
