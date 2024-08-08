@@ -2,7 +2,8 @@
 
 Remake of one of my Godot games. Using [LÖVE](https://love2d.org/) this time. 
 
-Original game: [link](https://sugarvoid.itch.io/sickle-dodge) 
+## Project Goal
+Compare making a game in LÖVE and Godot. 
 
 <hr>
 
@@ -33,6 +34,7 @@ Original game: [link](https://sugarvoid.itch.io/sickle-dodge)
 - Dave
 ### Font
 - Mago by [nimblebeastscollective](https://nimblebeastscollective.itch.io) [CC0](https://creativecommons.org/publicdomain/zero/1.0/)
+- Fibberish by [Nathan Scott](https://caffinate.itch.io/fibberish) is licensed under [CC BY 3.0]()
 ### Music :musical_keyboard:
 - Snowy Cottage 8bit ver 2 by [TAD](https://www.youtube.com/c/Tadon) is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
 - Iced Village by [TAD](https://www.youtube.com/c/Tadon) is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
