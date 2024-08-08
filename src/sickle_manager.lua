@@ -3,7 +3,7 @@
 SickleManager = {}
 SickleManager.__index = SickleManager
 
-
+local DEBUG_SPEED = 80
 
 local DIRECTIONS = {
     DOWN = { 0, 1 },
@@ -149,15 +149,15 @@ function SickleManager:new()
         [1] = on_player_win,
     }
     _sickle_manager.debug_key_functions = {
-        ["1"] = function() _sickle_manager:spawn_sickles(WAVES.left_high_single, 90) end,
-        ["2"] = function() _sickle_manager:spawn_sickles(WAVES.top_full_b, 90) end,
-        ["3"] = function() _sickle_manager:spawn_sickles(WAVES.top_left, 90) end,
-        ["4"] = function() _sickle_manager:spawn_sickles(WAVES.top_right, 90) end,
-        ["5"] = function() _sickle_manager:spawn_sickles(WAVES.left_full, 90) end,
-        ["6"] = function() _sickle_manager:spawn_sickles(WAVES.left_high, 90) end,
-        ["7"] = function() _sickle_manager:spawn_sickles(WAVES.left_low, 90) end,
-        ["8"] = function() _sickle_manager:spawn_sickles(WAVES.right_high, 90) end,
-        ["9"] = function() _sickle_manager:spawn_sickles(WAVES.right_low, 90) end,
+        ["1"] = function() _sickle_manager:spawn_sickles(WAVES.left_high_single, DEBUG_SPEED) end,
+        ["2"] = function() _sickle_manager:spawn_sickles(WAVES.top_full_b, DEBUG_SPEED) end,
+        ["3"] = function() _sickle_manager:spawn_sickles(WAVES.top_left, DEBUG_SPEED) end,
+        ["4"] = function() _sickle_manager:spawn_sickles(WAVES.top_right, DEBUG_SPEED) end,
+        ["5"] = function() _sickle_manager:spawn_sickles(WAVES.left_full, DEBUG_SPEED) end,
+        ["6"] = function() _sickle_manager:spawn_sickles(WAVES.left_high, DEBUG_SPEED) end,
+        ["7"] = function() _sickle_manager:spawn_sickles(WAVES.left_low, DEBUG_SPEED) end,
+        ["8"] = function() _sickle_manager:spawn_sickles(WAVES.right_high, DEBUG_SPEED) end,
+        ["9"] = function() _sickle_manager:spawn_sickles(WAVES.right_low, DEBUG_SPEED) end,
     }
 
     return _sickle_manager

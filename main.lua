@@ -1,5 +1,7 @@
 --! main.lua
 
+is_debug_on = false
+
 love = require("love")
 wf = require 'lib.windfield'
 lume = require("lib.lume")
@@ -128,9 +130,11 @@ function love.keypressed(key)
         end
     end
 
-    for i = 1, 9 do
-        if key == (tostring(i)) then
-            sickle_manager.debug_key_functions[key]()
+    if is_debug_on then
+        for i = 1, 9 do
+            if key == (tostring(i)) then
+                sickle_manager.debug_key_functions[key]()
+            end
         end
     end
 end
