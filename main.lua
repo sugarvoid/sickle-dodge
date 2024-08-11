@@ -149,6 +149,8 @@ function love.update(dt)
     else
         update_gameover(dt)
     end
+
+    love.window.setTitle("Sickle Dodge - " ..tostring(love.timer.getFPS()))
 end
 
 function update_title()
