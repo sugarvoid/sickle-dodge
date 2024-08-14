@@ -5,6 +5,9 @@ Remake of one of my Godot games. Using [LÖVE](https://love2d.org/) this time.
 ## Project Goal
 Compare making a game in LÖVE and Godot. 
 
+## Project Status
+Done as it is going to get. This was only something to compare the process of making a game in Love2D with Godot.  
+
 <hr>
 
 ## Info :dart:

@@ -1,5 +1,3 @@
---! main.lua
-
 is_debug_on = false
 
 love = require("love")
@@ -213,7 +211,6 @@ function draw_game()
     draw_snow()
     player:draw()
     platfrom:draw()
-    --world:draw()
     sickle_manager:draw()
     draw_death_markers()
     love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, 100))

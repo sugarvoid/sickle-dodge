@@ -1,5 +1,3 @@
--- sickle_manager.lua
-
 SickleManager = {}
 SickleManager.__index = SickleManager
 
@@ -118,7 +116,10 @@ function SickleManager:new()
 
     _sickle_manager.update_actions = {
         [30] = nil,
-        [29] = function() _sickle_manager:spawn_sickles(WAVES.top_left, 100) _sickle_manager.tmr_every_4s:start() print("4") end,
+        [29] = function()
+            _sickle_manager:spawn_sickles(WAVES.top_left, 100)
+            _sickle_manager.tmr_every_4s:start()
+        end,
         [28] = nil,
         [27] = function() _sickle_manager:spawn_sickles(WAVES.top_right, 150) end,
         [26] = function() _sickle_manager.tmr_every_2s:start() end,

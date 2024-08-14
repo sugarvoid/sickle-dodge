@@ -1,5 +1,3 @@
---platform.lua
-
 Platform = {}
 Platform.__index = Platform
 

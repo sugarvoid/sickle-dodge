@@ -1,5 +1,3 @@
---Sickle.lua
-
 Sickle = {}
 Sickle.__index = Sickle
 

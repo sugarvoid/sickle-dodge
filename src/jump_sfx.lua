@@ -1,5 +1,3 @@
---jump_sfx.lua
-
 JumpSfx = {}
 JumpSfx.__index = JumpSfx
 

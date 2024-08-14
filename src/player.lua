@@ -1,5 +1,3 @@
---player.lua
-
 require("src.jump_sfx")
 
 Player = {}
