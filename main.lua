@@ -251,11 +251,11 @@ function draw_win()
     draw_hud()
     if math.floor(love.timer.getTime()) % 2 == 0 then
         love.graphics.print("you win", 60, 70, 0, 1, 1)
-        love.graphics.print("thnaks for playing", 60, 80, 0, 1, 1)
+        love.graphics.print("thanks for playing", 60, 80, 0, 1, 1)
     end
 end
 
-function playSound(_sound)
+function play_sound(_sound)
     love.audio.stop(_sound)
     love.audio.play(_sound)
 end
