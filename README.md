@@ -3,8 +3,8 @@
 Remake of one of my Godot games. Using [LÖVE](https://love2d.org/) this time. 
 
 
+![](https://youtu.be/Ej2-5m_rUI0)
 
-![](https://github.com/sugarvoid/sickle-dodge-love/blob/master/gameplay.mp4)
 
 ## Project Goal
 Compare making a game in LÖVE and Godot. 
