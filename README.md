@@ -2,6 +2,10 @@
 
 Remake of one of my Godot games. Using [LÖVE](https://love2d.org/) this time. 
 
+
+[![YouTube](http://i.ytimg.com/vi/Ej2-5m_rUI0/hqdefault.jpg)](https://www.youtube.com/watch?v=Ej2-5m_rUI0)
+
+
 ## Project Goal
 Compare making a game in LÖVE and Godot. 
 
