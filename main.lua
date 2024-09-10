@@ -112,7 +112,7 @@ function love.keypressed(key)
     end
 
     if gamestate == gamestates.retry then
-        if key == "space" then
+        if key == "space" or key == "W" then
             reset_game()
             gamestate = gamestates.game
         end
