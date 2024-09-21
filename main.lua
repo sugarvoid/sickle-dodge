@@ -1,9 +1,14 @@
-is_debug_on = false
+is_debug_on = true
+
+if is_debug_on then
+    love.profiler = require('lib.profile')
+end
 
 love = require("love")
-wf = require 'lib.windfield'
+--wf = require 'lib.windfield'
 lume = require("lib.lume")
 anim8 = require("lib.anim8")
+logger = require("lib.log")
 
 GAME_W = 240
 GAME_H = 136
@@ -54,6 +59,14 @@ local platfrom = Platform:new()
 local sickle_manager = SickleManager:new()
 
 function love.load()
+    if is_debug_on then
+        logger.level = logger.Level.DEBUG
+        logger.debug("Entering debug mode")
+        love.profiler.start()
+    else
+        logger.level = logger.Level.INFO
+        logger.info("logger in INFO mode")
+    end
     init_snow()
     load_game()
     window = { translateX = 0, translateY = 0, scale = 4, width = GAME_W, height = GAME_H }
@@ -156,7 +169,7 @@ function love.update(dt)
         update_gameover(dt)
     end
 
-    love.window.setTitle("Sickle Dodge - " ..tostring(love.timer.getFPS()))
+    love.window.setTitle("Sickle Dodge - " .. tostring(love.timer.getFPS()))
 end
 
 function update_title()
@@ -199,7 +212,6 @@ function love.draw()
     end
     if gamestate == gamestates.game then
         draw_game()
-        
     end
     if gamestate == gamestates.retry then
         draw_gameover()
@@ -327,33 +339,24 @@ function beginContact(a, b, coll)
     obj_a = a:getUserData()
     obj_b = b:getUserData()
 
-    print(obj_a.obj_type .. " hit " .. obj_b.obj_type)
+    logger.debug(obj_a.obj_type .. " hit " .. obj_b.obj_type)
 
     if obj_a.obj_type == "Player" and obj_b.obj_type == "Ground" then
         player:on_ground_contact()
     end
     if obj_a.obj_type == "Player" and obj_b.obj_type == "Sickle" then
-        print("HERE!!!!!!!!!!!!")
         player:on_sickle_contact(obj_b.owner)
     end
     if obj_a.obj_type == "Ground" and obj_b.obj_type == "Sickle" then
-        print("sickle hit ground")
         obj_b.owner:on_ground_contact()
     end
 end
 
-function endContact(a, b, coll)
-    if obj_a == "Player" and obj_b == "Ground" then
-        
-    end
-end
+function endContact(a, b, coll) end
 
-function preSolve(a, b, coll)
-end
+function preSolve(a, b, coll) end
 
-function postSolve(a, b, coll, normalimpulse, tangentimpulse)
-end
-
+function postSolve(a, b, coll, normalimpulse, tangentimpulse) end
 
 function resize(w, h)                          -- update new translation and scale:
     local w1, h1 = window.width, window.height -- target rendering resolution
@@ -363,4 +366,17 @@ end
 
 function love.resize(w, h)
     resize(w, h) -- update new translation and scale
+end
+
+function love.quit()
+    print("The application is closing.")
+    -- Perform your cleanup tasks here.
+    -- For example, save game progress, release resources, write to log files, etc.
+    if is_debug_on then
+        love.profiler.stop()
+        print(love.profiler.report(30))
+    end
+
+    -- Returning false or no value will allow the application to quit normally.
+    -- If you return true from this callback, it will prevent the quit from happening.
 end

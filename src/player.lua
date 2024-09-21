@@ -145,7 +145,6 @@ function Player:on_sickle_contact(sickle)
         print("player phased through sickle")
         return
     else
-        print("sickle hit player")
         --local collision_data = self.body:getEnterCollisionData("Sickle")
         --local sickle = collision_data.collider:getObject()
         sickle:shatter()
@@ -204,7 +203,6 @@ end
 
 function Player:reset()
     self.body:setType("dynamic")
-
     self.is_ghost = false
     self.body:setAwake(true)
     self.body:setMass(player_mass)
