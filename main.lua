@@ -5,6 +5,9 @@ wf = require 'lib.windfield'
 lume = require("lib.lume")
 anim8 = require("lib.anim8")
 
+GAME_W = 240
+GAME_H = 136
+
 
 love.graphics.setDefaultFilter("nearest", "nearest")
 
@@ -53,6 +56,10 @@ local sickle_manager = SickleManager:new()
 function love.load()
     init_snow()
     load_game()
+    window = { translateX = 0, translateY = 0, scale = 4, width = GAME_W, height = GAME_H }
+    width, height = love.graphics.getDimensions()
+    love.window.setMode(width, height, { resizable = true, borderless = false })
+    resize(width, height) -- update new translation and scale
     bg_music:setLooping(true)
     title_music:setLooping(true)
     title_music:play()
@@ -182,7 +189,8 @@ function spawn_death_marker(_x, _y)
 end
 
 function love.draw()
-    love.graphics.scale(4)
+    love.graphics.translate(window.translateX, window.translateY)
+    love.graphics.scale(window.scale)
     love.graphics.draw(background, 0, 0)
 
     if gamestate == gamestates.title then
@@ -309,4 +317,39 @@ function load_game()
         data = lume.deserialize(file)
         player.has_won = data.has_won or false
     end
+end
+
+function beginContact(a, b, coll)
+    x, y = coll:getNormal()
+    obj_a = a:getUserData()
+    obj_b = b:getUserData()
+    if obj_a == "Player" and obj_b == "Platform" then
+        
+    end
+    if obj_a == "Player" and obj_b == "Sickle" then
+        
+    end
+end
+
+function endContact(a, b, coll)
+    if obj_a == "Player" and obj_b == "Surface" then
+        
+    end
+end
+
+function preSolve(a, b, coll)
+end
+
+function postSolve(a, b, coll, normalimpulse, tangentimpulse)
+end
+
+
+function resize(w, h)                          -- update new translation and scale:
+    local w1, h1 = window.width, window.height -- target rendering resolution
+    local scale = math.min(w / w1, h / h1)
+    window.translateX, window.translateY, window.scale = (w - w1 * scale) / 2, (h - h1 * scale) / 2, scale
+end
+
+function love.resize(w, h)
+    resize(w, h) -- update new translation and scale
 end
