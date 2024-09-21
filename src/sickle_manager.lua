@@ -99,6 +99,23 @@ local WAVES = {
         {},
         {},
         {},
+    },
+    top_double_line = {
+        { 50,  -10, DIRECTIONS.DOWN },
+        { 70,  -10, DIRECTIONS.DOWN },
+        { 150, -10, DIRECTIONS.DOWN },
+        { 170, -10, DIRECTIONS.DOWN },
+    },
+    alternating_left_right = {
+        { 250, 70,  DIRECTIONS.LEFT },
+        { -10, 90,  DIRECTIONS.RIGHT },
+        { 250, 110, DIRECTIONS.LEFT },
+    },
+    diagonal_left_right = {
+        { -10, 10,  DIRECTIONS.RIGHT },
+        { 50,  -10, DIRECTIONS.DOWN },
+        { 100, 30,  DIRECTIONS.RIGHT },
+        { 150, -10, DIRECTIONS.DOWN },
     }
 }
 
@@ -117,11 +134,11 @@ function SickleManager:new()
     _sickle_manager.update_actions = {
         [30] = nil,
         [29] = function()
-            _sickle_manager:spawn_sickles(WAVES.top_left, 100)
+            _sickle_manager:spawn_sickles(WAVES.alternating_left_right, 100)
             _sickle_manager.tmr_every_4s:start()
         end,
         [28] = nil,
-        [27] = function() _sickle_manager:spawn_sickles(WAVES.top_right, 150) end,
+        [27] = function() _sickle_manager:spawn_sickles(WAVES.diagonal_left_right, 150) end,
         [26] = function() _sickle_manager.tmr_every_2s:start() end,
         [25] = function() _sickle_manager:spawn_sickles(WAVES.left_high, 150) end,
         [24] = nil,

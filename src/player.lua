@@ -20,7 +20,7 @@ function Player:new()
     _player.image = love.graphics.newImage("asset/image/player.png")
     _player.crown = love.graphics.newImage("asset/image/crown.png")
     local s_grid = anim8.newGrid(16, 16, _player.spr_sheet:getWidth(), _player.spr_sheet:getHeight())
-    
+
     _player.animations = {
         idle = anim8.newAnimation(s_grid(('1-6'), 1), 0.1),
         death = anim8.newAnimation(s_grid(('7-14'), 1), 0.1, 'pauseAtEnd')
@@ -53,10 +53,10 @@ function Player:new()
     _player.w, _player.h = _player.curr_animation:getDimensions()
     --_player.hitbox = { x = _player.x, y = _player.y, w = _player.w - 10, h = _player.h - 4 }
     _player.body = love.physics.newBody(world, _player.x, _player.y, "dynamic")
-    _player.shape = love.physics.newRectangleShape(_player.w - 10 , _player.h - 6)
+    _player.shape = love.physics.newRectangleShape(_player.w - 10, _player.h - 6)
     _player.fixture = love.physics.newFixture(_player.body, _player.shape)
     _player.body:setAwake(true)
-    _player.fixture:setUserData({obj_type="Player", owner=_player})
+    _player.fixture:setUserData({ obj_type = "Player", owner = _player })
     _player.fixture:setCategory(2)
     _player.fixture:setMask(2)
     _player.body:setSleepingAllowed(true)
@@ -67,7 +67,6 @@ function Player:new()
 end
 
 function Player:update(dt)
-
     self.curr_animation:update(dt)
     self.jump_effect:update(dt)
     self.tmr_wait_for_animation:update()
@@ -75,20 +74,20 @@ function Player:update(dt)
 
     if self.is_alive then
         local vel_x, vel_y = self.body:getLinearVelocity()
-    --logger.debug(tostring(vel_x.. "," .. vel_y))
-    if love.keyboard.isDown('d') then
-        self.facing_dir = 1
-        vel_x = clamp(self.max_speed, vel_x + self.acceleration, 0)
-    end
-    if love.keyboard.isDown('a') then
-        self.facing_dir = -1
-        vel_x = clamp(-self.max_speed, vel_x + -self.acceleration, 0)
-    end
+        --logger.debug(tostring(vel_x.. "," .. vel_y))
+        if love.keyboard.isDown('d') then
+            self.facing_dir = 1
+            vel_x = clamp(self.max_speed, vel_x + self.acceleration, 0)
+        end
+        if love.keyboard.isDown('a') then
+            self.facing_dir = -1
+            vel_x = clamp(-self.max_speed, vel_x + -self.acceleration, 0)
+        end
 
-    self.body:setLinearVelocity(vel_x, vel_y)
-        
+        self.body:setLinearVelocity(vel_x, vel_y)
+
         flux.update(dt)
-        
+
         if vel_x == 0 then
             self.tmr_standing_still:update()
         else
@@ -128,7 +127,6 @@ function Player:jump()
     end
 end
 
-
 function Player:on_sickle_contact(sickle)
     if self.is_ghost then
         logger.debug("player phased through sickle")
@@ -167,10 +165,10 @@ end
 function Player:draw()
     self.jump_effect:draw()
     love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, self.alpha))
-    self.curr_animation:draw(self.spr_sheet, self.x, self.y-2, math.rad(self.rotation), self.facing_dir, 1, self.w / 2,
+    self.curr_animation:draw(self.spr_sheet, self.x, self.y - 2, math.rad(self.rotation), self.facing_dir, 1, self.w / 2,
         self.h / 2)
     if self.is_alive and self.has_won then
-        love.graphics.draw(self.crown, self.x, self.y-2, math.rad(self.rotation), self.facing_dir, 1, self.w / 2,
+        love.graphics.draw(self.crown, self.x, self.y - 2, math.rad(self.rotation), self.facing_dir, 1, self.w / 2,
             self.h /
             2)
     end
