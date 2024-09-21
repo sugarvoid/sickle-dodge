@@ -1,3 +1,21 @@
+
+require("src.const")
+
+function get_asset(type, file)
+    local _middle = ""
+    if type == "image" then
+        _middle = IMG_DIR
+        local _img = love.graphics.newImage(ASSET_DIR..IMG_DIR..file)
+        --print(img:typeOf("Image"))
+        return _img
+    elseif type == "sound" then
+        _middle = SFX_DIR
+    elseif type == "font" then
+        _middle = FONT_DIR
+    end
+end
+
+
 is_debug_on = true
 
 if is_debug_on then
@@ -5,18 +23,21 @@ if is_debug_on then
 end
 
 love = require("love")
---wf = require 'lib.windfield'
 lume = require("lib.lume")
 anim8 = require("lib.anim8")
 logger = require("lib.log")
 
-
-print(love.window)
-GAME_W = 240
-GAME_H = 136
-
+world = love.physics.newWorld(0, 950, true)
 
 love.graphics.setDefaultFilter("nearest", "nearest")
+-- Load Assets
+-- TODO: Add get_asset function to all
+local title_music = love.audio.newSource("asset/audio/snowy_c.ogg", "stream")
+local bg_music = love.audio.newSource("asset/audio/8_bit_iced_village.ogg", "stream")
+local snow_flake = get_asset("image", SNOWFLAKE_FILE)
+local death_marker = love.graphics.newImage('asset/image/death_marker.png')
+local background = get_asset("image", BACKGROUND_FILE)
+local title_img = love.graphics.newImage("asset/image/title.png")
 
 require("lib.color")
 require("src.player")
@@ -25,13 +46,6 @@ require("src.sickle_manager")
 require("src.sickle")
 require("lib.kgo.debug")
 require("lib.kgo.timer")
-
-world = love.physics.newWorld(0, 950, true)
---world = wf.newWorld(0, 950, false)
---world:addCollisionClass("Player")
---world:addCollisionClass("Ground")
---world:addCollisionClass('Sickle', { ignores = { "Player", "Sickle", "Ground" } })
---world:addCollisionClass('Ghost', { ignores = { "Sickle" } })
 
 
 local font = nil
@@ -49,12 +63,9 @@ local seconds_left = 60
 local tick = 0
 local player_attempt = 0
 
-local title_music = love.audio.newSource("asset/audio/snowy_c.ogg", "stream")
-local bg_music = love.audio.newSource("asset/audio/8_bit_iced_village.ogg", "stream")
-local snow_flake = love.graphics.newImage('asset/image/snow.png')
-local death_marker = love.graphics.newImage('asset/image/death_marker.png')
-local background = love.graphics.newImage("asset/image/background.png")
-local title_img = love.graphics.newImage("asset/image/title.png")
+
+
+
 local snow_system = love.graphics.newParticleSystem(snow_flake, 1000)
 local player = Player:new()
 local platfrom = Platform:new()
@@ -74,7 +85,7 @@ function love.load()
     window = { translateX = 0, translateY = 0, scale = 4, width = GAME_W, height = GAME_H }
     width, height = love.graphics.getDimensions()
     love.window.setMode(width, height, { resizable = true, borderless = false })
-    resize(width, height) -- update new translation and scale
+    resize(width, height)
     bg_music:setLooping(true)
     title_music:setLooping(true)
     title_music:play()
@@ -97,7 +108,7 @@ end
 function init_snow()
     snow_system:setParticleLifetime(5, 15)
     snow_system:setEmissionRate(100)
-    snow_system:setEmissionArea("normal", 240 / 4, 0) --240
+    snow_system:setEmissionArea("normal", 240/4, 0)
     snow_system:setSpeed(1, 3)
     snow_system:setPosition(240 / 2, -6)
     snow_system:setSizes(0.7, 0.6, 0.5)
@@ -170,8 +181,9 @@ function love.update(dt)
     else
         update_gameover(dt)
     end
-
-    love.window.setTitle("Sickle Dodge - " .. tostring(love.timer.getFPS()))
+    if is_debug_on then
+        love.window.setTitle("Sickle Dodge - " .. tostring(love.timer.getFPS()))
+    end
 end
 
 function update_title()

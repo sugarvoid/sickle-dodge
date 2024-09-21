@@ -74,7 +74,7 @@ function Player:update(dt)
 
     if self.is_alive then
         local vel_x, vel_y = self.body:getLinearVelocity()
-        --logger.debug(tostring(vel_x.. "," .. vel_y))
+
         if love.keyboard.isDown('d') then
             self.facing_dir = 1
             vel_x = clamp(self.max_speed, vel_x + self.acceleration, 0)
@@ -93,10 +93,6 @@ function Player:update(dt)
         else
             self.tmr_standing_still:start()
         end
-        -- if self.body:enter("Ground") then
-        --     self.rotation = 0
-        --     self.jumps_left = 2
-        -- end
 
         self.x = self.body:getX()
         self.y = self.body:getY()
@@ -194,10 +190,6 @@ end
 
 function Player:reset()
     self:exit_ghost_mode()
-    --self.body:setType("dynamic")
-    --self.fixture:setMask(2)
-    --self.is_ghost = false
-    --self.body:setAwake(true)
     self.body:setMass(player_mass)
     self.body:setLinearVelocity(0, 0)
     self.body:setPosition(self.starting_pos.x, self.starting_pos.y)
