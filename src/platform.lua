@@ -10,12 +10,15 @@ function Platform:new()
     _platform.w = _platform.image:getWidth()
     _platform.h = _platform.image:getHeight()
 
+    _platform.hitbox = { x = _platform.x, y = _platform.y, w = _platform.w, h = _platform.h }
 
-
-    _platform.body = love.physics.newBody(world, 0, 0, "static")
+    _platform.body = love.physics.newBody(world, _platform.x, _platform.y, "static")
     _platform.shape = love.physics.newRectangleShape(_platform.w, _platform.h)
+
+    
+
     _platform.fixture = love.physics.newFixture(_platform.body, _platform.shape)
-    _platform.body:setPosition(_platform.x, _platform.y)
+    --_platform.body:setPosition(_platform.x, _platform.y)
     _platform.body:setAwake(true)
     _platform.fixture:setUserData({obj_type="Ground", owner=_platform})
 
@@ -23,7 +26,7 @@ function Platform:new()
     _platform.fixture:setMask(3)
 
 
-    _platform.hitbox = { x = _platform.x, y = _platform.y, w = _platform.w, h = _platform.h }
+    
 
 
     return _platform
@@ -31,4 +34,5 @@ end
 
 function Platform:draw()
     love.graphics.draw(self.image, self.x, self.y)
+    draw_hitbox(self.hitbox, "#EE4B2B")
 end

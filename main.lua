@@ -231,6 +231,13 @@ function draw_game()
     love.graphics.push("all")
     draw_hud()
     love.graphics.pop()
+
+
+
+    draw_world()
+
+
+
     draw_snow()
     player:draw()
     platfrom:draw()
@@ -239,6 +246,24 @@ function draw_game()
     love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, 100))
     love.graphics.print(seconds_left, 110, 15, 0, 3, 3)
     love.graphics.setColor(255, 255, 255)
+end
+
+
+function draw_world()
+    for _, body in pairs(world:getBodies()) do
+        for _, fixture in pairs(body:getFixtures()) do
+            local shape = fixture:getShape()
+    
+            if shape:typeOf("CircleShape") then
+                local cx, cy = body:getWorldPoints(shape:getPoint())
+                love.graphics.circle("fill", cx, cy, shape:getRadius())
+            elseif shape:typeOf("PolygonShape") then
+                love.graphics.polygon("fill", body:getWorldPoints(shape:getPoints()))
+            else
+                love.graphics.line(body:getWorldPoints(shape:getPoints()))
+            end
+        end
+    end
 end
 
 function draw_death_markers()
@@ -326,6 +351,7 @@ function save_game()
     love.filesystem.write("sickle.sav", serialized)
 end
 
+
 function load_game()
     if love.filesystem.getInfo("sickle.sav") then
         file = love.filesystem.read("sickle.sav")
@@ -369,7 +395,7 @@ function love.resize(w, h)
 end
 
 function love.quit()
-    print("The application is closing.")
+    logger.info("The application is closing.")
     -- Perform your cleanup tasks here.
     -- For example, save game progress, release resources, write to log files, etc.
     if is_debug_on then

@@ -8,6 +8,7 @@ local break_sfx = love.audio.newSource("asset/audio/ice_break.wav", "static")
 
 break_sfx:setVolume(0.1)
 
+
 function Sickle:new(_x, _y, _moving_dir, _speed)
     local _sickle = setmetatable({}, Sickle)
 

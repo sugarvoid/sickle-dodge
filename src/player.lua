@@ -142,7 +142,7 @@ end
 
 function Player:on_sickle_contact(sickle)
     if self.is_ghost then
-        print("player phased through sickle")
+        logger.debug("player phased through sickle")
         return
     else
         --local collision_data = self.body:getEnterCollisionData("Sickle")
