@@ -5,10 +5,12 @@ Platform.__index = Platform
 function Platform:new()
     local _platform = setmetatable({}, Platform)
     _platform.image = love.graphics.newImage("asset/image/platform.png")
-    _platform.x = 40
-    _platform.y = 120
+    _platform.x = 122
+    _platform.y = 124
     _platform.w = _platform.image:getWidth()
     _platform.h = _platform.image:getHeight()
+    _platform.ox = _platform.w/2
+    _platform.oy = _platform.h/2
 
     _platform.hitbox = { x = _platform.x, y = _platform.y, w = _platform.w, h = _platform.h }
 
@@ -33,6 +35,5 @@ function Platform:new()
 end
 
 function Platform:draw()
-    love.graphics.draw(self.image, self.x, self.y)
-    draw_hitbox(self.hitbox, "#EE4B2B")
+    love.graphics.draw(self.image, self.x, self.y, 0, 1, 1, self.ox, self.oy)
 end

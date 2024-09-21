@@ -56,8 +56,8 @@ function Player:new()
 
 
 
-    _player.body = love.physics.newBody(world, 0, 0, "dynamic")
-    _player.shape = love.physics.newRectangleShape(_player.hitbox.w, _player.hitbox.h)
+    _player.body = love.physics.newBody(world, _player.x, _player.y, "dynamic")
+    _player.shape = love.physics.newRectangleShape(_player.hitbox.w, _player.hitbox.h-2)
     _player.fixture = love.physics.newFixture(_player.body, _player.shape)
     _player.body:setAwake(true)
     _player.fixture:setUserData({obj_type="Player", owner=_player})
@@ -82,6 +82,7 @@ end
 
 function Player:update(dt)
     local vel_x, vel_y = self.body:getLinearVelocity()
+    --logger.debug(tostring(vel_x.. "," .. vel_y))
     if love.keyboard.isDown('d') then
         self.facing_dir = 1
         vel_x = clamp(self.max_speed, vel_x + self.acceleration, 0)
@@ -176,10 +177,10 @@ end
 function Player:draw()
     self.jump_effect:draw()
     love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, self.alpha))
-    self.curr_animation:draw(self.spr_sheet, self.x, self.y - 2, math.rad(self.rotation), self.facing_dir, 1, self.w / 2,
+    self.curr_animation:draw(self.spr_sheet, self.x, self.y-2, math.rad(self.rotation), self.facing_dir, 1, self.w / 2,
         self.h / 2)
     if self.is_alive and self.has_won then
-        love.graphics.draw(self.crown, self.x, self.y - 2, math.rad(self.rotation), self.facing_dir, 1, self.w / 2,
+        love.graphics.draw(self.crown, self.x, self.y-2, math.rad(self.rotation), self.facing_dir, 1, self.w / 2,
             self.h /
             2)
     end

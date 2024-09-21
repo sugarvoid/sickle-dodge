@@ -10,6 +10,8 @@ lume = require("lib.lume")
 anim8 = require("lib.anim8")
 logger = require("lib.log")
 
+
+print(love.window)
 GAME_W = 240
 GAME_H = 136
 
@@ -219,7 +221,7 @@ function love.draw()
     if gamestate == gamestates.win then
         draw_win()
     end
-    love.graphics.print(tostring(player.body:getY()), 0, 0, 0, 1, 1)
+    
 end
 
 function draw_title()
