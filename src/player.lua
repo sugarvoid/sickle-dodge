@@ -52,18 +52,36 @@ function Player:new()
     _player.is_moving = false
     _player.w, _player.h = _player.curr_animation:getDimensions()
     _player.hitbox = { x = _player.x, y = _player.y, w = _player.w - 10, h = _player.h - 4 }
-    _player.body = world:newRectangleCollider(_player.x, _player.y - 2, _player.hitbox.w, _player.hitbox.h - 2)
-    _player.body:setType("dynamic")
-    _player.body:setCollisionClass("Player")
-    _player.body:setObject(_player)
+
+
+
+
+    _player.body = love.physics.newBody(world, 0, 0, "dynamic")
+    _player.shape = love.physics.newRectangleShape(_player.hitbox.w, _player.hitbox.h)
+    _player.fixture = love.physics.newFixture(_player.body, _player.shape)
+    _player.body:setAwake(true)
+    _player.fixture:setUserData({obj_type="Player", owner=_player})
+
+    _player.fixture:setCategory(2)
+    _player.fixture:setMask(2)
+
+   -- _player.body = world:newRectangleCollider(_player.x, _player.y - 2, _player.hitbox.w, _player.hitbox.h - 2)
+    --_player.body:setType("dynamic")
+    --_player.body:setCollisionClass("Player")
+    --_player.body:setObject(_player)
     _player.body:setFixedRotation(true)
     _player.body:setMass(player_mass)
+
+
+
+
+
+
     return _player
 end
 
 function Player:update(dt)
     local vel_x, vel_y = self.body:getLinearVelocity()
-
     if love.keyboard.isDown('d') then
         self.facing_dir = 1
         vel_x = clamp(self.max_speed, vel_x + self.acceleration, 0)
@@ -73,35 +91,24 @@ function Player:update(dt)
         vel_x = clamp(-self.max_speed, vel_x + -self.acceleration, 0)
     end
 
-    self.body:setLinearVelocity(vel_x, vel_y)
     self.curr_animation:update(dt)
     self.jump_effect:update(dt)
     self.tmr_wait_for_animation:update()
+    self.tmr_ghost_mode:update()
 
     if self.is_alive then
-        if self.body:enter("Sickle") then
-            if self.is_ghost then
-                print("player phased through sickle")
-                return
-            else
-                local collision_data = self.body:getEnterCollisionData("Sickle")
-                local sickle = collision_data.collider:getObject()
-                sickle:shatter()
-                local death_x, death_y = self.body:getPosition()
-                self:die({ death_x, death_y })
-            end
-        end
+        self.body:setLinearVelocity(vel_x, vel_y)
         flux.update(dt)
-        self.tmr_ghost_mode:update()
+        
         if vel_x == 0 then
             self.tmr_standing_still:update()
         else
             self.tmr_standing_still:start()
         end
-        if self.body:enter("Ground") then
-            self.rotation = 0
-            self.jumps_left = 2
-        end
+        -- if self.body:enter("Ground") then
+        --     self.rotation = 0
+        --     self.jumps_left = 2
+        -- end
 
         self.x = self.body:getX()
         self.y = self.body:getY()
@@ -132,15 +139,35 @@ function Player:jump()
     end
 end
 
+
+function Player:on_sickle_contact(sickle)
+    if self.is_ghost then
+        print("player phased through sickle")
+        return
+    else
+        print("sickle hit player")
+        --local collision_data = self.body:getEnterCollisionData("Sickle")
+        --local sickle = collision_data.collider:getObject()
+        sickle:shatter()
+        local death_x, death_y = self.body:getPosition()
+        self:die({ death_x, death_y })
+    end
+end
+
+function Player:on_ground_contact()
+    self.rotation = 0
+    self.jumps_left = 2
+end
+
 function Player:inactive_die()
     local death_x, death_y = self.body:getPosition()
     self:die({ death_x, death_y })
 end
 
 function Player:die(pos, condition)
-    self.rotation = 0
-    self.body:setType("static")
     self.is_alive = false
+    self.rotation = 0
+    --self.body:setType("static")
     self.curr_animation = self.animations["death"]
     self.tmr_wait_for_animation:start()
     death_sfx:play()
@@ -177,9 +204,11 @@ end
 
 function Player:reset()
     self.body:setType("dynamic")
+
     self.is_ghost = false
     self.body:setAwake(true)
     self.body:setMass(player_mass)
+    self.body:setLinearVelocity(0, 0)
     self.body:setPosition(self.starting_pos.x, self.starting_pos.y)
     self.animations["death"]:resume()
     self.animations["death"]:gotoFrame(1)

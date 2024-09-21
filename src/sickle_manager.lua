@@ -182,7 +182,10 @@ function SickleManager:update(dt)
     for s in all(self.active_sickles) do
         s:update(dt)
         if s.life_timer <= 0 then
-            s.body:destroy()
+            if s.alive then
+                s.body:destroy()
+            end
+            
             del(self.active_sickles, s)
         else
 

@@ -28,14 +28,25 @@ function Sickle:new(_x, _y, _moving_dir, _speed)
     _sickle.friction = 3500
     _sickle.w, _sickle.h = _sickle.curr_animation:getDimensions()
     _sickle.hitbox = { x = _sickle.x, y = _sickle.y, w = _sickle.w - 12, h = _sickle.h - 3 }
-    _sickle.body = world:newRectangleCollider(_sickle.x, _sickle.y, _sickle.w - 12, _sickle.h - 3)
-    _sickle.body:setType("dynamic")
-    _sickle.body:setCollisionClass("Sickle")
+
+    
+    _sickle.body = love.physics.newBody(world,_sickle.x,_sickle.y,"dynamic")
+    _sickle.shape = love.physics.newRectangleShape(_sickle.hitbox.w, _sickle.hitbox.h)
+    _sickle.fixture = love.physics.newFixture(_sickle.body, _sickle.shape)
+    --_sickle.fixture["owner"] = _sickle
+    _sickle.fixture:setUserData({obj_type="Sickle", owner=_sickle})
+
+    _sickle.fixture:setCategory(1)
+    _sickle.fixture:setMask(1)
+
+    --_sickle.body:setType("dynamic")
+    --_sickle.body:setCollisionClass("Sickle")
     _sickle.body:setGravityScale(0)
-    _sickle.body:setObject(_sickle)
+    --_sickle.body:setObject(_sickle)
     _sickle.body:setFixedRotation(true)
     _sickle.body:setPosition(_x, _y)
     _sickle:set_rotation()
+    
     _sickle.body:setLinearVelocity(_sickle.speed * _sickle.moving_dir[1], _sickle.speed * _sickle.moving_dir[2])
 
     return _sickle
@@ -43,26 +54,32 @@ end
 
 function Sickle:update(dt)
     self.curr_animation:update(dt)
-    self.x = self.body:getX()
-    self.y = self.body:getY()
+    if self.alive then
+        self.x = self.body:getX()
+        self.y = self.body:getY()
+    end
+    
     self.life_timer = self.life_timer - 1
 
-    if self.body:enter("Ground") then
-        self:shatter()
-        break_sfx:stop()
-        break_sfx:play()
-    end
+    
 
     if self.curr_animation.status == "paused" then
         self.life_timer = 0
     end
 end
 
+function Sickle:on_ground_contact()
+    self:shatter()
+end
+
 function Sickle:shatter()
     self.alive = false
-    self.body:setLinearVelocity(0, 0)
+    self.body:destroy()
+    --self.body:setLinearVelocity(0, 0)
     self.curr_animation = self.animations["shatter"]
-    self.body:setActive(false)
+    --self.body:setActive(false)
+    break_sfx:stop()
+    break_sfx:play()
 end
 
 function Sickle:draw()

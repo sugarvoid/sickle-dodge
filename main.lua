@@ -19,12 +19,12 @@ require("src.sickle")
 require("lib.kgo.debug")
 require("lib.kgo.timer")
 
-
-world = wf.newWorld(0, 950, false)
-world:addCollisionClass("Player")
-world:addCollisionClass("Ground")
-world:addCollisionClass('Sickle', { ignores = { "Player", "Sickle", "Ground" } })
-world:addCollisionClass('Ghost', { ignores = { "Sickle" } })
+world = love.physics.newWorld(0, 950, true)
+--world = wf.newWorld(0, 950, false)
+--world:addCollisionClass("Player")
+--world:addCollisionClass("Ground")
+--world:addCollisionClass('Sickle', { ignores = { "Player", "Sickle", "Ground" } })
+--world:addCollisionClass('Ghost', { ignores = { "Sickle" } })
 
 
 local font = nil
@@ -65,6 +65,7 @@ function love.load()
     title_music:play()
     title_music:setVolume(0.3)
     bg_music:setVolume(0.3)
+    world:setCallbacks(beginContact, endContact, preSolve, postSolve)
     font = love.graphics.newFont("asset/font/mago2.ttf", 16)
     love.graphics.setFont(font)
     gamestate = gamestates.title
@@ -198,6 +199,7 @@ function love.draw()
     end
     if gamestate == gamestates.game then
         draw_game()
+        
     end
     if gamestate == gamestates.retry then
         draw_gameover()
@@ -205,6 +207,7 @@ function love.draw()
     if gamestate == gamestates.win then
         draw_win()
     end
+    love.graphics.print(tostring(player.body:getY()), 0, 0, 0, 1, 1)
 end
 
 function draw_title()
@@ -323,16 +326,24 @@ function beginContact(a, b, coll)
     x, y = coll:getNormal()
     obj_a = a:getUserData()
     obj_b = b:getUserData()
-    if obj_a == "Player" and obj_b == "Platform" then
-        
+
+    print(obj_a.obj_type .. " hit " .. obj_b.obj_type)
+
+    if obj_a.obj_type == "Player" and obj_b.obj_type == "Ground" then
+        player:on_ground_contact()
     end
-    if obj_a == "Player" and obj_b == "Sickle" then
-        
+    if obj_a.obj_type == "Player" and obj_b.obj_type == "Sickle" then
+        print("HERE!!!!!!!!!!!!")
+        player:on_sickle_contact(obj_b.owner)
+    end
+    if obj_a.obj_type == "Ground" and obj_b.obj_type == "Sickle" then
+        print("sickle hit ground")
+        obj_b.owner:on_ground_contact()
     end
 end
 
 function endContact(a, b, coll)
-    if obj_a == "Player" and obj_b == "Surface" then
+    if obj_a == "Player" and obj_b == "Ground" then
         
     end
 end
