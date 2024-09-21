@@ -69,6 +69,7 @@ function Player:new()
     --_player.body:setType("dynamic")
     --_player.body:setCollisionClass("Player")
     --_player.body:setObject(_player)
+    _player.body:setSleepingAllowed(true)
     _player.body:setFixedRotation(true)
     _player.body:setMass(player_mass)
 
@@ -167,6 +168,7 @@ end
 function Player:die(pos, condition)
     self.is_alive = false
     self.rotation = 0
+    self.body:setLinearVelocity(0, 0)
     --self.body:setType("static")
     self.curr_animation = self.animations["death"]
     self.tmr_wait_for_animation:start()
@@ -193,12 +195,14 @@ end
 
 function Player:enter_ghost_mode()
     self.is_ghost = true
+    self.fixture:setMask(1)
     self.tmr_ghost_mode:start()
     self.alpha = 150
 end
 
 function Player:exit_ghost_mode()
     self.is_ghost = false
+    self.fixture:setMask(2)
     self.alpha = 255
 end
 

@@ -373,6 +373,7 @@ function beginContact(a, b, coll)
         player:on_ground_contact()
     end
     if obj_a.obj_type == "Player" and obj_b.obj_type == "Sickle" then
+        --FIXME: Player "ghosting" not working
         player:on_sickle_contact(obj_b.owner)
     end
     if obj_a.obj_type == "Ground" and obj_b.obj_type == "Sickle" then
