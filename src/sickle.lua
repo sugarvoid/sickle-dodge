@@ -84,6 +84,7 @@ function Sickle:shatter()
 end
 
 function Sickle:draw()
+    --TODO: Only draw if on screen
     self.curr_animation:draw(ice_sickle_sheet, self.x, self.y, math.rad(self.rotation), 1, 1, self.w / 2, self.h / 2)
 end
 

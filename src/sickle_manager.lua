@@ -169,7 +169,9 @@ function SickleManager:reset()
     self.tmr_every_4s:stop()
 
     for k in pairs(self.active_sickles) do
-        self.active_sickles[k].body:destroy()
+        if not self.active_sickles[k].body:isDestroyed() then
+            self.active_sickles[k].body:destroy()
+        end
         self.active_sickles[k] = nil
     end
 end
@@ -185,7 +187,6 @@ function SickleManager:update(dt)
             if s.alive then
                 s.body:destroy()
             end
-            
             del(self.active_sickles, s)
         else
 

@@ -97,9 +97,9 @@ end
 function init_snow()
     snow_system:setParticleLifetime(5, 15)
     snow_system:setEmissionRate(100)
-    snow_system:setEmissionArea("normal", 240, 0)
+    snow_system:setEmissionArea("normal", 240/4, 0) --240
     snow_system:setSpeed(1, 3)
-    snow_system:setPosition(0, -6)
+    snow_system:setPosition(240/2, -6)
     snow_system:setSizes(0.7, 0.6, 0.5)
     snow_system:setSizeVariation(1)
     snow_system:setSpinVariation(1)
@@ -342,6 +342,8 @@ function check_collision(a, b)
         b.y < a.y + a.h
 end
 
+
+
 function do_tables_match(_table_1, _table_2)
     return table.concat(_table_1) == table.concat(_table_2)
 end
@@ -363,13 +365,15 @@ function load_game()
 end
 
 function beginContact(a, b, coll)
-    x, y = coll:getNormal()
+
+    --x, y = coll:getNormal()
     obj_a = a:getUserData()
     obj_b = b:getUserData()
 
     logger.debug(obj_a.obj_type .. " hit " .. obj_b.obj_type)
 
-    if obj_a.obj_type == "Player" and obj_b.obj_type == "Ground" then
+    -- Checking contact vector to prevent player from clinging to side of platform
+    if obj_a.obj_type == "Player" and obj_b.obj_type == "Ground" and coll:getNormal() ~= {1,0} then 
         player:on_ground_contact()
     end
     if obj_a.obj_type == "Player" and obj_b.obj_type == "Sickle" then

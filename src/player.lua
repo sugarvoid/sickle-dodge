@@ -49,40 +49,32 @@ function Player:new()
     _player.max_speed = 100
     _player.acceleration = 20
     _player.friction = 3500
-    _player.is_moving = false
+    --_player.is_moving = false
     _player.w, _player.h = _player.curr_animation:getDimensions()
-    _player.hitbox = { x = _player.x, y = _player.y, w = _player.w - 10, h = _player.h - 4 }
-
-
-
-
+    --_player.hitbox = { x = _player.x, y = _player.y, w = _player.w - 10, h = _player.h - 4 }
     _player.body = love.physics.newBody(world, _player.x, _player.y, "dynamic")
-    _player.shape = love.physics.newRectangleShape(_player.hitbox.w, _player.hitbox.h-2)
+    _player.shape = love.physics.newRectangleShape(_player.w - 10 , _player.h - 6)
     _player.fixture = love.physics.newFixture(_player.body, _player.shape)
     _player.body:setAwake(true)
     _player.fixture:setUserData({obj_type="Player", owner=_player})
-
     _player.fixture:setCategory(2)
     _player.fixture:setMask(2)
-
-   -- _player.body = world:newRectangleCollider(_player.x, _player.y - 2, _player.hitbox.w, _player.hitbox.h - 2)
-    --_player.body:setType("dynamic")
-    --_player.body:setCollisionClass("Player")
-    --_player.body:setObject(_player)
     _player.body:setSleepingAllowed(true)
     _player.body:setFixedRotation(true)
     _player.body:setMass(player_mass)
-
-
-
-
-
 
     return _player
 end
 
 function Player:update(dt)
-    local vel_x, vel_y = self.body:getLinearVelocity()
+
+    self.curr_animation:update(dt)
+    self.jump_effect:update(dt)
+    self.tmr_wait_for_animation:update()
+    self.tmr_ghost_mode:update()
+
+    if self.is_alive then
+        local vel_x, vel_y = self.body:getLinearVelocity()
     --logger.debug(tostring(vel_x.. "," .. vel_y))
     if love.keyboard.isDown('d') then
         self.facing_dir = 1
@@ -93,13 +85,8 @@ function Player:update(dt)
         vel_x = clamp(-self.max_speed, vel_x + -self.acceleration, 0)
     end
 
-    self.curr_animation:update(dt)
-    self.jump_effect:update(dt)
-    self.tmr_wait_for_animation:update()
-    self.tmr_ghost_mode:update()
-
-    if self.is_alive then
-        self.body:setLinearVelocity(vel_x, vel_y)
+    self.body:setLinearVelocity(vel_x, vel_y)
+        
         flux.update(dt)
         
         if vel_x == 0 then
@@ -169,6 +156,7 @@ function Player:die(pos, condition)
     self.is_alive = false
     self.rotation = 0
     self.body:setLinearVelocity(0, 0)
+    self.fixture:setMask(1)
     --self.body:setType("static")
     self.curr_animation = self.animations["death"]
     self.tmr_wait_for_animation:start()
@@ -207,9 +195,11 @@ function Player:exit_ghost_mode()
 end
 
 function Player:reset()
-    self.body:setType("dynamic")
-    self.is_ghost = false
-    self.body:setAwake(true)
+    self:exit_ghost_mode()
+    --self.body:setType("dynamic")
+    --self.fixture:setMask(2)
+    --self.is_ghost = false
+    --self.body:setAwake(true)
     self.body:setMass(player_mass)
     self.body:setLinearVelocity(0, 0)
     self.body:setPosition(self.starting_pos.x, self.starting_pos.y)
