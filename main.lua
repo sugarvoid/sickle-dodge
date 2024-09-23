@@ -41,6 +41,7 @@ local title_img = love.graphics.newImage("asset/image/title.png")
 
 require("lib.color")
 require("src.player")
+require("src.block")
 require("src.platform")
 require("src.sickle_manager")
 require("src.sickle")
@@ -66,10 +67,12 @@ local player_attempt = 0
 
 
 
+
 local snow_system = love.graphics.newParticleSystem(snow_flake, 1000)
 local player = Player:new()
 local platfrom = Platform:new()
 local sickle_manager = SickleManager:new()
+local start_block = Block:new()
 
 function love.load()
     if is_debug_on then
@@ -223,6 +226,7 @@ function love.draw()
 
     if gamestate == gamestates.title then
         draw_title()
+        start_block:draw()
     end
     if gamestate == gamestates.game then
         draw_game()
