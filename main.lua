@@ -50,6 +50,7 @@ require("lib.kgo.timer")
 
 
 local font = nil
+
 local gamestates = {
     title = 0,
     credit = 0.1,
@@ -65,7 +66,7 @@ local tick = 0
 local player_attempt = 0
 
 
-
+local gamestate2 = "pre_game"
 
 
 local snow_system = love.graphics.newParticleSystem(snow_flake, 1000)
@@ -122,6 +123,10 @@ function init_snow()
 end
 
 function start_game()
+    gamestate = gamestates.game
+    title_music:stop()
+    bg_music:stop()
+    bg_music:play()
     reset_game()
 end
 
@@ -157,11 +162,9 @@ function love.keypressed(key)
 
     if gamestate == gamestates.title then
         if key == "space" then
-            gamestate = gamestates.game
-            title_music:stop()
-            bg_music:stop()
-            bg_music:play()
-            start_game()
+            player:jump()
+            -- TODO: Make the button start the game 
+            -- start_game()
         end
     end
 
@@ -178,7 +181,7 @@ function love.update(dt)
     snow_system:update(dt)
 
     if gamestate == gamestates.title then
-        update_title()
+        update_title(dt)
     elseif gamestate == gamestates.game then
         update_game(dt)
     else
@@ -189,8 +192,9 @@ function love.update(dt)
     end
 end
 
-function update_title()
-    return
+function update_title(dt)
+    player:update(dt)
+    world:update(dt)
 end
 
 function update_game(dt)
@@ -227,6 +231,8 @@ function love.draw()
     if gamestate == gamestates.title then
         draw_title()
         start_block:draw()
+        platfrom:draw()
+        player:draw()
     end
     if gamestate == gamestates.game then
         draw_game()
@@ -240,26 +246,62 @@ function love.draw()
 end
 
 function draw_title()
-    love.graphics.print("[space] to play", 70, 80, 0, 1, 1)
+    --love.graphics.print("[space] to play", 70, 80, 0, 1, 1)
     love.graphics.draw(title_img, 50, 45, 0, 0.19, 0.19)
 end
 
+
+
+-- if gamestate == "pre_game" then
+--     elseif gamestate == "game" then
+--     elseif gamestate == "retry" then
+--     else -- won
+--     end
+
 function draw_game()
+
     love.graphics.push("all")
     draw_hud()
     love.graphics.pop()
 
-
-
     draw_world()
-
-
-
     draw_snow()
-    player:draw()
     platfrom:draw()
-    sickle_manager:draw()
-    draw_death_markers()
+    player:draw()
+
+    if gamestate2 == "pre_game" then
+        draw_title()
+        start_block:draw()
+        print("pre_game")
+    elseif gamestate2 == "game" then
+        sickle_manager:draw()
+        --draw_death_markers()
+    elseif gamestate2 == "retry" then
+        --draw_death_markers()
+        draw_gameover()
+    else -- won
+        draw_win()
+    end
+
+    if gamestate2 ~= "pre_game" then
+        draw_death_markers()
+        draw_time_left()
+    end
+
+    
+
+
+
+    
+    
+    --player:draw()
+    --platfrom:draw()
+    --sickle_manager:draw()
+    --draw_death_markers()
+    
+end
+
+function draw_time_left()
     love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, 100))
     love.graphics.print(seconds_left, 110, 15, 0, 3, 3)
     love.graphics.setColor(255, 255, 255)
@@ -298,10 +340,11 @@ function draw_hud()
 end
 
 function draw_gameover()
-    draw_snow()
-    draw_death_markers()
-    platfrom:draw()
-    draw_hud()
+    --draw_snow()
+    --draw_death_markers()
+    --platfrom:draw()
+    --draw_hud()
+    -- FIXME: Can I remove this??? 
     love.graphics.print(seconds_left, 110, 15, 0, 3, 3)
     if math.floor(love.timer.getTime()) % 2 == 0 then
         love.graphics.print("jump to try again", 65, 70, 0, 1, 1)
@@ -309,10 +352,10 @@ function draw_gameover()
 end
 
 function draw_win()
-    draw_snow()
-    draw_death_markers()
-    platfrom:draw()
-    draw_hud()
+    --draw_snow()
+    --draw_death_markers()
+    --platfrom:draw()
+    --draw_hud()
     if math.floor(love.timer.getTime()) % 2 == 0 then
         love.graphics.print("you win", 60, 70, 0, 1, 1)
         love.graphics.print("thanks for playing", 60, 80, 0, 1, 1)
