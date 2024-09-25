@@ -47,11 +47,11 @@ function Player:new()
     _player.vel_y = 50
     _player.vel_x = 0
     _player.max_speed = 100
-    _player.acceleration = 20
-    _player.friction = 3500
+    _player.acceleration = 8
+    _player.friction = 8000
     --_player.is_moving = false
     _player.w, _player.h = _player.curr_animation:getDimensions()
-    --_player.hitbox = { x = _player.x, y = _player.y, w = _player.w - 10, h = _player.h - 4 }
+    _player.hitbox = { x = _player.x, y = _player.y, w = _player.w - 10, h = _player.h - 6 }
     _player.body = love.physics.newBody(world, _player.x, _player.y, "dynamic")
     _player.shape = love.physics.newRectangleShape(_player.w - 10, _player.h - 6)
     _player.fixture = love.physics.newFixture(_player.body, _player.shape)
@@ -77,18 +77,18 @@ function Player:update(dt)
 
         if love.keyboard.isDown('d') then
             self.facing_dir = 1
-            vel_x = clamp(self.max_speed, vel_x + self.acceleration, 0)
+            vel_x = clamp(0, vel_x + self.acceleration, self.max_speed)
         end
         if love.keyboard.isDown('a') then
             self.facing_dir = -1
-            vel_x = clamp(-self.max_speed, vel_x + -self.acceleration, 0)
+            vel_x = clamp(-self.max_speed, vel_x - self.acceleration, 0)
         end
 
         self.body:setLinearVelocity(vel_x, vel_y)
 
         flux.update(dt)
 
-        if vel_x == 0 then
+        if vel_x == 0 and vel_y == 0 then
             self.tmr_standing_still:update()
         else
             self.tmr_standing_still:start()
@@ -96,6 +96,9 @@ function Player:update(dt)
 
         self.x = self.body:getX()
         self.y = self.body:getY()
+
+        self.hitbox.x = self.x
+        self.hitbox.y = self.y
 
         if self.body:getY() >= 132 or self.body:getX() <= 2 or self.body:getX() >= 239 then
             local death_x, death_y = self.body:getPosition()

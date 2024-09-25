@@ -39,6 +39,9 @@ local death_marker = love.graphics.newImage('asset/image/death_marker.png')
 local background = get_asset("image", BACKGROUND_FILE)
 local title_img = love.graphics.newImage("asset/image/title.png")
 
+
+
+
 require("lib.color")
 require("src.player")
 require("src.block")
@@ -47,6 +50,7 @@ require("src.sickle_manager")
 require("src.sickle")
 require("lib.kgo.debug")
 require("lib.kgo.timer")
+require("src.start_area")
 
 
 local font = nil
@@ -73,7 +77,8 @@ local snow_system = love.graphics.newParticleSystem(snow_flake, 1000)
 local player = Player:new()
 local platfrom = Platform:new()
 local sickle_manager = SickleManager:new()
-local start_block = Block:new()
+--local start_block = Block:new()
+local start_area = StartArea:new(start_game)
 
 function love.load()
     if is_debug_on then
@@ -179,7 +184,7 @@ end
 
 function love.update(dt)
     snow_system:update(dt)
-
+    --logger.debug(tostring(check_collision(player.hitbox, start_area)))
     if gamestate == gamestates.title then
         update_title(dt)
     elseif gamestate == gamestates.game then
@@ -193,6 +198,7 @@ function love.update(dt)
 end
 
 function update_title(dt)
+    start_area:update(dt)
     player:update(dt)
     world:update(dt)
 end
@@ -213,6 +219,7 @@ function update_game(dt)
     world:update(dt)
     sickle_manager:update(dt)
     player:update(dt)
+    
 end
 
 function update_gameover(dt)
@@ -230,7 +237,8 @@ function love.draw()
 
     if gamestate == gamestates.title then
         draw_title()
-        start_block:draw()
+        --start_block:draw()
+        start_area:draw()
         platfrom:draw()
         player:draw()
     end
@@ -271,7 +279,8 @@ function draw_game()
 
     if gamestate2 == "pre_game" then
         draw_title()
-        start_block:draw()
+        --start_block:draw()
+        start_area:draw()
         print("pre_game")
     elseif gamestate2 == "game" then
         sickle_manager:draw()
