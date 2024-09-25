@@ -247,7 +247,7 @@ end
 
 function draw_title()
     --love.graphics.print("[space] to play", 70, 80, 0, 1, 1)
-    love.graphics.draw(title_img, 50, 45, 0, 0.19, 0.19)
+    love.graphics.draw(title_img, 50, 30, 0, 0.19, 0.19)
 end
 
 
@@ -415,6 +415,9 @@ function load_game()
         file = love.filesystem.read("sickle.sav")
         data = lume.deserialize(file)
         player.has_won = data.has_won or false
+        if is_debug_on then
+            player.has_won = false
+        end
     end
 end
 

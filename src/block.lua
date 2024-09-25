@@ -6,7 +6,7 @@ function Block:new(callback)
     local _block = setmetatable({}, Block)
     _block.image = love.graphics.newImage("asset/image/start_block.png")
     _block.x = 60
-    _block.y = 70
+    _block.y = 85
     _block.w = _block.image:getWidth()
     _block.h = _block.image:getHeight()
     _block.ox = _block.w / 2
@@ -25,7 +25,7 @@ function Block:new(callback)
     _block.fixture:setUserData({ obj_type = "StartBlock", owner = _block })
 
     _block.fixture:setCategory(5)
-    _block.fixture:setMask(5)
+    _block.fixture:setMask(1)
 
 
 
