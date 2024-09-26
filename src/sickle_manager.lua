@@ -100,6 +100,16 @@ local WAVES = {
         {},
         {},
     },
+    xxx_a = {
+        { 75,  -226, DIRECTIONS.DOWN },
+        { 121, -155, DIRECTIONS.DOWN },
+        { 160, -95,  DIRECTIONS.DOWN },
+        { 191, -17,  DIRECTIONS.DOWN },
+        { 270, 99,   DIRECTIONS.LEFT },
+        { 363, 99,   DIRECTIONS.LEFT },
+        { 452, 99,   DIRECTIONS.LEFT },
+        { 535, 99,   DIRECTIONS.LEFT },
+    },
     top_double_line = {
         { 50,  -10, DIRECTIONS.DOWN },
         { 70,  -10, DIRECTIONS.DOWN },
