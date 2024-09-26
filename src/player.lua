@@ -38,7 +38,7 @@ function Player:new()
     _player.is_moving_left = false
     _player.is_moving_right = false
     _player.tmr_standing_still = Timer:new(60 * 3, function() _player:inactive_die() end, true)
-    _player.tmr_standing_still:start()
+
     _player.tmr_ghost_mode = Timer:new(15, function() _player:exit_ghost_mode() end, false)
     _player.tmr_wait_for_animation = Timer:new(60 * 0.9, function() go_to_gameover() end, false)
     _player.jumps_left = 2
@@ -88,10 +88,12 @@ function Player:update(dt)
 
         flux.update(dt)
 
-        if vel_x == 0 and vel_y == 0 then
-            self.tmr_standing_still:update()
-        else
-            self.tmr_standing_still:start()
+        if gamestate2 ~= "pre_game" then
+            if vel_x == 0 and vel_y == 0 then
+                self.tmr_standing_still:update()
+            else
+                self.tmr_standing_still:start()
+            end
         end
 
         self.x = self.body:getX()
@@ -147,6 +149,10 @@ end
 function Player:inactive_die()
     local death_x, death_y = self.body:getPosition()
     self:die({ death_x, death_y })
+end
+
+function Player:start_movement_timer()
+    self.tmr_standing_still:start()
 end
 
 function Player:die(pos, condition)

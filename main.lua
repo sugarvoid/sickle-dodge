@@ -63,14 +63,14 @@ local gamestates = {
     retry = 1.1,
     win = 2
 }
-local gamestate = nil
+gamestate = nil
 local death_markers = {}
 local seconds_left = 60
 local tick = 0
 local player_attempt = 0
 
 
-local gamestate2 = "pre_game"
+gamestate2 = "pre_game"
 
 
 local snow_system = love.graphics.newParticleSystem(snow_flake, 1000)
