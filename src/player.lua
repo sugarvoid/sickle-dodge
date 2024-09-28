@@ -36,8 +36,6 @@ function Player:new()
     _player.x = _player.starting_pos.x
     _player.y = _player.starting_pos.y
     _player.has_won = false
-    --_player.is_moving_left = false
-    --_player.is_moving_right = false
     _player.tmr_standing_still = Timer:new(60 * 3, function() _player:inactive_die() end, true)
     _player.tmr_ghost_mode = Timer:new(15, function() _player:exit_ghost_mode() end, false)
     _player.tmr_wait_for_animation = Timer:new(60 * 0.9, function() go_to_gameover() end, false)
@@ -48,7 +46,6 @@ function Player:new()
     _player.vel_x = 0
     _player.max_speed = 100
     _player.acceleration = 8
-    _player.friction = 8000
     _player.w, _player.h = _player.curr_animation:getDimensions()
     _player.hitbox = { x = _player.x, y = _player.y, w = _player.w - 10, h = _player.h - 6 }
     _player.body = love.physics.newBody(world, _player.x, _player.y, "dynamic")

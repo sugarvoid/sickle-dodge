@@ -40,7 +40,6 @@ require("src.start_area")
 
 local font = nil
 
-
 gamestate = nil
 local death_markers = {}
 local seconds_left = 60
@@ -52,14 +51,10 @@ local is_paused = false
 local p_index = 1
 
 
---gamestate = "title"
-
-
 local snow_system = love.graphics.newParticleSystem(snow_flake, 1000)
 local player = Player:new()
 local platfrom = Platform:new()
 local sickle_manager = SickleManager:new()
---local start_block = Block:new()
 local start_area = StartArea:new(start_game)
 
 function love.load()
@@ -266,12 +261,12 @@ end
 function love.update(dt)
     if not is_paused then
         snow_system:update(dt)
-        if check_collision(player.hitbox, start_area) then
-            start_area:increase()
-        else
-            start_area:decrease()
-        end
         if gamestate == gamestates.title then
+            if check_collision(player.hitbox, start_area) then
+                start_area:increase()
+            else
+                start_area:decrease()
+            end
             update_title(dt)
         elseif gamestate == gamestates.game then
             update_game(dt)
@@ -279,9 +274,6 @@ function love.update(dt)
             update_gameover(dt)
         end
     end
-    --if is_debug_on then
-    --love.window.setTitle("Sickle Dodge - " .. tostring(love.timer.getFPS()))
-    --end
 end
 
 function update_title(dt)
@@ -364,7 +356,6 @@ function love.draw()
 end
 
 function draw_title()
-    --love.graphics.print("[space] to play", 70, 80, 0, 1, 1)
     love.graphics.draw(title_img, 60, 20, 0, 0.19, 0.19)
 end
 
@@ -380,16 +371,11 @@ function toggle_pause()
     is_paused = not is_paused
 end
 
--- if gamestate == "pre_game" then
---     elseif gamestate == "game" then
---     elseif gamestate == "retry" then
---     else -- won
---     end
-
 function draw_game()
     love.graphics.push("all")
     draw_hud()
     love.graphics.pop()
+
     if is_debug_on then
         draw_world()
     end
@@ -438,11 +424,6 @@ function draw_hud()
 end
 
 function draw_gameover()
-    --draw_snow()
-    --draw_death_markers()
-    --platfrom:draw()
-    --draw_hud()
-    -- FIXME: Can I remove this???
     love.graphics.print(seconds_left, 110, 15, 0, 3, 3)
     if math.floor(love.timer.getTime()) % 2 == 0 then
         love.graphics.print("jump to try again", 65, 70, 0, 1, 1)
@@ -450,10 +431,6 @@ function draw_gameover()
 end
 
 function draw_win()
-    --draw_snow()
-    --draw_death_markers()
-    --platfrom:draw()
-    --draw_hud()
     if math.floor(love.timer.getTime()) % 2 == 0 then
         love.graphics.print("you win", 60, 70, 0, 1, 1)
         love.graphics.print("thanks for playing", 60, 80, 0, 1, 1)
@@ -531,7 +508,6 @@ function beginContact(a, b, coll)
         player:on_ground_contact()
     end
     if obj_a.obj_type == "Player" and obj_b.obj_type == "Sickle" then
-        --FIXME: Player "ghosting" not working
         player:on_sickle_contact(obj_b.owner)
     end
     if obj_a.obj_type == "Ground" and obj_b.obj_type == "Sickle" then
@@ -545,25 +521,21 @@ function preSolve(a, b, coll) end
 
 function postSolve(a, b, coll, normalimpulse, tangentimpulse) end
 
-function resize(w, h)                          -- update new translation and scale:
-    local w1, h1 = window.width, window.height -- target rendering resolution
+function resize(w, h)                          
+    local w1, h1 = window.width, window.height
     local scale = math.min(w / w1, h / h1)
     window.translateX, window.translateY, window.scale = (w - w1 * scale) / 2, (h - h1 * scale) / 2, scale
 end
 
 function love.resize(w, h)
-    resize(w, h) -- update new translation and scale
+    resize(w, h)
 end
 
 function love.quit()
     logger.info("The application is closing.")
     -- Perform your cleanup tasks here.
-    -- For example, save game progress, release resources, write to log files, etc.
     if is_debug_on then
         love.profiler.stop()
         print(love.profiler.report(30))
     end
-
-    -- Returning false or no value will allow the application to quit normally.
-    -- If you return true from this callback, it will prevent the quit from happening.
 end

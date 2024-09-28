@@ -25,7 +25,7 @@ gamestates = {
 }
 
 function get_gs_str(num)
-	for name, val in pairs(gamestates) do
+	for state_name, val in pairs(gamestates) do
         if val == num then
             return state_name
         end

@@ -24,11 +24,7 @@ function Sickle:new(_x, _y, _moving_dir, _speed)
     _sickle.rotation = 0
     _sickle.life_timer = 300
     _sickle.speed = _speed
-    _sickle.max_speed = 200
-    _sickle.acceleration = 4000
-    _sickle.friction = 3500
     _sickle.w, _sickle.h = _sickle.curr_animation:getDimensions()
-    --_sickle.hitbox = { x = _sickle.x, y = _sickle.y, w = _sickle.w - 12, h = _sickle.h - 3 }
     _sickle.body = love.physics.newBody(world, _sickle.x, _sickle.y, "dynamic")
     _sickle.shape = love.physics.newRectangleShape(_sickle.w - 12, _sickle.h - 3)
     _sickle.fixture = love.physics.newFixture(_sickle.body, _sickle.shape)
@@ -40,7 +36,6 @@ function Sickle:new(_x, _y, _moving_dir, _speed)
     _sickle.body:setPosition(_x, _y)
     _sickle:set_rotation()
     _sickle.body:setLinearVelocity(_sickle.speed * _sickle.moving_dir[1], _sickle.speed * _sickle.moving_dir[2])
-
     return _sickle
 end
 

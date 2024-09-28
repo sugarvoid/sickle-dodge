@@ -25,7 +25,6 @@ local WAVES = {
     },
     left_low = {
         { -10,  110, DIRECTIONS.RIGHT },
-        --{ -80,  110, DIRECTIONS.RIGHT },
         { -150, 110, DIRECTIONS.RIGHT },
         { -190, 110, DIRECTIONS.RIGHT },
     },
