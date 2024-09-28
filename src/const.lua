@@ -24,13 +24,12 @@ gamestates = {
     pause=3,
 }
 
-function get_gs_str(value)
+function get_gs_str(num)
 	for name, val in pairs(gamestates) do
-        if val == value then
-            return name
+        if val == num then
+            return state_name
         end
     end
-	return nil -- If the value is not found
 end
 
 function get_asset(type, file)
@@ -38,7 +37,6 @@ function get_asset(type, file)
     if type == "image" then
         _middle = IMG_DIR
         local _img = love.graphics.newImage(ASSET_DIR..IMG_DIR..file)
-        --print(img:typeOf("Image"))
         return _img
     elseif type == "sound" then
         _middle = SFX_DIR

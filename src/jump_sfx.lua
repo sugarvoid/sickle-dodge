@@ -10,6 +10,7 @@ function JumpSfx:new()
     _jump_sfx.curr_animation = anim8.newAnimation(jump_grid(('1-6'), 1), 0.07, 'pauseAtEnd')
     _jump_sfx.x = 0
     _jump_sfx.y = 0
+    _jump_sfx.curr_animation:pause()
     return _jump_sfx
 end
 
@@ -17,9 +18,9 @@ function JumpSfx:update(dt)
     self.curr_animation:update(dt)
 end
 
-function JumpSfx:do_animation(_x, _y)
-    self.x = _x
-    self.y = _y + 4
+function JumpSfx:do_animation(x, y)
+    self.x = x
+    self.y = y + 4
     self.curr_animation:resume()
     self.curr_animation:gotoFrame(1)
 end

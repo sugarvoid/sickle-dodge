@@ -14,7 +14,7 @@ https://trello.com/b/IBYFLiS9/sickle-dodge
 <hr>
 
 ## Info :dart:
-- Dodge the ice sickles for 60 seconds.
+- Dodge the ice sickles for 30 seconds.
 - The sickles are not random, they will always spawn in the same pattern/order.
 - The player will freeze if standing still for too long.
 - There is a double jump.

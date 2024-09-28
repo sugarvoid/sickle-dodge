@@ -36,8 +36,8 @@ function Player:new()
     _player.x = _player.starting_pos.x
     _player.y = _player.starting_pos.y
     _player.has_won = false
-    _player.is_moving_left = false
-    _player.is_moving_right = false
+    --_player.is_moving_left = false
+    --_player.is_moving_right = false
     _player.tmr_standing_still = Timer:new(60 * 3, function() _player:inactive_die() end, true)
     _player.tmr_ghost_mode = Timer:new(15, function() _player:exit_ghost_mode() end, false)
     _player.tmr_wait_for_animation = Timer:new(60 * 0.9, function() go_to_gameover() end, false)
@@ -49,7 +49,6 @@ function Player:new()
     _player.max_speed = 100
     _player.acceleration = 8
     _player.friction = 8000
-    --_player.is_moving = false
     _player.w, _player.h = _player.curr_animation:getDimensions()
     _player.hitbox = { x = _player.x, y = _player.y, w = _player.w - 10, h = _player.h - 6 }
     _player.body = love.physics.newBody(world, _player.x, _player.y, "dynamic")
@@ -76,28 +75,26 @@ function Player:update(dt)
     if self.is_alive then
         local vel_x, vel_y = self.body:getLinearVelocity()
 
-        
-            if love.keyboard.isDown('d') then
-                self.facing_dir = 1
-                vel_x = clamp(0, vel_x + self.acceleration, self.max_speed)
-            end
-            if love.keyboard.isDown('a') then
-                self.facing_dir = -1
-                vel_x = clamp(-self.max_speed, vel_x - self.acceleration, 0)
-            end
+
+        if love.keyboard.isDown('d') then
+            self.facing_dir = 1
+            vel_x = clamp(0, vel_x + self.acceleration, self.max_speed)
+        end
+        if love.keyboard.isDown('a') then
+            self.facing_dir = -1
+            vel_x = clamp(-self.max_speed, vel_x - self.acceleration, 0)
+        end
 
         if contected_controller then
             if contected_controller:getGamepadAxis("leftx") >= 0.5 then
                 self.facing_dir = 1
                 vel_x = clamp(0, vel_x + self.acceleration, self.max_speed)
             end
-            if contected_controller:getGamepadAxis("leftx") <= -0.5  then
+            if contected_controller:getGamepadAxis("leftx") <= -0.5 then
                 self.facing_dir = -1
                 vel_x = clamp(-self.max_speed, vel_x - self.acceleration, 0)
             end
         end
-
-        
 
         self.body:setLinearVelocity(vel_x, vel_y)
 
@@ -148,8 +145,6 @@ function Player:on_sickle_contact(sickle)
         logger.debug("player phased through sickle")
         return
     else
-        --local collision_data = self.body:getEnterCollisionData("Sickle")
-        --local sickle = collision_data.collider:getObject()
         sickle:shatter()
         local death_x, death_y = self.body:getPosition()
         self:die({ death_x, death_y })
@@ -179,7 +174,6 @@ function Player:die(pos, condition)
     self.tmr_wait_for_animation:start()
     death_sfx:play()
     spawn_death_marker(pos[1], pos[2])
-    --self.body:setAwake(false)
 end
 
 function Player:draw()

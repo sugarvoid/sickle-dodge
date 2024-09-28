@@ -7,6 +7,7 @@
 ### Added
 - Add controller support
 - Add pause screen 
+- Make window resizable
 
 ### Removed
 - Remove windfield library 

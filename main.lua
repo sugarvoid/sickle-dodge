@@ -1,7 +1,4 @@
-
 require("src.const")
-
-
 
 
 is_debug_on = true
@@ -33,7 +30,6 @@ local pause_img = love.graphics.newImage("asset/image/pause.png")
 
 require("lib.color")
 require("src.player")
-require("src.block")
 require("src.platform")
 require("src.sickle_manager")
 require("src.sickle")
@@ -103,7 +99,6 @@ function love.load()
             title_music:pause()
         end
     end
-
 end
 
 function reset_game()
@@ -116,7 +111,7 @@ end
 function init_snow()
     snow_system:setParticleLifetime(5, 10)
     snow_system:setEmissionRate(100)
-    snow_system:setEmissionArea("normal", 240/4, 0)
+    snow_system:setEmissionArea("normal", 240 / 4, 0)
     snow_system:setSpeed(1, 3)
     snow_system:setPosition(240 / 2, -6)
     snow_system:setSizes(0.7, 0.6, 0.5)
@@ -143,45 +138,44 @@ function love.joystickpressed(joystick, button)
     -- 1 = X
     -- 7 = pause
     --if is_paused then
-        if button == 7 then
-            toggle_pause()
-            return
-        end
+    if button == 7 then
+        toggle_pause()
+        return
+    end
     --end
     if is_paused then
         if button == 12 then
-    move_pause_arrow("up")
-    elseif button == 13 then
-        move_pause_arrow("down")
-   end
-   if button == 1 then
-        handle_pause_action()
-        return
-   end
-
+            move_pause_arrow("up")
+        elseif button == 13 then
+            move_pause_arrow("down")
+        end
+        if button == 1 then
+            handle_pause_action()
+            return
+        end
     end
-   logger.debug(button)
-   if button == 1 then
-    player:jump()
-   end
+    logger.debug(button)
+    if button == 1 then
+        player:jump()
+    end
 end
 
 function love.keypressed(key)
     --logger.debug(key)
-    
+
 
     if is_paused then
-        
+
     else
 
     end
 
     if not is_paused then
         if key == "escape" then
-        --love.event.quit()
-        toggle_pause()
-        return
-    end
+            --love.event.quit()
+            toggle_pause()
+            return
+        end
         if key == "m" then
             if bg_music:isPlaying() then
                 bg_music:pause()
@@ -206,7 +200,7 @@ function love.keypressed(key)
         if gamestate == gamestates.title then
             if key == "space" or key == "w" then
                 player:jump()
-                -- TODO: Make the button start the game 
+                -- TODO: Make the button start the game
                 -- start_game()
             end
         end
@@ -218,13 +212,12 @@ function love.keypressed(key)
                 end
             end
         end
-
     else
         if key == "up" or key == "w" then
             logger.debug("Pressed up on pause menu")
             move_pause_arrow("up")
             --p_index = clamp(1, p_index - 1, 3)
-            -- TODO: Make the button start the game 
+            -- TODO: Make the button start the game
             -- start_game()
         elseif key == "down" or key == "s" then
             logger.debug("Pressed down on pause menu")
@@ -232,20 +225,19 @@ function love.keypressed(key)
 
             --p_index = clamp(1, p_index + 1, 3)
         end
-        if key == "space" then
+        if key == "space" or key == "return" then
             handle_pause_action()
             --if p_index == 1 then
-                --toggle_pause()
-           -- elseif p_index == 2 then
-               -- return
-           -- elseif p_index == 3 then
-               -- love.event.quit()
-           -- end
-            
+            --toggle_pause()
+            -- elseif p_index == 2 then
+            -- return
+            -- elseif p_index == 3 then
+            -- love.event.quit()
+            -- end
         end
         --if key == "escape" then
-            --logger.debug("unpausing")
-            --toggle_pause()
+        --logger.debug("unpausing")
+        --toggle_pause()
         --end
         --logger.debug("Pressed: " .. key .. " on pause screen")
     end
@@ -261,7 +253,7 @@ function move_pause_arrow(dir)
 end
 
 function handle_pause_action()
-    logger.debug("pressed space - index ".. p_index)
+    logger.debug("pressed space - index " .. p_index)
     if p_index == 1 then
         toggle_pause()
     elseif p_index == 2 then
@@ -288,7 +280,7 @@ function love.update(dt)
         end
     end
     --if is_debug_on then
-        --love.window.setTitle("Sickle Dodge - " .. tostring(love.timer.getFPS()))
+    --love.window.setTitle("Sickle Dodge - " .. tostring(love.timer.getFPS()))
     --end
 end
 
@@ -314,7 +306,6 @@ function update_game(dt)
     world:update(dt)
     sickle_manager:update(dt)
     player:update(dt)
-    
 end
 
 function update_gameover(dt)
@@ -370,8 +361,6 @@ function love.draw()
         love.graphics.print("gs: " .. tostring(get_gs_str(gamestate)), 0, 0, 0, 0.8, 0.8)
         love.graphics.print("fps: " .. tostring(love.timer.getFPS()), 0, 8, 0, 0.8, 0.8)
     end
-
-    
 end
 
 function draw_title()
@@ -385,14 +374,11 @@ function draw_pause()
     love.graphics.print("Resume", 57, 50, 0, 0.8, 0.8)
     love.graphics.print("option 2", 57, 58, 0, 0.8, 0.8)
     love.graphics.print("quit", 57, 66, 0, 0.8, 0.8)
-
 end
 
 function toggle_pause()
     is_paused = not is_paused
 end
-
-
 
 -- if gamestate == "pre_game" then
 --     elseif gamestate == "game" then
@@ -407,10 +393,10 @@ function draw_game()
     if is_debug_on then
         draw_world()
     end
-    
+
     platfrom:draw()
     player:draw()
-    sickle_manager:draw() 
+    sickle_manager:draw()
 end
 
 function draw_time_left()
@@ -456,7 +442,7 @@ function draw_gameover()
     --draw_death_markers()
     --platfrom:draw()
     --draw_hud()
-    -- FIXME: Can I remove this??? 
+    -- FIXME: Can I remove this???
     love.graphics.print(seconds_left, 110, 15, 0, 3, 3)
     if math.floor(love.timer.getTime()) % 2 == 0 then
         love.graphics.print("jump to try again", 65, 70, 0, 1, 1)
