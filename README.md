@@ -9,7 +9,8 @@ https://github.com/user-attachments/assets/ad99d086-962c-4559-af9b-fb9f9785b758
 Compare making a game in LÖVE and Godot. 
 
 ## Project Status
-Done as it is going to get. This was only something to compare the process of making a game in Love2D with Godot.  
+https://trello.com/b/IBYFLiS9/sickle-dodge
+Thought I was done, but enjoying making small improvements.  
 
 <hr>
 
@@ -48,5 +49,4 @@ Done as it is going to get. This was only something to compare the process of ma
 - Love2d [github](https://github.com/love2d/love)
 - Flux [github](https://github.com/rxi/flux)
 - Anim8 [github](https://github.com/kikito/anim8)
-- Windfield [github](https://github.com/a327ex/windfield)
 - Lume [github](https://github.com/rxi/lume)

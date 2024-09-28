@@ -6,7 +6,7 @@ function Block:new(callback)
     local _block = setmetatable({}, Block)
     _block.image = love.graphics.newImage("asset/image/start_block.png")
     _block.x = 60
-    _block.y = 85
+    _block.y = 90
     _block.w = _block.image:getWidth()
     _block.h = _block.image:getHeight()
     _block.ox = _block.w / 2

@@ -2,23 +2,37 @@ StartArea = {}
 StartArea.__index = StartArea
 
 
-function StartArea:new(callback)
+function StartArea:new()
     local _start_area = setmetatable({}, StartArea)
-    _start_area.x = 90
-    _start_area.y = 100
+    _start_area.x = 150
+    _start_area.y = 104
     _start_area.w = 16
     _start_area.h = 16
     _start_area.fill = 0
-    _start_area.max_fill = 100
+    _start_area.max_fill = 16
     _start_area.ox = _start_area.w / 2
     _start_area.oy = _start_area.h / 2
-    _start_area.tmr_player_in = Timer:new(60 * 4, function() callback() end, true)
+    _start_area.tmr_player_in = Timer:new(30 * 1, function() _start_area:callback() end, true)
     _start_area.tmr_player_in:start()
     return _start_area
 end
 
 function StartArea:update(dt)
-    
+    if self.fill == self.max_fill then
+        self.tmr_player_in:update()
+    end
+end
+
+function StartArea:callback()
+    start_game()
+end
+
+function StartArea:increase()
+    self.fill = clamp(0, self.fill + 0.2,self.max_fill)
+end
+
+function StartArea:decrease()
+    self.fill = clamp(0, self.fill - 0.2,self.max_fill)
 end
 
 function StartArea:draw()

@@ -22,7 +22,7 @@ function Player:new()
     local s_grid = anim8.newGrid(16, 16, _player.spr_sheet:getWidth(), _player.spr_sheet:getHeight())
 
     _player.animations = {
-        idle = anim8.newAnimation(s_grid(('1-6'), 1), 0.1),
+        idle = anim8.newAnimation(s_grid(('1-6'), 1), 0.15),
         death = anim8.newAnimation(s_grid(('7-14'), 1), 0.1, 'pauseAtEnd')
     }
     _player.starting_pos = { x = 60, y = 111 }
@@ -75,7 +75,7 @@ function Player:update(dt)
     if self.is_alive then
         local vel_x, vel_y = self.body:getLinearVelocity()
 
-        if not contected_controller then 
+        
             if love.keyboard.isDown('d') then
                 self.facing_dir = 1
                 vel_x = clamp(0, vel_x + self.acceleration, self.max_speed)
@@ -85,7 +85,7 @@ function Player:update(dt)
                 vel_x = clamp(-self.max_speed, vel_x - self.acceleration, 0)
             end
 
-        else
+        if contected_controller then
             if contected_controller:getGamepadAxis("leftx") >= 0.5 then
                 self.facing_dir = 1
                 vel_x = clamp(0, vel_x + self.acceleration, self.max_speed)
@@ -102,7 +102,7 @@ function Player:update(dt)
 
         flux.update(dt)
 
-        if gamestate2 ~= "pre_game" then
+        if gamestate ~= gamestates.title then
             if vel_x == 0 and vel_y == 0 then
                 self.tmr_standing_still:update()
             else
@@ -174,7 +174,6 @@ function Player:die(pos, condition)
     self.rotation = 0
     self.body:setLinearVelocity(0, 0)
     self.fixture:setMask(1)
-    --self.body:setType("static")
     self.curr_animation = self.animations["death"]
     self.tmr_wait_for_animation:start()
     death_sfx:play()
