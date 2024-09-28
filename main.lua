@@ -4,7 +4,7 @@ require("src.const")
 
 
 
-is_debug_on = false
+is_debug_on = true
 
 if is_debug_on then
     love.profiler = require('lib.profile')
@@ -50,7 +50,10 @@ local death_markers = {}
 local seconds_left = 60
 local tick = 0
 local player_attempt = 0
+
+-- Pause screen
 local is_paused = false
+local p_index = 1
 
 
 --gamestate = "title"
@@ -82,6 +85,7 @@ function love.load()
     resize(width, height)
     bg_music:setLooping(true)
     title_music:setLooping(true)
+
     title_music:play()
     title_music:setVolume(0.3)
     bg_music:setVolume(0.3)
@@ -90,6 +94,16 @@ function love.load()
     love.graphics.setFont(font)
     gamestate = gamestates.title
     font:setFilter("nearest")
+
+    if is_debug_on then
+        if bg_music:isPlaying() then
+            bg_music:pause()
+        end
+        if title_music:isPlaying() then
+            title_music:pause()
+        end
+    end
+
 end
 
 function reset_game()
@@ -128,6 +142,24 @@ end
 function love.joystickpressed(joystick, button)
     -- 1 = X
     -- 7 = pause
+    --if is_paused then
+        if button == 7 then
+            toggle_pause()
+            return
+        end
+    --end
+    if is_paused then
+        if button == 12 then
+    move_pause_arrow("up")
+    elseif button == 13 then
+        move_pause_arrow("down")
+   end
+   if button == 1 then
+        handle_pause_action()
+        return
+   end
+
+    end
    logger.debug(button)
    if button == 1 then
     player:jump()
@@ -135,79 +167,129 @@ function love.joystickpressed(joystick, button)
 end
 
 function love.keypressed(key)
-    logger.debug(key)
-    if key == "escape" then
-        --love.event.quit()
-        toggle_pause()
-    end
+    --logger.debug(key)
+    
 
     if is_paused then
-        if key == "up" then
-            logger.debug("Pressed up on pause menu")
-            -- TODO: Make the button start the game 
-            -- start_game()
-        elseif key == "down" then
-            logger.debug("Pressed down on pause menu")
-        end
+        
     else
 
     end
 
-    if key == "m" then
-        if bg_music:isPlaying() then
-            bg_music:pause()
-        else
-            bg_music:play()
-        end
+    if not is_paused then
+        if key == "escape" then
+        --love.event.quit()
+        toggle_pause()
+        return
     end
-
-    if gamestate == gamestates.game then
-        if key == "space" or key == "w" then
-            player:jump()
-        end
-    end
-
-    if gamestate == gamestates.retry then
-        if key == "space" or key == "w" then
-            reset_game()
-            gamestate = gamestates.game
-        end
-    end
-
-    if gamestate == gamestates.title then
-        if key == "space" or key == "w" then
-            player:jump()
-            -- TODO: Make the button start the game 
-            -- start_game()
-        end
-    end
-
-    if is_debug_on then
-        for i = 1, 9 do
-            if key == (tostring(i)) then
-                sickle_manager.debug_key_functions[key]()
+        if key == "m" then
+            if bg_music:isPlaying() then
+                bg_music:pause()
+            else
+                bg_music:play()
             end
         end
+
+        if gamestate == gamestates.game then
+            if key == "space" or key == "w" then
+                player:jump()
+            end
+        end
+
+        if gamestate == gamestates.retry then
+            if key == "space" or key == "w" then
+                reset_game()
+                gamestate = gamestates.game
+            end
+        end
+
+        if gamestate == gamestates.title then
+            if key == "space" or key == "w" then
+                player:jump()
+                -- TODO: Make the button start the game 
+                -- start_game()
+            end
+        end
+
+        if is_debug_on then
+            for i = 1, 9 do
+                if key == (tostring(i)) then
+                    sickle_manager.debug_key_functions[key]()
+                end
+            end
+        end
+
+    else
+        if key == "up" or key == "w" then
+            logger.debug("Pressed up on pause menu")
+            move_pause_arrow("up")
+            --p_index = clamp(1, p_index - 1, 3)
+            -- TODO: Make the button start the game 
+            -- start_game()
+        elseif key == "down" or key == "s" then
+            logger.debug("Pressed down on pause menu")
+            move_pause_arrow("down")
+
+            --p_index = clamp(1, p_index + 1, 3)
+        end
+        if key == "space" then
+            handle_pause_action()
+            --if p_index == 1 then
+                --toggle_pause()
+           -- elseif p_index == 2 then
+               -- return
+           -- elseif p_index == 3 then
+               -- love.event.quit()
+           -- end
+            
+        end
+        --if key == "escape" then
+            --logger.debug("unpausing")
+            --toggle_pause()
+        --end
+        --logger.debug("Pressed: " .. key .. " on pause screen")
+    end
+end
+
+function move_pause_arrow(dir)
+    if dir == "up" then
+        p_index = clamp(1, p_index - 1, 3)
+    elseif dir == "down" then
+        p_index = clamp(1, p_index + 1, 3)
+    end
+    -- body
+end
+
+function handle_pause_action()
+    logger.debug("pressed space - index ".. p_index)
+    if p_index == 1 then
+        toggle_pause()
+    elseif p_index == 2 then
+        return
+    elseif p_index == 3 then
+        love.event.quit()
     end
 end
 
 function love.update(dt)
-    snow_system:update(dt)
-    if check_collision(player.hitbox, start_area) then
-        start_area:increase()
-    else
-        start_area:decrease()
+    if not is_paused then
+        snow_system:update(dt)
+        if check_collision(player.hitbox, start_area) then
+            start_area:increase()
+        else
+            start_area:decrease()
+        end
+        if gamestate == gamestates.title then
+            update_title(dt)
+        elseif gamestate == gamestates.game then
+            update_game(dt)
+        else
+            update_gameover(dt)
+        end
     end
-    if gamestate == gamestates.title then
-        update_title(dt)
-    elseif gamestate == gamestates.game then
-        update_game(dt)
-    else
-        update_gameover(dt)
-    end
-    if is_debug_on then
-        love.window.setTitle("Sickle Dodge - " .. tostring(love.timer.getFPS()))
-    end
+    --if is_debug_on then
+        --love.window.setTitle("Sickle Dodge - " .. tostring(love.timer.getFPS()))
+    --end
 end
 
 function update_title(dt)
@@ -259,10 +341,8 @@ function love.draw()
     love.graphics.scale(window.scale)
     love.graphics.draw(background, 0, 0)
     draw_snow()
-
     if gamestate == gamestates.title then
         draw_title()
-        --start_block:draw()
         start_area:draw()
         platfrom:draw()
         player:draw()
@@ -281,6 +361,11 @@ function love.draw()
         draw_pause()
     end
 
+    if gamestate ~= gamestates.title then
+        draw_death_markers()
+        draw_time_left()
+    end
+
     if 1 == 1 then
         love.graphics.print("gs: " .. tostring(get_gs_str(gamestate)), 0, 0, 0, 0.8, 0.8)
         love.graphics.print("fps: " .. tostring(love.timer.getFPS()), 0, 8, 0, 0.8, 0.8)
@@ -291,12 +376,12 @@ end
 
 function draw_title()
     --love.graphics.print("[space] to play", 70, 80, 0, 1, 1)
-    love.graphics.draw(title_img, 50, 30, 0, 0.19, 0.19)
+    love.graphics.draw(title_img, 60, 20, 0, 0.19, 0.19)
 end
 
 function draw_pause()
     love.graphics.draw(pause_img, 0, 0)
-    love.graphics.print("_", 49, 48)
+    love.graphics.print("_", 49, 40 + (p_index * 8))
     love.graphics.print("Resume", 57, 50, 0, 0.8, 0.8)
     love.graphics.print("option 2", 57, 58, 0, 0.8, 0.8)
     love.graphics.print("quit", 57, 66, 0, 0.8, 0.8)
@@ -316,47 +401,16 @@ end
 --     end
 
 function draw_game()
-
     love.graphics.push("all")
     draw_hud()
     love.graphics.pop()
-
-    draw_world()
+    if is_debug_on then
+        draw_world()
+    end
     
     platfrom:draw()
     player:draw()
-
-    if gamestate == "title" then
-        draw_title()
-        --start_block:draw()
-        start_area:draw()
-        print("pre_game")
-    elseif gamestate == "game" then
-        sickle_manager:draw()
-        --draw_death_markers()
-    elseif gamestate == "retry" then
-        --draw_death_markers()
-        draw_gameover()
-    else -- won
-        draw_win()
-    end
-
-    if gamestate ~= "title" then
-        draw_death_markers()
-        draw_time_left()
-    end
-
-    
-
-
-
-    
-    
-    --player:draw()
-    --platfrom:draw()
-    --sickle_manager:draw()
-    --draw_death_markers()
-    
+    sickle_manager:draw() 
 end
 
 function draw_time_left()

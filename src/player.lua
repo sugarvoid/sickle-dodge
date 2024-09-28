@@ -14,6 +14,7 @@ jump_sfx:setVolume(0.3)
 jump_sfx2:setVolume(0.2)
 death_sfx:setVolume(0.5)
 
+
 function Player:new()
     local _player = setmetatable({}, Player)
     _player.spr_sheet = love.graphics.newImage("asset/image/player_sheet.png")
@@ -38,7 +39,6 @@ function Player:new()
     _player.is_moving_left = false
     _player.is_moving_right = false
     _player.tmr_standing_still = Timer:new(60 * 3, function() _player:inactive_die() end, true)
-
     _player.tmr_ghost_mode = Timer:new(15, function() _player:exit_ghost_mode() end, false)
     _player.tmr_wait_for_animation = Timer:new(60 * 0.9, function() go_to_gameover() end, false)
     _player.jumps_left = 2
@@ -67,6 +67,7 @@ function Player:new()
 end
 
 function Player:update(dt)
+    logger.debug(tostring(self.body:isAwake()))
     self.curr_animation:update(dt)
     self.jump_effect:update(dt)
     self.tmr_wait_for_animation:update()
@@ -178,6 +179,7 @@ function Player:die(pos, condition)
     self.tmr_wait_for_animation:start()
     death_sfx:play()
     spawn_death_marker(pos[1], pos[2])
+    --self.body:setAwake(false)
 end
 
 function Player:draw()
@@ -211,10 +213,12 @@ function Player:exit_ghost_mode()
 end
 
 function Player:reset()
+    logger.debug("resetting player")
     self:exit_ghost_mode()
     self.body:setMass(player_mass)
     self.body:setLinearVelocity(0, 0)
     self.body:setPosition(self.starting_pos.x, self.starting_pos.y)
+    self.body:setAwake(true)
     self.animations["death"]:resume()
     self.animations["death"]:gotoFrame(1)
     self.tmr_wait_for_animation:stop()
