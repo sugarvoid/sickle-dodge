@@ -89,6 +89,8 @@ function love.load()
         logger.level = logger.Level.INFO
         logger.info("logger in INFO mode")
     end
+    local joysticks = love.joystick.getJoysticks()
+    contected_controller = joysticks[1]
     init_snow()
     load_game()
     window = { translateX = 0, translateY = 0, scale = 4, width = GAME_W, height = GAME_H }
@@ -228,6 +230,17 @@ end
 
 function spawn_death_marker(_x, _y)
     table.insert(death_markers, { _x, _y })
+end
+
+function love.joystickremoved(joystick)
+    local js = joystick
+    contected_controller = nil
+    print(js:getName())
+end
+
+function love.joystickadded(joystick)
+    contected_controller = joystick
+    print()
 end
 
 function love.draw()

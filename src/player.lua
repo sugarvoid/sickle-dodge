@@ -75,14 +75,28 @@ function Player:update(dt)
     if self.is_alive then
         local vel_x, vel_y = self.body:getLinearVelocity()
 
-        if love.keyboard.isDown('d') then
-            self.facing_dir = 1
-            vel_x = clamp(0, vel_x + self.acceleration, self.max_speed)
+        if not contected_controller then 
+            if love.keyboard.isDown('d') then
+                self.facing_dir = 1
+                vel_x = clamp(0, vel_x + self.acceleration, self.max_speed)
+            end
+            if love.keyboard.isDown('a') then
+                self.facing_dir = -1
+                vel_x = clamp(-self.max_speed, vel_x - self.acceleration, 0)
+            end
+
+        else
+            if contected_controller:getGamepadAxis("leftx") >= 0.5 then
+                self.facing_dir = 1
+                vel_x = clamp(0, vel_x + self.acceleration, self.max_speed)
+            end
+            if contected_controller:getGamepadAxis("leftx") <= -0.5  then
+                self.facing_dir = -1
+                vel_x = clamp(-self.max_speed, vel_x - self.acceleration, 0)
+            end
         end
-        if love.keyboard.isDown('a') then
-            self.facing_dir = -1
-            vel_x = clamp(-self.max_speed, vel_x - self.acceleration, 0)
-        end
+
+        
 
         self.body:setLinearVelocity(vel_x, vel_y)
 
