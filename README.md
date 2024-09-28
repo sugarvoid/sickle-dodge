@@ -9,8 +9,7 @@ https://github.com/user-attachments/assets/ad99d086-962c-4559-af9b-fb9f9785b758
 Compare making a game in LÖVE and Godot. 
 
 ## Project Status
-https://trello.com/b/IBYFLiS9/sickle-dodge
-Thought I was done, but enjoying making small improvements.  
+https://trello.com/b/IBYFLiS9/sickle-dodge 
 
 <hr>
 
@@ -26,9 +25,10 @@ Thought I was done, but enjoying making small improvements.
 
 |Key|Action|
 |:---:|:---:|
-|A|Move Left|
-|D|Move Right|
-|W/Space|Jump|
+|A, Left|Move Left|
+|D, Right|Move Right|
+|W, Space|Jump|
+|ESC| Pause |
 |M|Mute Music|
 
 <hr>
@@ -50,3 +50,4 @@ Thought I was done, but enjoying making small improvements.
 - Flux [github](https://github.com/rxi/flux)
 - Anim8 [github](https://github.com/kikito/anim8)
 - Lume [github](https://github.com/rxi/lume)
+- Profile.lua [github](https://github.com/2dengine/profile.lua)
