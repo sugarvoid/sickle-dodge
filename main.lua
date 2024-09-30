@@ -167,6 +167,9 @@ function love.keypressed(key)
 
     if not is_paused then
         if key == "escape" then
+            if is_debug_on then
+                love.event.quit()
+            end
             --love.event.quit()
             toggle_pause()
             return

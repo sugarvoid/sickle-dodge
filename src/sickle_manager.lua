@@ -17,7 +17,7 @@ local function make_sickle(_x, _y, _dir, _speed)
 end
 
 local VERTICALS = {}
-local HORIZONTALES = {114, 102} --first 2 are good
+local HORIZONTALES = {114, 102, 91, 80, 69, 56} --first 2 are good
 
 local WAVES = {
     top_left = {
@@ -32,10 +32,10 @@ local WAVES = {
         { -190, 110, DIRECTIONS.RIGHT },
     },
     right_low_single = {
-        { 250, HORIZONTALES[1], DIRECTIONS.LEFT },
+        { -10, HORIZONTALES[3], DIRECTIONS.RIGHT },
     },
     left_high_single = {
-        { -10, 100, DIRECTIONS.RIGHT },
+        { -10, HORIZONTALES[3], DIRECTIONS.RIGHT },
     },
     left_full = {
         { -20,  110, DIRECTIONS.RIGHT },
@@ -246,11 +246,43 @@ function SickleManager:spawn_sickles(_pattern, _speed)
     end
 end
 
-local screen_width = 236
-local screen_hieght = 00
+local screen_width = 240
+local screen_hieght = 120
 
 function draw_debug_lines()
+    --changeFontColor("#ffffff", 0.5)
+    love.graphics.push("all")
+    love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, 30))
+    --love.graphics.line(0, 42, screen_width, 42)
+    --love.graphics.line(0, 53, screen_width, 53)
+    -- Horizontals 
+    love.graphics.line(0, 64, screen_width, 64)
+    love.graphics.line(0, 75, screen_width, 75)
+    love.graphics.line(0, 86, screen_width, 86)
     love.graphics.line(0, 97, screen_width, 97)
     love.graphics.line(0, 108, screen_width, 108)
+
+    -- Verticals 
+    love.graphics.line(45, 0, 45, screen_hieght)
+    love.graphics.line(56, 0, 56, screen_hieght)
+    love.graphics.line(68, 0, 68, screen_hieght)
+    love.graphics.line(80, 0, 80, screen_hieght)
+
+    love.graphics.line(92, 0, 92, screen_hieght)
+    love.graphics.line(104, 0, 104, screen_hieght)
+    love.graphics.line(116, 0, 116, screen_hieght)
+
+    love.graphics.line(128, 0, 128, screen_hieght)
+    love.graphics.line(140, 0, 140, screen_hieght)
+    love.graphics.line(152, 0, 152, screen_hieght)
+
+    love.graphics.line(164, 0, 164, screen_hieght)
+    love.graphics.line(176, 0, 176, screen_hieght)
+    love.graphics.line(188, 0, 188, screen_hieght)
+
+    love.graphics.line(200, 0, 200, screen_hieght)
     -- body
+    love.graphics.pop()
+    --love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, 1))
+
 end
