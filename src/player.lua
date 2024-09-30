@@ -63,7 +63,6 @@ function Player:new()
 end
 
 function Player:update(dt)
-    logger.debug(tostring(self.body:isAwake()))
     self.curr_animation:update(dt)
     self.jump_effect:update(dt)
     self.tmr_wait_for_animation:update()

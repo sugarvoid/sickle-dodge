@@ -16,6 +16,9 @@ local function make_sickle(_x, _y, _dir, _speed)
     return new_sickle
 end
 
+local VERTICALS = {}
+local HORIZONTALES = {114, 102} --first 2 are good
+
 local WAVES = {
     top_left = {
         { 50,  -10, DIRECTIONS.DOWN },
@@ -29,7 +32,7 @@ local WAVES = {
         { -190, 110, DIRECTIONS.RIGHT },
     },
     right_low_single = {
-        { 250, 114, DIRECTIONS.LEFT },
+        { 250, HORIZONTALES[1], DIRECTIONS.LEFT },
     },
     left_high_single = {
         { -10, 100, DIRECTIONS.RIGHT },
@@ -84,9 +87,9 @@ local WAVES = {
     },
     left_high = {
         { -200, 90,  DIRECTIONS.RIGHT },
-        { -150, 100, DIRECTIONS.RIGHT },
+        { -150, 102, DIRECTIONS.RIGHT },
         { -80,  90,  DIRECTIONS.RIGHT },
-        { -10,  100, DIRECTIONS.RIGHT },
+        { -10,  102, DIRECTIONS.RIGHT },
     },
     final_wave = {
         {},
@@ -133,7 +136,7 @@ function SickleManager:new()
     _sickle_manager.active_sickles = {}
     _sickle_manager.timers = {}
     _sickle_manager.tmr_every_2s = Timer:new(60 * 2,
-        function() _sickle_manager:spawn_sickles(WAVES.right_low_single, 160) end, true)
+        function() _sickle_manager:spawn_sickles(WAVES.right_low_single, 170) end, true)
     _sickle_manager.tmr_every_4s = Timer:new(60 * 4,
         function() _sickle_manager:spawn_sickles(WAVES.left_high_single, 160) end, true)
 
@@ -143,8 +146,8 @@ function SickleManager:new()
     _sickle_manager.update_actions = {
         [30] = nil,
         [29] = function()
-            _sickle_manager:spawn_sickles(WAVES.alternating_left_right, 100)
-            _sickle_manager.tmr_every_4s:start()
+            _sickle_manager:spawn_sickles(WAVES.alternating_left_right, 150)
+            --_sickle_manager.tmr_every_4s:start()
         end,
         [28] = nil,
         [27] = function() _sickle_manager:spawn_sickles(WAVES.diagonal_left_right, 150) end,
@@ -224,6 +227,7 @@ function SickleManager:draw()
     for s in all(self.active_sickles) do
         s:draw()
     end
+
 end
 
 function SickleManager:on_every_second(_seconds_in)
@@ -240,4 +244,13 @@ function SickleManager:spawn_sickles(_pattern, _speed)
         local n_s = make_sickle(p[1], p[2], { p[3][1], p[3][2] }, _speed)
         table.insert(self.active_sickles, n_s)
     end
+end
+
+local screen_width = 236
+local screen_hieght = 00
+
+function draw_debug_lines()
+    love.graphics.line(0, 97, screen_width, 97)
+    love.graphics.line(0, 108, screen_width, 108)
+    -- body
 end

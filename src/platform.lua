@@ -11,7 +11,6 @@ function Platform:new()
     _platform.h = _platform.image:getHeight()
     _platform.ox = _platform.w / 2
     _platform.oy = _platform.h / 2
-    --_platform.hitbox = { x = _platform.x, y = _platform.y, w = _platform.w, h = _platform.h }
     _platform.body = love.physics.newBody(world, _platform.x, _platform.y, "static")
     _platform.shape = love.physics.newRectangleShape(_platform.w, _platform.h)
     _platform.fixture = love.physics.newFixture(_platform.body, _platform.shape)
