@@ -16,12 +16,12 @@ local function make_sickle(_x, _y, _dir, _speed)
     return new_sickle
 end
 
-local VERTICALS = {}
+local VERTICALS = {50, 62, 74, 86, 98, 110, 122, 134, 146, 158, 170, 182, 194}
 local HORIZONTALES = {114, 102, 91, 80, 69, 56} --first 2 are good
 
 local WAVES = {
     debug = {
-        { 200, HORIZONTALES[1], DIRECTIONS.LEFT },
+        { VERTICALS[13], -10, DIRECTIONS.DOWN },
     },
     top_left = {
         { 50,  -10, DIRECTIONS.DOWN },
