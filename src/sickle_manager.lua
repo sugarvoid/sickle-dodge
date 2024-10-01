@@ -24,10 +24,10 @@ local WAVES = {
         { VERTICALS[13], -10, DIRECTIONS.DOWN },
     },
     top_left = {
-        { 50,  -10, DIRECTIONS.DOWN },
-        { 60,  -10, DIRECTIONS.DOWN },
-        { 70,  -10, DIRECTIONS.DOWN },
-        { 100, -10, DIRECTIONS.DOWN },
+        { VERTICALS[4],  -10, DIRECTIONS.DOWN },
+        { VERTICALS[5],  -10, DIRECTIONS.DOWN },
+        { VERTICALS[6],  -10, DIRECTIONS.DOWN },
+        { VERTICALS[7], -10, DIRECTIONS.DOWN },
     },
     left_low = {
         { -10,  110, DIRECTIONS.RIGHT },
@@ -127,9 +127,8 @@ local WAVES = {
         { 250, 110, DIRECTIONS.LEFT },
     },
     diagonal_left_right = {
-        { -10, 10,  DIRECTIONS.RIGHT },
+        {-10, HORIZONTALES[2] ,DIRECTIONS.RIGHT},
         { 50,  -10, DIRECTIONS.DOWN },
-        { 100, 30,  DIRECTIONS.RIGHT },
         { 150, -10, DIRECTIONS.DOWN },
     }
 }
