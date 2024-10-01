@@ -283,6 +283,7 @@ function update_title(dt)
     start_area:update(dt)
     player:update(dt)
     world:update(dt)
+    sickle_manager:update(dt) --TODO: Remove after testing
 end
 
 function update_game(dt)
@@ -333,6 +334,7 @@ function love.draw()
         start_area:draw()
         platfrom:draw()
         player:draw()
+        sickle_manager:draw() --TODO: Remove after testing
     end
     if gamestate == gamestates.game then
         draw_game()

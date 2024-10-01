@@ -20,6 +20,9 @@ local VERTICALS = {}
 local HORIZONTALES = {114, 102, 91, 80, 69, 56} --first 2 are good
 
 local WAVES = {
+    debug = {
+        { 200, HORIZONTALES[1], DIRECTIONS.LEFT },
+    },
     top_left = {
         { 50,  -10, DIRECTIONS.DOWN },
         { 60,  -10, DIRECTIONS.DOWN },
@@ -131,6 +134,15 @@ local WAVES = {
     }
 }
 
+function spawn_debug_wave()
+    _sickle_manager:spawn_sickles(WAVES.left_high_single, DEBUG_SPEED)
+end
+
+
+function SickleManager:spawn_debug_wave()
+    self:spawn_sickles(WAVES.debug, DEBUG_SPEED)
+end
+
 function SickleManager:new()
     local _sickle_manager = setmetatable({}, SickleManager)
     _sickle_manager.active_sickles = {}
@@ -142,6 +154,8 @@ function SickleManager:new()
 
     table.insert(_sickle_manager.timers, _sickle_manager.tmr_every_2s)
     table.insert(_sickle_manager.timers, _sickle_manager.tmr_every_4s)
+
+
 
     _sickle_manager.update_actions = {
         [30] = nil,
@@ -179,7 +193,7 @@ function SickleManager:new()
         [1] = on_player_win,
     }
     _sickle_manager.debug_key_functions = {
-        ["1"] = function() _sickle_manager:spawn_sickles(WAVES.left_high_single, DEBUG_SPEED) end,
+        ["1"] = function() _sickle_manager:spawn_debug_wave() end,
         ["2"] = function() _sickle_manager:spawn_sickles(WAVES.top_full_b, DEBUG_SPEED) end,
         ["3"] = function() _sickle_manager:spawn_sickles(WAVES.top_left, DEBUG_SPEED) end,
         ["4"] = function() _sickle_manager:spawn_sickles(WAVES.top_right, DEBUG_SPEED) end,
