@@ -295,7 +295,7 @@ function update_game(dt)
             sickle_manager:on_every_second(seconds_left)
         end
     end
-    if seconds_left == 0 then
+    if seconds_left == 0 and player.is_alive then
         save_game()
         gamestate = gamestates.win
     end
@@ -441,6 +441,8 @@ function draw_win()
         love.graphics.print("you win", 60, 70, 0, 1, 1)
         love.graphics.print("thanks for playing", 60, 80, 0, 1, 1)
     end
+    platfrom:draw()
+    player:draw()
 end
 
 function play_sound(_sound)

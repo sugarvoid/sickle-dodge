@@ -111,8 +111,14 @@ function Player:update(dt)
         self.hitbox.y = self.y
 
         if self.body:getY() >= 132 or self.body:getX() <= 2 or self.body:getX() >= 239 then
-            local death_x, death_y = self.body:getPosition()
-            self:die({ death_x, death_y })
+
+            if gamestate == gamestates.title or gamestate == gamestates.win then
+                self:reset()
+            else
+                local death_x, death_y = self.body:getPosition()
+                self:die({ death_x, death_y })
+            end
+            
         end
     end
 end
