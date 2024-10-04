@@ -72,11 +72,11 @@ function Player:update(dt)
         local vel_x, vel_y = self.body:getLinearVelocity()
 
 
-        if love.keyboard.isDown('d') then
+        if love.keyboard.isDown('d') or love.keyboard.isDown("right") then
             self.facing_dir = 1
             vel_x = clamp(0, vel_x + self.acceleration, self.max_speed)
         end
-        if love.keyboard.isDown('a') then
+        if love.keyboard.isDown('a') or love.keyboard.isDown("left") then
             self.facing_dir = -1
             vel_x = clamp(-self.max_speed, vel_x - self.acceleration, 0)
         end

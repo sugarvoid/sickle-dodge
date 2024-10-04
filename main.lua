@@ -55,7 +55,7 @@ local snow_system = love.graphics.newParticleSystem(snow_flake, 1000)
 local player = Player:new()
 local platfrom = Platform:new()
 local sickle_manager = SickleManager:new()
-local start_area = StartArea:new(start_game)
+local start_area = StartArea:new()
 
 function love.load()
     if is_debug_on then
@@ -132,12 +132,11 @@ end
 function love.joystickpressed(joystick, button)
     -- 1 = X
     -- 7 = pause
-    --if is_paused then
     if button == 7 then
         toggle_pause()
         return
     end
-    --end
+
     if is_paused then
         if button == 12 then
             move_pause_arrow("up")
@@ -157,20 +156,11 @@ end
 
 function love.keypressed(key)
     --logger.debug(key)
-
-
-    if is_paused then
-
-    else
-
-    end
-
     if not is_paused then
         if key == "escape" then
             if is_debug_on then
                 love.event.quit()
             end
-            --love.event.quit()
             toggle_pause()
             return
         end
@@ -182,24 +172,13 @@ function love.keypressed(key)
             end
         end
 
-        if gamestate == gamestates.game then
-            if key == "space" or key == "w" then
-                player:jump()
-            end
-        end
-
-        if gamestate == gamestates.retry then
-            if key == "space" or key == "w" then
+        if key == "space" or key == "w" or key == "up" then
+            if gamestate == gamestates.retry then
                 reset_game()
                 gamestate = gamestates.game
-            end
-        end
-
-        if gamestate == gamestates.title then
-            if key == "space" or key == "w" then
+                return
+            else
                 player:jump()
-                -- TODO: Make the button start the game
-                -- start_game()
             end
         end
 
@@ -212,32 +191,15 @@ function love.keypressed(key)
         end
     else
         if key == "up" or key == "w" then
-            logger.debug("Pressed up on pause menu")
+            --logger.debug("Pressed up on pause menu")
             move_pause_arrow("up")
-            --p_index = clamp(1, p_index - 1, 3)
-            -- TODO: Make the button start the game
-            -- start_game()
         elseif key == "down" or key == "s" then
-            logger.debug("Pressed down on pause menu")
+            --logger.debug("Pressed down on pause menu")
             move_pause_arrow("down")
-
-            --p_index = clamp(1, p_index + 1, 3)
         end
         if key == "space" or key == "return" then
             handle_pause_action()
-            --if p_index == 1 then
-            --toggle_pause()
-            -- elseif p_index == 2 then
-            -- return
-            -- elseif p_index == 3 then
-            -- love.event.quit()
-            -- end
         end
-        --if key == "escape" then
-        --logger.debug("unpausing")
-        --toggle_pause()
-        --end
-        --logger.debug("Pressed: " .. key .. " on pause screen")
     end
 end
 
@@ -247,7 +209,6 @@ function move_pause_arrow(dir)
     elseif dir == "down" then
         p_index = clamp(1, p_index + 1, 3)
     end
-    -- body
 end
 
 function handle_pause_action()
