@@ -289,7 +289,7 @@ function love.draw()
     love.graphics.scale(window.scale)
     love.graphics.draw(background, 0, 0)
     draw_snow()
-    draw_debug_lines()
+    draw_sickle_lanes()
     if gamestate == gamestates.title then
         draw_title()
         start_area:draw()

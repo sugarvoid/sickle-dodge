@@ -10,6 +10,7 @@ local DIRECTIONS = {
     RIGHT = { 1, 0 }
 }
 
+local right = true
 
 local function make_sickle(_x, _y, _dir, _speed)
     local new_sickle = Sickle:new(_x, _y, _dir, _speed)
@@ -45,10 +46,21 @@ local WAVES = {
         { VERTICALS[8], -10, DIRECTIONS.DOWN },
         { VERTICALS[9], -10, DIRECTIONS.DOWN },
     },
+    top_double_outside = {
+        { VERTICALS[2],  -5, DIRECTIONS.DOWN },
+        { VERTICALS[3],  -5, DIRECTIONS.DOWN },
+        { VERTICALS[10],  -5, DIRECTIONS.DOWN },
+        { VERTICALS[11],  -5, DIRECTIONS.DOWN },
+    },
     top_double_left = {
-        { VERTICALS[1],  -10, DIRECTIONS.DOWN },
         { VERTICALS[2],  -10, DIRECTIONS.DOWN },
-        { VERTICALS[3], -10, DIRECTIONS.DOWN },
+        { VERTICALS[3],  -10, DIRECTIONS.DOWN },
+        { VERTICALS[4], -10, DIRECTIONS.DOWN },
+    },
+    top_double_right = {
+        { VERTICALS[6],  -10, DIRECTIONS.DOWN },
+        { VERTICALS[7],  -10, DIRECTIONS.DOWN },
+        { VERTICALS[8], -10, DIRECTIONS.DOWN },
     },
     top_full_a = {
         { VERTICALS[2],  -17,  DIRECTIONS.DOWN },
@@ -88,7 +100,7 @@ local WAVES = {
     left_high = {
         { -20, HORIZONTALES[5],  DIRECTIONS.RIGHT },
         { -20, HORIZONTALES[4], DIRECTIONS.RIGHT },
-        { -70,  HORIZONTALES[1],  DIRECTIONS.RIGHT },
+        { -90,  HORIZONTALES[1],  DIRECTIONS.RIGHT },
         { -20,  HORIZONTALES[3], DIRECTIONS.RIGHT },
     },
 
@@ -106,10 +118,10 @@ local WAVES = {
         { 346, HORIZONTALES[2],  DIRECTIONS.LEFT },
         { 360, HORIZONTALES[3], DIRECTIONS.LEFT },
         { 458, HORIZONTALES[1], DIRECTIONS.LEFT },
-        { 473, HORIZONTALES[1],  DIRECTIONS.LEFT },
+        { 490, HORIZONTALES[1],  DIRECTIONS.LEFT },
     },
     right_low_single = {
-        { -10, HORIZONTALES[1], DIRECTIONS.RIGHT },
+        { 243, HORIZONTALES[1], DIRECTIONS.LEFT },
     },
     
     final_wave = {
@@ -141,6 +153,17 @@ local WAVES = {
     },
 }
 
+function SickleManager:on_two_sec()
+    if right then
+        self:spawn_sickles(WAVES.right_low_single, 150)
+        logger.debug("spawning right")
+        right = false
+    else
+        self:spawn_sickles(WAVES.left_high_single, 150)
+        logger.debug("spawning left")
+        right = true
+    end
+end
 
 function SickleManager:spawn_debug_wave()
     self:spawn_sickles(WAVES.debug, DEBUG_SPEED)
@@ -150,8 +173,9 @@ function SickleManager:new()
     local _sickle_manager = setmetatable({}, SickleManager)
     _sickle_manager.active_sickles = {}
     _sickle_manager.timers = {}
-    _sickle_manager.tmr_every_2s = Timer:new(60 * 2,
-        function() _sickle_manager:spawn_sickles(WAVES.right_low_single, 150) end, true)
+    _sickle_manager.tmr_every_2s = Timer:new(60 * 2,function ()
+        _sickle_manager:on_two_sec() 
+    end , true)
     _sickle_manager.tmr_every_4s = Timer:new(60 * 4,
         function() _sickle_manager:spawn_sickles(WAVES.left_high_single, 120) end, true)
 
@@ -164,14 +188,18 @@ function SickleManager:new()
         [30] = nil,
         [29] = function()
             _sickle_manager:spawn_sickles(WAVES.alternating_left_right, 150)
-            _sickle_manager.tmr_every_4s:start()
+            --_sickle_manager.tmr_every_4s:start()
         end,
         [28] = nil,
         [27] = function() _sickle_manager:spawn_sickles(WAVES.top_double_line, 190) end,
-        [26] = function() _sickle_manager.tmr_every_2s:start() end,
+        [26] = function() 
+            _sickle_manager.tmr_every_2s:start()
+            _sickle_manager:spawn_sickles(WAVES.top_double_outside, 270)
+
+        end,
         [25] = function() _sickle_manager:spawn_sickles(WAVES.left_high, 150) end,
         [24] = function() _sickle_manager:spawn_sickles(WAVES.top_double_left, 220) end,
-        [23] = nil,
+        [23] = function() _sickle_manager:spawn_sickles(WAVES.top_double_right, 250) end,
         [22] = nil,
         [21] = function() _sickle_manager:spawn_sickles(WAVES.right_low, 160) end,
         [20] = nil,
@@ -179,11 +207,11 @@ function SickleManager:new()
         [18] = function() _sickle_manager:spawn_sickles(WAVES.left_full, 150) end,
         [17] = nil,
         [16] = nil,
-        [15] = function() _sickle_manager:spawn_sickles(WAVES.top_right, 120) end,
+        [15] = function() _sickle_manager:spawn_sickles(WAVES.top_right, 220) end,
         [14] = nil,
-        [13] = function() _sickle_manager:spawn_sickles(WAVES.top_full_a, 120) end,
+        [13] = function() _sickle_manager:spawn_sickles(WAVES.top_full_a, 220) end,
         [12] = nil,
-        [11] = function() _sickle_manager:spawn_sickles(WAVES.top_left, 150) end,
+        [11] = function() _sickle_manager:spawn_sickles(WAVES.top_left, 220) end,
         [10] = function() _sickle_manager:spawn_sickles(WAVES.left_low, 170) end,
         [9] = nil,
         [8] = nil,
@@ -209,6 +237,8 @@ function SickleManager:new()
 
     return _sickle_manager
 end
+
+
 
 function SickleManager:reset()
     self.tmr_every_2s:stop()
@@ -266,12 +296,10 @@ end
 local screen_width = 240
 local screen_hieght = 120
 
-function draw_debug_lines()
-    --changeFontColor("#ffffff", 0.5)
+function draw_sickle_lanes()
     love.graphics.push("all")
     love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, 30))
-    --love.graphics.line(0, 42, screen_width, 42)
-    --love.graphics.line(0, 53, screen_width, 53)
+
     -- Horizontals 
     love.graphics.line(0, 64, screen_width, 64)
     love.graphics.line(0, 75, screen_width, 75)
@@ -284,22 +312,16 @@ function draw_debug_lines()
     love.graphics.line(56, 0, 56, screen_hieght)
     love.graphics.line(68, 0, 68, screen_hieght)
     love.graphics.line(80, 0, 80, screen_hieght)
-
     love.graphics.line(92, 0, 92, screen_hieght)
     love.graphics.line(104, 0, 104, screen_hieght)
     love.graphics.line(116, 0, 116, screen_hieght)
-
     love.graphics.line(128, 0, 128, screen_hieght)
     love.graphics.line(140, 0, 140, screen_hieght)
     love.graphics.line(152, 0, 152, screen_hieght)
-
     love.graphics.line(164, 0, 164, screen_hieght)
     love.graphics.line(176, 0, 176, screen_hieght)
     love.graphics.line(188, 0, 188, screen_hieght)
-
     love.graphics.line(200, 0, 200, screen_hieght)
-    -- body
-    love.graphics.pop()
-    --love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, 1))
 
+    love.graphics.pop()
 end
