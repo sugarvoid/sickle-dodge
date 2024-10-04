@@ -382,9 +382,9 @@ function draw_game()
     draw_hud()
     love.graphics.pop()
 
-    if is_debug_on then
-        draw_world()
-    end
+    --if is_debug_on then
+        --draw_world()
+    --end
 
     platfrom:draw()
     player:draw()

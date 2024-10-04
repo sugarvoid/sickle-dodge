@@ -78,7 +78,7 @@ local WAVES = {
     left_high_single = {
         { -10, HORIZONTALES[3], DIRECTIONS.RIGHT },
     },
-    left_full = {
+    left_full = { --TODO: Fix 
         { -20,  HORIZONTALES[6], DIRECTIONS.RIGHT },
         { -62,  HORIZONTALES[5],  DIRECTIONS.RIGHT },
         { -130, HORIZONTALES[5], DIRECTIONS.RIGHT },
@@ -93,7 +93,7 @@ local WAVES = {
     },
 
     -- RIGHT WAVES
-    right_high = {
+    right_high = { --TODOL Fix this
         { 347, HORIZONTALES[5], DIRECTIONS.LEFT },
         { 538, HORIZONTALES[5],  DIRECTIONS.LEFT },
         { 254, HORIZONTALES[5],  DIRECTIONS.LEFT },
@@ -135,15 +135,11 @@ local WAVES = {
     },
     
     alternating_left_right = {
-        { 250, 70,  DIRECTIONS.LEFT },
-        { -10, 90,  DIRECTIONS.RIGHT },
-        { 250, 110, DIRECTIONS.LEFT },
+        { 250, HORIZONTALES[5],  DIRECTIONS.LEFT },
+        { -10, HORIZONTALES[3],  DIRECTIONS.RIGHT },
+        { 250, HORIZONTALES[1], DIRECTIONS.LEFT },
     },
 }
-
-function spawn_debug_wave()
-    _sickle_manager:spawn_sickles(WAVES.left_high_single, DEBUG_SPEED)
-end
 
 
 function SickleManager:spawn_debug_wave()

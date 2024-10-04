@@ -143,7 +143,7 @@ function Player:jump()
 end
 
 function Player:on_sickle_contact(sickle)
-    if self.is_ghost then
+    if self.is_ghost or gamestate == gamestates.title then
         logger.debug("player phased through sickle")
         return
     else
