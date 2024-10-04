@@ -88,14 +88,14 @@ local WAVES = {
     },
     
     left_high_single = {
-        { -10, HORIZONTALES[3], DIRECTIONS.RIGHT },
+        { -10, HORIZONTALES[2], DIRECTIONS.RIGHT },
     },
     left_full = { --TODO: Fix 
-        { -20,  HORIZONTALES[6], DIRECTIONS.RIGHT },
-        { -62,  HORIZONTALES[5],  DIRECTIONS.RIGHT },
-        { -130, HORIZONTALES[5], DIRECTIONS.RIGHT },
-        { -150, HORIZONTALES[3], DIRECTIONS.RIGHT },
-        { -170, HORIZONTALES[1], DIRECTIONS.RIGHT },
+        { -20,  HORIZONTALES[3], DIRECTIONS.RIGHT },
+        { -62,  HORIZONTALES[3],  DIRECTIONS.RIGHT },
+        { -110, HORIZONTALES[4], DIRECTIONS.RIGHT },
+        { -140, HORIZONTALES[3], DIRECTIONS.RIGHT },
+        { -180, HORIZONTALES[1], DIRECTIONS.RIGHT },
     },
     left_high = {
         { -20, HORIZONTALES[5],  DIRECTIONS.RIGHT },

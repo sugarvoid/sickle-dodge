@@ -1,7 +1,7 @@
 require("src.const")
 
 
-is_debug_on = true
+is_debug_on = false
 
 if is_debug_on then
     love.profiler = require('lib.profile')
@@ -45,6 +45,8 @@ local death_markers = {}
 local seconds_left = 60
 local tick = 0
 local player_attempt = 0
+local player_total_attempts = 0
+local has_won
 
 -- Pause screen
 local is_paused = false
@@ -150,7 +152,13 @@ function love.joystickpressed(joystick, button)
     end
     logger.debug(button)
     if button == 1 then
-        player:jump()
+        if gamestate == gamestates.retry then
+            reset_game()
+            gamestate = gamestates.game
+            return
+        else
+            player:jump()
+        end
     end
 end
 
@@ -257,7 +265,7 @@ function update_game(dt)
         end
     end
     if seconds_left == 0 and player.is_alive then
-        save_game()
+        has_won = true
         gamestate = gamestates.win
     end
     world:update(dt)
@@ -289,7 +297,10 @@ function love.draw()
     love.graphics.scale(window.scale)
     love.graphics.draw(background, 0, 0)
     draw_snow()
-    draw_sickle_lanes()
+    if is_debug_on then
+        draw_sickle_lanes()
+    end
+    
     if gamestate == gamestates.title then
         draw_title()
         start_area:draw()
@@ -316,7 +327,7 @@ function love.draw()
         draw_time_left()
     end
 
-    if 1 == 1 then
+    if is_debug_on then
         love.graphics.print("gs: " .. tostring(get_gs_str(gamestate)), 0, 0, 0, 0.8, 0.8)
         love.graphics.print("fps: " .. tostring(love.timer.getFPS()), 0, 8, 0, 0.8, 0.8)
     end
@@ -324,13 +335,14 @@ end
 
 function draw_title()
     love.graphics.draw(title_img, 60, 20, 0, 0.19, 0.19)
+    love.graphics.print("by Dave", 120, 37)
 end
 
 function draw_pause()
     love.graphics.draw(pause_img, 0, 0)
     love.graphics.print("_", 49, 40 + (p_index * 8))
     love.graphics.print("Resume", 57, 50, 0, 0.8, 0.8)
-    love.graphics.print("option 2", 57, 58, 0, 0.8, 0.8)
+    love.graphics.print("stats", 57, 58, 0, 0.8, 0.8)
     love.graphics.print("quit", 57, 66, 0, 0.8, 0.8)
 end
 
@@ -449,7 +461,8 @@ end
 
 function save_game()
     data = {}
-    data.has_won = true
+    data.has_won = has_won
+    data.player_total_attempts = player_total_attempts + player_attempt
     serialized = lume.serialize(data)
     love.filesystem.write("sickle.sav", serialized)
 end
@@ -459,6 +472,8 @@ function load_game()
         file = love.filesystem.read("sickle.sav")
         data = lume.deserialize(file)
         player.has_won = data.has_won or false
+        player_total_attempts = data.player_total_attempts or 0
+        player_attempt = data.player_attempt or 1
         if is_debug_on then
             player.has_won = false
         end
@@ -501,6 +516,7 @@ function love.resize(w, h)
 end
 
 function love.quit()
+    save_game()
     logger.info("The application is closing.")
     -- Perform your cleanup tasks here.
     if is_debug_on then
