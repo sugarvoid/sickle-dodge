@@ -1,8 +1,9 @@
 
-## [2.0.0] - 2024-XX-XX
+## [2.0.0] - 2024-10-04
 
 ### Changed 
 - Lower game time 30 seconds
+- Tweak sickle wave layouts
 
 ### Added
 - Add controller support
