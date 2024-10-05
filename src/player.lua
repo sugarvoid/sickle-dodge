@@ -96,7 +96,7 @@ function Player:update(dt)
 
         flux.update(dt)
 
-        if gamestate ~= gamestates.title then
+        if gamestate == gamestates.game then
             if vel_x == 0 and vel_y == 0 then
                 self.tmr_standing_still:update()
             else

@@ -30,6 +30,7 @@ https://trello.com/b/IBYFLiS9/sickle-dodge
 |W, Space|Jump|
 |ESC| Pause |
 |M|Mute Music|
+<sub>Also has controller support</sub>
 
 <hr>
 

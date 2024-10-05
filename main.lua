@@ -322,7 +322,7 @@ function love.draw()
         draw_pause()
     end
 
-    if gamestate ~= gamestates.title then
+    if gamestate == gamestates.game or gamestate == gamestates.win then
         draw_death_markers()
         draw_time_left()
     end
@@ -473,7 +473,7 @@ function load_game()
         data = lume.deserialize(file)
         player.has_won = data.has_won or false
         player_total_attempts = data.player_total_attempts or 0
-        player_attempt = data.player_attempt or 1
+       -- player_attempt = data.player_attempt or 1
         if is_debug_on then
             player.has_won = false
         end
