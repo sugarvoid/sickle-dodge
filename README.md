@@ -1,6 +1,6 @@
 # Sickle Dodge (Love2D)
 
-Remake of one of my Godot games. Using [LÖVE](https://love2d.org/) this time. 
+Remake of one of my Godot games. Using [LÖVE](https://love2d.org/) this time. <br>
 [Play in broswser](https://sugarvoid.itch.io/sickle-dodge-love2d)
 
 https://github.com/user-attachments/assets/ad99d086-962c-4559-af9b-fb9f9785b758
