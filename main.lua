@@ -8,6 +8,7 @@ if is_debug_on then
 end
 
 love = require("love")
+Object = require("lib.classic")
 lume = require("lib.lume")
 anim8 = require("lib.anim8")
 logger = require("lib.log")

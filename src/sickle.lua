@@ -1,5 +1,7 @@
-Sickle = {}
-Sickle.__index = Sickle
+--Sickle = {}
+--Sickle.__index = Sickle
+
+Sickle = Object:extend("Sickle")
 
 
 local ice_sickle_sheet = love.graphics.newImage("asset/image/ice_sickle_sheet.png")
@@ -10,33 +12,33 @@ break_sfx:setVolume(0.1)
 
 
 function Sickle:new(_x, _y, _moving_dir, _speed)
-    local _sickle = setmetatable({}, Sickle)
+    --local _sickle = setmetatable({}, Sickle)
 
-    _sickle.animations = {
+    self.animations = {
         default = anim8.newAnimation(sickle_grid(('1-2'), 1), 0.1),
         shatter = anim8.newAnimation(sickle_grid(('3-8'), 1), 0.02, 'pauseAtEnd')
     }
-    _sickle.curr_animation = _sickle.animations["default"]
-    _sickle.x = 0
-    _sickle.y = 0
-    _sickle.moving_dir = _moving_dir
-    _sickle.alive = true
-    _sickle.rotation = 0
-    _sickle.life_timer = 300
-    _sickle.speed = _speed
-    _sickle.w, _sickle.h = _sickle.curr_animation:getDimensions()
-    _sickle.body = love.physics.newBody(world, _sickle.x, _sickle.y, "dynamic")
-    _sickle.shape = love.physics.newRectangleShape(_sickle.w - 12, _sickle.h - 3)
-    _sickle.fixture = love.physics.newFixture(_sickle.body, _sickle.shape)
-    _sickle.fixture:setUserData({ obj_type = "Sickle", owner = _sickle })
-    _sickle.fixture:setCategory(1)
-    _sickle.fixture:setMask(1)
-    _sickle.body:setGravityScale(0)
-    _sickle.body:setFixedRotation(true)
-    _sickle.body:setPosition(_x, _y)
-    _sickle:set_rotation()
-    _sickle.body:setLinearVelocity(_sickle.speed * _sickle.moving_dir[1], _sickle.speed * _sickle.moving_dir[2])
-    return _sickle
+    self.curr_animation = self.animations["default"]
+    self.x = 0
+    self.y = 0
+    self.moving_dir = _moving_dir
+    self.alive = true
+    self.rotation = 0
+    self.life_timer = 300
+    self.speed = _speed
+    self.w, self.h = self.curr_animation:getDimensions()
+    self.body = love.physics.newBody(world, self.x, self.y, "dynamic")
+    self.shape = love.physics.newRectangleShape(self.w - 12, self.h - 3)
+    self.fixture = love.physics.newFixture(self.body, self.shape)
+    self.fixture:setUserData({ obj_type = "Sickle", owner = self })
+    self.fixture:setCategory(1)
+    self.fixture:setMask(1)
+    self.body:setGravityScale(0)
+    self.body:setFixedRotation(true)
+    self.body:setPosition(_x, _y)
+    self:set_rotation()
+    self.body:setLinearVelocity(self.speed * self.moving_dir[1], self.speed * self.moving_dir[2])
+    return self
 end
 
 function Sickle:update(dt)

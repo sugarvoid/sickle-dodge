@@ -13,7 +13,7 @@ local DIRECTIONS = {
 local right = true
 
 local function make_sickle(_x, _y, _dir, _speed)
-    local new_sickle = Sickle:new(_x, _y, _dir, _speed)
+    local new_sickle = Sickle(_x, _y, _dir, _speed)
     return new_sickle
 end
 
