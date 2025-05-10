@@ -13,6 +13,8 @@ DEATH_MARKER = "death_marker.png"
 PLAYER_SHEET = "player_sheet.png"
 PLAYER = "player.png"
 CROWN = "crown.png"
+TITLE = "title.png"
+PAUSE = "pause.png"
 
 gamestates = {
     title = 0,

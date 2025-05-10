@@ -20,7 +20,7 @@ love.graphics.setDefaultFilter("nearest", "nearest")
 local title_music = love.audio.newSource("asset/audio/snowy_c.ogg", "stream")
 local bg_music = love.audio.newSource("asset/audio/8_bit_iced_village.ogg", "stream")
 local snow_flake = get_asset("image", SNOWFLAKE_FILE)
-local death_marker = love.graphics.newImage('asset/image/death_marker.png')
+local death_marker = get_asset("image", DEATH_MARKER) ---love.graphics.newImage('asset/image/death_marker.png')
 local background = get_asset("image", BACKGROUND_FILE)
 local title_img = love.graphics.newImage("asset/image/title.png")
 local pause_img = love.graphics.newImage("asset/image/pause.png")
@@ -335,7 +335,6 @@ end
 
 function draw_title()
     love.graphics.draw(title_img, 60, 20, 0, 0.19, 0.19)
-    love.graphics.print("by Dave", 120, 37)
 end
 
 function draw_pause()
@@ -405,7 +404,7 @@ end
 function draw_gameover()
     love.graphics.print(seconds_left, 110, 15, 0, 3, 3)
     if math.floor(love.timer.getTime()) % 2 == 0 then
-        love.graphics.print("jump to try again", 65, 70, 0, 1, 1)
+        love.graphics.print("jump to try again", 85, 70, 0, 1, 1)
     end
 end
 
