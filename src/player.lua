@@ -20,7 +20,7 @@ function Player:new()
     _player.spr_sheet = love.graphics.newImage("asset/image/player_sheet.png")
     _player.image = love.graphics.newImage("asset/image/player.png")
     _player.crown = love.graphics.newImage("asset/image/crown.png")
-    local s_grid = anim8.newGrid(16, 16, _player.spr_sheet:getWidth(), _player.spr_sheet:getHeight())
+    local s_grid = anim8.newGrid(16, 15, _player.spr_sheet:getWidth(), _player.spr_sheet:getHeight())
 
     _player.animations = {
         idle = anim8.newAnimation(s_grid(('1-6'), 1), 0.15),
