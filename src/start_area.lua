@@ -36,6 +36,7 @@ function StartArea:decrease()
 end
 
 function StartArea:draw()
+    love.graphics.print("start", self.x+1, self.y - 12, 0, 0.7, 0.7)
     love.graphics.rectangle("fill", self.x, self.y, self.w, self.fill)
     love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
     --love.graphics.draw(self.image, self.x, self.y, 0, 1, 1, self.ox, self.oy)

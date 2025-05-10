@@ -8,6 +8,7 @@ if is_debug_on then
 end
 
 love = require("love")
+Object = require("lib.classic")
 lume = require("lib.lume")
 anim8 = require("lib.anim8")
 logger = require("lib.log")
@@ -365,7 +366,7 @@ end
 
 function draw_time_left()
     love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, 100))
-    love.graphics.print(seconds_left, 110, 15, 0, 3, 3)
+    love.graphics.print(seconds_left, 100, -15, 0, 5, 5)
     love.graphics.setColor(255, 255, 255)
 end
 
