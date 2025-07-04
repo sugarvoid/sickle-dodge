@@ -1,18 +1,13 @@
 # Sickle Dodge (Love2D)
 
-Remake of one of my Godot games. Using [LÖVE](https://love2d.org/) this time. <br>
+Remake of one of my Godot games. Using [LÖVE](https://love2d.org/) this time.
 [Play in broswser](https://sugarvoid.itch.io/sickle-dodge-love2d)
 
 https://github.com/user-attachments/assets/ad99d086-962c-4559-af9b-fb9f9785b758
 
-
 ## Project Goal
 Compare making a game in LÖVE and Godot. 
 
-## Project Status
-https://trello.com/b/IBYFLiS9/sickle-dodge 
-
-<hr>
 
 ## Info :dart:
 - Dodge the ice sickles for 30 seconds.
@@ -20,7 +15,7 @@ https://trello.com/b/IBYFLiS9/sickle-dodge
 - The player will freeze if standing still for too long.
 - There is a double jump.
 - Player can phase through sickles while flipping.
-<hr>
+
 
 ## Controls :joystick: 
 
@@ -33,8 +28,6 @@ https://trello.com/b/IBYFLiS9/sickle-dodge
 |M|Mute Music|
 
 <sub>Also has controller support</sub>
-
-<hr>
 
 
 ## Credits
