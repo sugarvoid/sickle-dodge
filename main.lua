@@ -1,4 +1,54 @@
-require("src.const")
+GAME_W = 240
+GAME_H = 136
+
+ASSET_DIR = "asset/"
+IMG_DIR = "image/"
+FONT_DIR = "font/"
+SFX_DIR = "audio/"
+
+-- TODO: Add the rest... maybe, not sure if better than full paths 
+SNOWFLAKE_FILE = "snow.png"
+BACKGROUND_FILE = "background.png"
+DEATH_MARKER = "death_marker.png"
+PLAYER_SHEET = "player_sheet.png"
+PLAYER = "player.png"
+CROWN = "crown.png"
+TITLE = "title.png"
+PAUSE = "pause.png"
+
+TITLE_SFX = "snowy_c.ogg"
+
+gamestates = {
+    title = 0,
+    credit = 0.1,
+    info = 0.2,
+    game = 1,
+    retry = 1.1,
+    win = 2,
+    pause=3,
+}
+
+function get_gs_str(num)
+	for state_name, val in pairs(gamestates) do
+        if val == num then
+            return state_name
+        end
+    end
+end
+
+function get_asset(type, file)
+    local _middle = ""
+    if type == "image" then
+        _middle = IMG_DIR
+        local _img = love.graphics.newImage(ASSET_DIR..IMG_DIR..file)
+        return _img
+    elseif type == "sound" then
+        local _sfx = love.audio.newSource(ASSET_DIR..SFX_DIR..file, "stream")
+        return _sfx
+    elseif type == "font" then
+        _middle = FONT_DIR
+    end
+end
 
 
 is_debug_on = false
@@ -7,7 +57,6 @@ if is_debug_on then
     love.profiler = require('lib.profile')
 end
 
-love = require("love")
 Object = require("lib.classic")
 lume = require("lib.lume")
 anim8 = require("lib.anim8")
@@ -16,9 +65,11 @@ logger = require("lib.log")
 world = love.physics.newWorld(0, 950, true)
 
 love.graphics.setDefaultFilter("nearest", "nearest")
+
 -- Load Assets
 -- TODO: Add get_asset function to all
-local title_music = love.audio.newSource("asset/audio/snowy_c.ogg", "stream")
+
+local title_music = get_asset("sound", TITLE_SFX)
 local bg_music = love.audio.newSource("asset/audio/8_bit_iced_village.ogg", "stream")
 local snow_flake = get_asset("image", SNOWFLAKE_FILE)
 local death_marker = get_asset("image", DEATH_MARKER) ---love.graphics.newImage('asset/image/death_marker.png')
@@ -356,7 +407,7 @@ function draw_game()
     love.graphics.pop()
 
     --if is_debug_on then
-        --draw_world()
+    draw_world()
     --end
 
     platfrom:draw()
