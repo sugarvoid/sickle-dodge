@@ -4,11 +4,10 @@ SickleManager.__index = SickleManager
 local DEBUG_SPEED = 80
 
 local DIRECTIONS = {
-    DOWN = { 0, 1 },
-    LEFT = { -1, 0 },
-    UP = { 0, -1 },
-    RIGHT = { 1, 0 }
-}
+    DOWN = {0, 1},
+    LEFT = {-1, 0},
+    UP = {0, -1},
+RIGHT = {1, 0}}
 
 local right = true
 
@@ -22,108 +21,108 @@ local HORIZONTALES = {114, 102, 91, 80, 69, 56} --first 2 are good
 
 local WAVES = {
     debug = {
-        { VERTICALS[4], -10, DIRECTIONS.DOWN },
+        {VERTICALS[4], -10, DIRECTIONS.DOWN},
     },
     -- TOP WAVES
     top_left = {
-        { VERTICALS[2],  -10, DIRECTIONS.DOWN },
-        { VERTICALS[3],  -10, DIRECTIONS.DOWN },
-        { VERTICALS[4],  -10, DIRECTIONS.DOWN },
-        { VERTICALS[5],  -10, DIRECTIONS.DOWN },
-        { VERTICALS[6],  -10, DIRECTIONS.DOWN },
-        { VERTICALS[7], -10, DIRECTIONS.DOWN },
+        {VERTICALS[2], -10, DIRECTIONS.DOWN},
+        {VERTICALS[3], -10, DIRECTIONS.DOWN},
+        {VERTICALS[4], -10, DIRECTIONS.DOWN},
+        {VERTICALS[5], -10, DIRECTIONS.DOWN},
+        {VERTICALS[6], -10, DIRECTIONS.DOWN},
+        {VERTICALS[7], -10, DIRECTIONS.DOWN},
     },
     top_right = {
-        { VERTICALS[9], -21,  DIRECTIONS.DOWN },
-        { VERTICALS[10], -21,  DIRECTIONS.DOWN },
-        { VERTICALS[11], -80,  DIRECTIONS.DOWN },
-        { VERTICALS[12], -80,  DIRECTIONS.DOWN },
-        { VERTICALS[13], -136, DIRECTIONS.DOWN },
+        {VERTICALS[9], -21, DIRECTIONS.DOWN},
+        {VERTICALS[10], -21, DIRECTIONS.DOWN},
+        {VERTICALS[11], -80, DIRECTIONS.DOWN},
+        {VERTICALS[12], -80, DIRECTIONS.DOWN},
+        {VERTICALS[13], -136, DIRECTIONS.DOWN},
     },
     top_double_line = {
-        { VERTICALS[4],  -10, DIRECTIONS.DOWN },
-        { VERTICALS[5],  -10, DIRECTIONS.DOWN },
-        { VERTICALS[8], -10, DIRECTIONS.DOWN },
-        { VERTICALS[9], -10, DIRECTIONS.DOWN },
+        {VERTICALS[4], -10, DIRECTIONS.DOWN},
+        {VERTICALS[5], -10, DIRECTIONS.DOWN},
+        {VERTICALS[8], -10, DIRECTIONS.DOWN},
+        {VERTICALS[9], -10, DIRECTIONS.DOWN},
     },
     top_double_outside = {
-        { VERTICALS[2],  -5, DIRECTIONS.DOWN },
-        { VERTICALS[3],  -5, DIRECTIONS.DOWN },
-        { VERTICALS[10],  -5, DIRECTIONS.DOWN },
-        { VERTICALS[11],  -5, DIRECTIONS.DOWN },
+        {VERTICALS[2], -5, DIRECTIONS.DOWN},
+        {VERTICALS[3], -5, DIRECTIONS.DOWN},
+        {VERTICALS[10], -5, DIRECTIONS.DOWN},
+        {VERTICALS[11], -5, DIRECTIONS.DOWN},
     },
     top_double_left = {
-        { VERTICALS[2],  -10, DIRECTIONS.DOWN },
-        { VERTICALS[3],  -10, DIRECTIONS.DOWN },
-        { VERTICALS[4], -10, DIRECTIONS.DOWN },
+        {VERTICALS[2], -10, DIRECTIONS.DOWN},
+        {VERTICALS[3], -10, DIRECTIONS.DOWN},
+        {VERTICALS[4], -10, DIRECTIONS.DOWN},
     },
     top_double_right = {
-        { VERTICALS[6],  -10, DIRECTIONS.DOWN },
-        { VERTICALS[7],  -10, DIRECTIONS.DOWN },
-        { VERTICALS[8], -10, DIRECTIONS.DOWN },
+        {VERTICALS[6], -10, DIRECTIONS.DOWN},
+        {VERTICALS[7], -10, DIRECTIONS.DOWN},
+        {VERTICALS[8], -10, DIRECTIONS.DOWN},
     },
     top_full_a = {
-        { VERTICALS[2],  -17,  DIRECTIONS.DOWN },
-        { VERTICALS[1],  -133, DIRECTIONS.DOWN },
-        { VERTICALS[6], -132, DIRECTIONS.DOWN },
-        { VERTICALS[5], -17,  DIRECTIONS.DOWN },
-        { VERTICALS[1],  -58,  DIRECTIONS.DOWN },
-        { VERTICALS[2],  -185, DIRECTIONS.DOWN },
-        { VERTICALS[8], -184, DIRECTIONS.DOWN },
-        { VERTICALS[10], -58,  DIRECTIONS.DOWN },
+        {VERTICALS[2], -17, DIRECTIONS.DOWN},
+        {VERTICALS[1], -133, DIRECTIONS.DOWN},
+        {VERTICALS[6], -132, DIRECTIONS.DOWN},
+        {VERTICALS[5], -17, DIRECTIONS.DOWN},
+        {VERTICALS[1], -58, DIRECTIONS.DOWN},
+        {VERTICALS[2], -185, DIRECTIONS.DOWN},
+        {VERTICALS[8], -184, DIRECTIONS.DOWN},
+        {VERTICALS[10], -58, DIRECTIONS.DOWN},
     },
     top_full_b = {
-        { VERTICALS[11],  -99,  DIRECTIONS.DOWN },
-        { VERTICALS[9], -47,  DIRECTIONS.DOWN },
-        { VERTICALS[8], -155, DIRECTIONS.DOWN },
-        { VERTICALS[8], -97,  DIRECTIONS.DOWN },
-        { VERTICALS[7],  -13,  DIRECTIONS.DOWN },
-        { VERTICALS[10], -14,  DIRECTIONS.DOWN },
+        {VERTICALS[11], -99, DIRECTIONS.DOWN},
+        {VERTICALS[9], -47, DIRECTIONS.DOWN},
+        {VERTICALS[8], -155, DIRECTIONS.DOWN},
+        {VERTICALS[8], -97, DIRECTIONS.DOWN},
+        {VERTICALS[7], -13, DIRECTIONS.DOWN},
+        {VERTICALS[10], -14, DIRECTIONS.DOWN},
     },
     -- LEFT WAVES
     left_low = {
-        { -10,  HORIZONTALES[1], DIRECTIONS.RIGHT },
-        { -150, HORIZONTALES[2], DIRECTIONS.RIGHT },
-        { -190, HORIZONTALES[1], DIRECTIONS.RIGHT },
+        {-10, HORIZONTALES[1], DIRECTIONS.RIGHT},
+        {-150, HORIZONTALES[2], DIRECTIONS.RIGHT},
+        {-190, HORIZONTALES[1], DIRECTIONS.RIGHT},
     },
-    
+
     left_high_single = {
-        { -10, HORIZONTALES[2], DIRECTIONS.RIGHT },
+        {-10, HORIZONTALES[2], DIRECTIONS.RIGHT},
     },
-    left_full = { --TODO: Fix 
-        { -20,  HORIZONTALES[3], DIRECTIONS.RIGHT },
-        { -62,  HORIZONTALES[3],  DIRECTIONS.RIGHT },
-        { -110, HORIZONTALES[4], DIRECTIONS.RIGHT },
-        { -140, HORIZONTALES[3], DIRECTIONS.RIGHT },
-        { -180, HORIZONTALES[1], DIRECTIONS.RIGHT },
+    left_full = {--TODO: Fix
+        {-20, HORIZONTALES[3], DIRECTIONS.RIGHT},
+        {-62, HORIZONTALES[3], DIRECTIONS.RIGHT},
+        {-110, HORIZONTALES[4], DIRECTIONS.RIGHT},
+        {-140, HORIZONTALES[3], DIRECTIONS.RIGHT},
+        {-180, HORIZONTALES[1], DIRECTIONS.RIGHT},
     },
     left_high = {
-        { -20, HORIZONTALES[5],  DIRECTIONS.RIGHT },
-        { -20, HORIZONTALES[4], DIRECTIONS.RIGHT },
-        { -90,  HORIZONTALES[1],  DIRECTIONS.RIGHT },
-        { -20,  HORIZONTALES[3], DIRECTIONS.RIGHT },
+        {-20, HORIZONTALES[5], DIRECTIONS.RIGHT},
+        {-20, HORIZONTALES[4], DIRECTIONS.RIGHT},
+        {-90, HORIZONTALES[1], DIRECTIONS.RIGHT},
+        {-20, HORIZONTALES[3], DIRECTIONS.RIGHT},
     },
 
     -- RIGHT WAVES
-    right_high = { --TODOL Fix this
-        { 347, HORIZONTALES[5], DIRECTIONS.LEFT },
-        { 538, HORIZONTALES[5],  DIRECTIONS.LEFT },
-        { 254, HORIZONTALES[5],  DIRECTIONS.LEFT },
-        { 345, HORIZONTALES[4],  DIRECTIONS.LEFT },
-        { 436, HORIZONTALES[3],  DIRECTIONS.LEFT },
+    right_high = {--TODOL Fix this
+        {347, HORIZONTALES[5], DIRECTIONS.LEFT},
+        {538, HORIZONTALES[5], DIRECTIONS.LEFT},
+        {254, HORIZONTALES[5], DIRECTIONS.LEFT},
+        {345, HORIZONTALES[4], DIRECTIONS.LEFT},
+        {436, HORIZONTALES[3], DIRECTIONS.LEFT},
     },
     right_low = {
-        { 271, HORIZONTALES[1], DIRECTIONS.LEFT },
-        { 288, HORIZONTALES[2],  DIRECTIONS.LEFT },
-        { 346, HORIZONTALES[2],  DIRECTIONS.LEFT },
-        { 360, HORIZONTALES[3], DIRECTIONS.LEFT },
-        { 458, HORIZONTALES[1], DIRECTIONS.LEFT },
-        { 490, HORIZONTALES[1],  DIRECTIONS.LEFT },
+        {271, HORIZONTALES[1], DIRECTIONS.LEFT},
+        {288, HORIZONTALES[2], DIRECTIONS.LEFT},
+        {346, HORIZONTALES[2], DIRECTIONS.LEFT},
+        {360, HORIZONTALES[3], DIRECTIONS.LEFT},
+        {458, HORIZONTALES[1], DIRECTIONS.LEFT},
+        {490, HORIZONTALES[1], DIRECTIONS.LEFT},
     },
     right_low_single = {
-        { 243, HORIZONTALES[1], DIRECTIONS.LEFT },
+        {243, HORIZONTALES[1], DIRECTIONS.LEFT},
     },
-    
+
     final_wave = {
         {},
         {},
@@ -136,20 +135,20 @@ local WAVES = {
         {},
     },
     xxx_a = {
-        { 75,  -226, DIRECTIONS.DOWN },
-        { 121, -155, DIRECTIONS.DOWN },
-        { 160, -95,  DIRECTIONS.DOWN },
-        { 191, -17,  DIRECTIONS.DOWN },
-        { 270, 99,   DIRECTIONS.LEFT },
-        { 363, 99,   DIRECTIONS.LEFT },
-        { 452, 99,   DIRECTIONS.LEFT },
-        { 535, 99,   DIRECTIONS.LEFT },
+        {75, -226, DIRECTIONS.DOWN},
+        {121, -155, DIRECTIONS.DOWN},
+        {160, -95, DIRECTIONS.DOWN},
+        {191, -17, DIRECTIONS.DOWN},
+        {270, 99, DIRECTIONS.LEFT},
+        {363, 99, DIRECTIONS.LEFT},
+        {452, 99, DIRECTIONS.LEFT},
+        {535, 99, DIRECTIONS.LEFT},
     },
-    
+
     alternating_left_right = {
-        { 250, HORIZONTALES[5],  DIRECTIONS.LEFT },
-        { -10, HORIZONTALES[3],  DIRECTIONS.RIGHT },
-        { 250, HORIZONTALES[1], DIRECTIONS.LEFT },
+        {250, HORIZONTALES[5], DIRECTIONS.LEFT},
+        {-10, HORIZONTALES[3], DIRECTIONS.RIGHT},
+        {250, HORIZONTALES[1], DIRECTIONS.LEFT},
     },
 }
 
@@ -173,16 +172,14 @@ function SickleManager:new()
     local _sickle_manager = setmetatable({}, SickleManager)
     _sickle_manager.active_sickles = {}
     _sickle_manager.timers = {}
-    _sickle_manager.tmr_every_2s = Timer:new(60 * 2,function ()
-        _sickle_manager:on_two_sec() 
-    end , true)
+    _sickle_manager.tmr_every_2s = Timer:new(60 * 2, function ()
+        _sickle_manager:on_two_sec()
+    end, true)
     _sickle_manager.tmr_every_4s = Timer:new(60 * 4,
-        function() _sickle_manager:spawn_sickles(WAVES.left_high_single, 120) end, true)
+    function() _sickle_manager:spawn_sickles(WAVES.left_high_single, 120) end, true)
 
     table.insert(_sickle_manager.timers, _sickle_manager.tmr_every_2s)
     table.insert(_sickle_manager.timers, _sickle_manager.tmr_every_4s)
-
-
 
     _sickle_manager.update_actions = {
         [30] = nil,
@@ -192,7 +189,7 @@ function SickleManager:new()
         end,
         [28] = nil,
         [27] = function() _sickle_manager:spawn_sickles(WAVES.top_double_line, 190) end,
-        [26] = function() 
+        [26] = function()
             _sickle_manager.tmr_every_2s:start()
             _sickle_manager:spawn_sickles(WAVES.top_double_outside, 270)
 
@@ -238,8 +235,6 @@ function SickleManager:new()
     return _sickle_manager
 end
 
-
-
 function SickleManager:reset()
     self.tmr_every_2s:stop()
     self.tmr_every_4s:stop()
@@ -274,7 +269,6 @@ function SickleManager:draw()
     for s in all(self.active_sickles) do
         s:draw()
     end
-
 end
 
 function SickleManager:on_every_second(_seconds_in)
@@ -288,7 +282,7 @@ end
 
 function SickleManager:spawn_sickles(_pattern, _speed)
     for p in all(_pattern) do
-        local n_s = make_sickle(p[1], p[2], { p[3][1], p[3][2] }, _speed)
+        local n_s = make_sickle(p[1], p[2], {p[3][1], p[3][2]}, _speed)
         table.insert(self.active_sickles, n_s)
     end
 end
@@ -300,14 +294,14 @@ function draw_sickle_lanes()
     love.graphics.push("all")
     love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, 30))
 
-    -- Horizontals 
+    -- Horizontals
     love.graphics.line(0, 64, screen_width, 64)
     love.graphics.line(0, 75, screen_width, 75)
     love.graphics.line(0, 86, screen_width, 86)
     love.graphics.line(0, 97, screen_width, 97)
     love.graphics.line(0, 108, screen_width, 108)
 
-    -- Verticals 
+    -- Verticals
     love.graphics.line(45, 0, 45, screen_hieght)
     love.graphics.line(56, 0, 56, screen_hieght)
     love.graphics.line(68, 0, 68, screen_hieght)

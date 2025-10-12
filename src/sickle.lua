@@ -3,21 +3,18 @@
 
 Sickle = Object:extend("Sickle")
 
-
 local ice_sickle_sheet = love.graphics.newImage("asset/image/ice_sickle_sheet.png")
-local sickle_grid = anim8.newGrid(16, 16, ice_sickle_sheet:getWidth(), ice_sickle_sheet:getHeight())
+local sickle_grid = anim8.newGrid(16, 18, ice_sickle_sheet:getWidth(), ice_sickle_sheet:getHeight())
 local break_sfx = love.audio.newSource("asset/audio/ice_break.wav", "static")
 
 break_sfx:setVolume(0.1)
-
 
 function Sickle:new(_x, _y, _moving_dir, _speed)
     --local _sickle = setmetatable({}, Sickle)
 
     self.animations = {
         default = anim8.newAnimation(sickle_grid(('1-2'), 1), 0.1),
-        shatter = anim8.newAnimation(sickle_grid(('3-8'), 1), 0.02, 'pauseAtEnd')
-    }
+    shatter = anim8.newAnimation(sickle_grid(('3-8'), 1), 0.02, 'pauseAtEnd')}
     self.curr_animation = self.animations["default"]
     self.x = 0
     self.y = 0
@@ -28,9 +25,9 @@ function Sickle:new(_x, _y, _moving_dir, _speed)
     self.speed = _speed
     self.w, self.h = self.curr_animation:getDimensions()
     self.body = love.physics.newBody(world, self.x, self.y, "dynamic")
-    self.shape = love.physics.newRectangleShape(self.w - 12, self.h - 3)
+    self.shape = love.physics.newRectangleShape(self.w - 10, self.h - 4)
     self.fixture = love.physics.newFixture(self.body, self.shape)
-    self.fixture:setUserData({ obj_type = "Sickle", owner = self })
+    self.fixture:setUserData({obj_type = "Sickle", owner = self})
     self.fixture:setCategory(1)
     self.fixture:setMask(1)
     self.body:setGravityScale(0)
@@ -73,13 +70,13 @@ function Sickle:draw()
 end
 
 function Sickle:set_rotation()
-    if do_tables_match(self.moving_dir, { 1, 0 }) then
+    if do_tables_match(self.moving_dir, {1, 0}) then
         self.body:setAngle(math.rad(90))
         self.rotation = 0
-    elseif do_tables_match(self.moving_dir, { -1, 0 }) then
+    elseif do_tables_match(self.moving_dir, {-1, 0}) then
         self.body:setAngle(math.rad(90))
         self.rotation = 180
-    elseif do_tables_match(self.moving_dir, { 0, 1 }) then
+    elseif do_tables_match(self.moving_dir, {0, 1}) then
         self.rotation = 90
     end
 end

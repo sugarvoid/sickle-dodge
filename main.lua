@@ -6,7 +6,7 @@ IMG_DIR = "image/"
 FONT_DIR = "font/"
 SFX_DIR = "audio/"
 
--- TODO: Add the rest... maybe, not sure if better than full paths 
+-- TODO: Add the rest... maybe, not sure if better than full paths
 SNOWFLAKE_FILE = "snow.png"
 BACKGROUND_FILE = "background.png"
 DEATH_MARKER = "death_marker.png"
@@ -25,11 +25,11 @@ gamestates = {
     game = 1,
     retry = 1.1,
     win = 2,
-    pause=3,
+    pause = 3,
 }
 
 function get_gs_str(num)
-	for state_name, val in pairs(gamestates) do
+    for state_name, val in pairs(gamestates) do
         if val == num then
             return state_name
         end
@@ -49,7 +49,6 @@ function get_asset(type, file)
         _middle = FONT_DIR
     end
 end
-
 
 is_debug_on = false
 
@@ -77,9 +76,6 @@ local background = get_asset("image", BACKGROUND_FILE)
 local title_img = love.graphics.newImage("asset/image/title.png")
 local pause_img = love.graphics.newImage("asset/image/pause.png")
 
-
-
-
 require("lib.color")
 require("src.player")
 require("src.platform")
@@ -88,7 +84,6 @@ require("src.sickle")
 require("lib.kgo.debug")
 require("lib.kgo.timer")
 require("src.start_area")
-
 
 local font = nil
 
@@ -103,7 +98,6 @@ local has_won
 -- Pause screen
 local is_paused = false
 local p_index = 1
-
 
 local snow_system = love.graphics.newParticleSystem(snow_flake, 1000)
 local player = Player:new()
@@ -124,9 +118,9 @@ function love.load()
     contected_controller = joysticks[1]
     init_snow()
     load_game()
-    window = { translateX = 0, translateY = 0, scale = 4, width = GAME_W, height = GAME_H }
+    window = {translateX = 0, translateY = 0, scale = 4, width = GAME_W, height = GAME_H}
     width, height = love.graphics.getDimensions()
-    love.window.setMode(width, height, { resizable = true, borderless = false })
+    love.window.setMode(width, height, {resizable = true, borderless = false})
     resize(width, height)
     bg_music:setLooping(true)
     title_music:setLooping(true)
@@ -304,7 +298,7 @@ function update_title(dt)
     start_area:update(dt)
     player:update(dt)
     world:update(dt)
-    sickle_manager:update(dt) --TODO: Remove after testing
+    sickle_manager:update(dt)
 end
 
 function update_game(dt)
@@ -330,7 +324,7 @@ function update_gameover(dt)
 end
 
 function spawn_death_marker(_x, _y)
-    table.insert(death_markers, { _x, _y })
+    table.insert(death_markers, {_x, _y})
 end
 
 function love.joystickremoved(joystick)
@@ -352,13 +346,13 @@ function love.draw()
     if is_debug_on then
         draw_sickle_lanes()
     end
-    
+
     if gamestate == gamestates.title then
         draw_title()
         start_area:draw()
         platfrom:draw()
         player:draw()
-        sickle_manager:draw() --TODO: Remove after testing
+        sickle_manager:draw()
     end
     if gamestate == gamestates.game then
         draw_game()
@@ -370,13 +364,13 @@ function love.draw()
         draw_win()
     end
 
-    if is_paused then
-        draw_pause()
-    end
-
     if gamestate == gamestates.game or gamestate == gamestates.win then
         draw_death_markers()
         draw_time_left()
+    end
+
+    if is_paused then
+        draw_pause()
     end
 
     if is_debug_on then
@@ -406,13 +400,15 @@ function draw_game()
     draw_hud()
     love.graphics.pop()
 
-    --if is_debug_on then
-    draw_world()
-    --end
+    if is_debug_on then
+        draw_world()
+    end
 
     platfrom:draw()
+    --draw_world()
     player:draw()
     sickle_manager:draw()
+
 end
 
 function draw_time_left()
@@ -441,7 +437,7 @@ end
 function draw_death_markers()
     for dm in all(death_markers) do
         love.graphics.draw(death_marker, dm[1], dm[2], 0, 0.2, 0.2, death_marker:getWidth() / 2,
-            death_marker:getHeight() / 2)
+        death_marker:getHeight() / 2)
     end
 end
 
@@ -470,8 +466,10 @@ function draw_win()
 end
 
 function play_sound(_sound)
-    love.audio.stop(_sound)
-    love.audio.play(_sound)
+    local s = _sound:clone()
+    s:play()
+    -- love.audio.stop(_sound)
+    --love.audio.play(_sound)
 end
 
 function go_to_gameover()
@@ -501,9 +499,9 @@ end
 
 function check_collision(a, b)
     return a.x < b.x + b.w and
-        b.x < a.x + a.w and
-        a.y < b.y + b.h and
-        b.y < a.y + a.h
+    b.x < a.x + a.w and
+    a.y < b.y + b.h and
+    b.y < a.y + a.h
 end
 
 function do_tables_match(_table_1, _table_2)
@@ -524,7 +522,7 @@ function load_game()
         data = lume.deserialize(file)
         player.has_won = data.has_won or false
         player_total_attempts = data.player_total_attempts or 0
-       -- player_attempt = data.player_attempt or 1
+        -- player_attempt = data.player_attempt or 1
         if is_debug_on then
             player.has_won = false
         end
@@ -539,7 +537,7 @@ function beginContact(a, b, coll)
     logger.debug(obj_a.obj_type .. " hit " .. obj_b.obj_type)
 
     -- Checking contact vector to prevent player from clinging to side of platform
-    if obj_a.obj_type == "Player" and obj_b.obj_type == "Ground" and coll:getNormal() ~= { 1, 0 } then
+    if obj_a.obj_type == "Player" and obj_b.obj_type == "Ground" and coll:getNormal() ~= {1, 0} then
         player:on_ground_contact()
     end
     if obj_a.obj_type == "Player" and obj_b.obj_type == "Sickle" then
@@ -556,7 +554,7 @@ function preSolve(a, b, coll) end
 
 function postSolve(a, b, coll, normalimpulse, tangentimpulse) end
 
-function resize(w, h)                          
+function resize(w, h)
     local w1, h1 = window.width, window.height
     local scale = math.min(w / w1, h / h1)
     window.translateX, window.translateY, window.scale = (w - w1 * scale) / 2, (h - h1 * scale) / 2, scale
