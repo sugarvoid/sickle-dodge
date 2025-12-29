@@ -40,10 +40,10 @@ function get_asset(type, file)
     local _middle = ""
     if type == "image" then
         _middle = IMG_DIR
-        local _img = love.graphics.newImage(ASSET_DIR..IMG_DIR..file)
+        local _img = love.graphics.newImage(ASSET_DIR .. IMG_DIR .. file)
         return _img
     elseif type == "sound" then
-        local _sfx = love.audio.newSource(ASSET_DIR..SFX_DIR..file, "stream")
+        local _sfx = love.audio.newSource(ASSET_DIR .. SFX_DIR .. file, "stream")
         return _sfx
     elseif type == "font" then
         _middle = FONT_DIR
@@ -208,6 +208,14 @@ function love.joystickpressed(joystick, button)
     end
 end
 
+function love.joystickreleased(joystick, button)
+    if button == 1 then
+        if gamestate == gamestates.game or gamestate == gamestates.title then
+            player:cut_jump()
+        end
+    end
+end
+
 function love.keypressed(key)
     --logger.debug(key)
     if not is_paused then
@@ -253,6 +261,14 @@ function love.keypressed(key)
         end
         if key == "space" or key == "return" then
             handle_pause_action()
+        end
+    end
+end
+
+function love.keyreleased(key)
+    if gamestate == gamestates.game or gamestate == gamestates.title then
+        if key == "space" or key == "w" or key == "up" then
+            player:cut_jump()
         end
     end
 end
@@ -408,7 +424,6 @@ function draw_game()
     --draw_world()
     player:draw()
     sickle_manager:draw()
-
 end
 
 function draw_time_left()

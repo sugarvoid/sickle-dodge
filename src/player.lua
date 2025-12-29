@@ -3,7 +3,6 @@ require("src.jump_sfx")
 Player = {}
 Player.__index = Player
 
-
 local flux = require("lib.flux")
 local player_mass = 0.22
 local jump_sfx = love.audio.newSource("asset/audio/jump1.wav", "static")
@@ -14,7 +13,6 @@ jump_sfx:setVolume(0.3)
 jump_sfx2:setVolume(0.2)
 death_sfx:setVolume(0.5)
 
-
 function Player:new()
     local _player = setmetatable({}, Player)
     _player.spr_sheet = love.graphics.newImage("asset/image/player_sheet.png")
@@ -24,9 +22,8 @@ function Player:new()
 
     _player.animations = {
         idle = anim8.newAnimation(s_grid(('1-6'), 1), 0.15),
-        death = anim8.newAnimation(s_grid(('7-14'), 1), 0.1, 'pauseAtEnd')
-    }
-    _player.starting_pos = { x = 60, y = 111 }
+    death = anim8.newAnimation(s_grid(('7-14'), 1), 0.1, 'pauseAtEnd')}
+    _player.starting_pos = {x = 60, y = 111}
     _player.curr_animation = _player.animations["idle"]
     _player.alpha = 255
     _player.rotation = 0
@@ -41,18 +38,20 @@ function Player:new()
     _player.tmr_wait_for_animation = Timer:new(60 * 0.9, function() go_to_gameover() end, false)
     _player.jumps_left = 2
     _player.jump_effect = JumpSfx:new()
+    _player.is_jumping = false
+    _player.jump_cut_factor = 0.4
     _player.speed = 100
     _player.vel_y = 50
     _player.vel_x = 0
     _player.max_speed = 100
     _player.acceleration = 8
     _player.w, _player.h = _player.curr_animation:getDimensions()
-    _player.hitbox = { x = _player.x, y = _player.y, w = _player.w - 10, h = _player.h - 6 }
+    _player.hitbox = {x = _player.x, y = _player.y, w = _player.w - 10, h = _player.h - 6}
     _player.body = love.physics.newBody(world, _player.x, _player.y, "dynamic")
     _player.shape = love.physics.newRectangleShape(_player.w - 10, _player.h - 6)
     _player.fixture = love.physics.newFixture(_player.body, _player.shape)
     _player.body:setAwake(true)
-    _player.fixture:setUserData({ obj_type = "Player", owner = _player })
+    _player.fixture:setUserData({obj_type = "Player", owner = _player})
     _player.fixture:setCategory(2)
     _player.fixture:setMask(2)
     _player.body:setSleepingAllowed(true)
@@ -70,7 +69,6 @@ function Player:update(dt)
 
     if self.is_alive then
         local vel_x, vel_y = self.body:getLinearVelocity()
-
 
         if love.keyboard.isDown('d') or love.keyboard.isDown("right") then
             self.facing_dir = 1
@@ -111,14 +109,12 @@ function Player:update(dt)
         self.hitbox.y = self.y
 
         if self.body:getY() >= 132 or self.body:getX() <= 2 or self.body:getX() >= 239 then
-
             if gamestate == gamestates.title or gamestate == gamestates.win then
                 self:reset()
             else
                 local death_x, death_y = self.body:getPosition()
-                self:die({ death_x, death_y })
+                self:die({death_x, death_y})
             end
-            
         end
     end
 end
@@ -128,17 +124,34 @@ function Player:jump()
         local vel_x, vel_y = self.body:getLinearVelocity()
         if self.jumps_left == 2 then -- First jump
             jump_sfx:play()
-            self.body:applyLinearImpulse(0, -55, self.body:getX(), self.body:getY() + (self.h / 2))
-            self.jumps_left = self.jumps_left - 1
+            --self.body:applyLinearImpulse(0, -55, self.body:getX(), self.body:getY() + (self.h / 2))
+            self.body:applyLinearImpulse(0, -60)
+            --self.jumps_left = self.jumps_left - 1
+            self.jumps_left = 1
+            self.is_jumping = true
         elseif self.jumps_left == 1 then -- Double jump
             jump_sfx2:play()
             self.jump_effect:do_animation(self.x, self.y)
             self:enter_ghost_mode()
             self:flip()
             self.body:setLinearVelocity(vel_x, 0)
-            self.body:applyLinearImpulse(0, (-55 * 0.8))
-            self.jumps_left = self.jumps_left - 1
+            self.body:applyLinearImpulse(0, (-60 * 0.8))
+            --self.jumps_left = self.jumps_left - 1
+            self.jumps_left = 0
+            self.is_jumping = true
         end
+    end
+end
+
+function Player:cut_jump()
+    if self.is_jumping then
+        local vel_x, vel_y = self.body:getLinearVelocity()
+
+        if vel_y < 0 then
+            self.body:setLinearVelocity(vel_x, vel_y * self.jump_cut_factor)
+        end
+
+        self.is_jumping = false
     end
 end
 
@@ -149,18 +162,19 @@ function Player:on_sickle_contact(sickle)
     else
         sickle:shatter()
         local death_x, death_y = self.body:getPosition()
-        self:die({ death_x, death_y })
+        self:die({death_x, death_y})
     end
 end
 
 function Player:on_ground_contact()
     self.rotation = 0
     self.jumps_left = 2
+    self.is_jumping = false
 end
 
 function Player:inactive_die()
     local death_x, death_y = self.body:getPosition()
-    self:die({ death_x, death_y })
+    self:die({death_x, death_y})
 end
 
 function Player:start_movement_timer()
@@ -182,17 +196,17 @@ function Player:draw()
     self.jump_effect:draw()
     love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, self.alpha))
     self.curr_animation:draw(self.spr_sheet, self.x, self.y - 2, math.rad(self.rotation), self.facing_dir, 1, self.w / 2,
-        self.h / 2)
+    self.h / 2)
     if self.is_alive and self.has_won then
         love.graphics.draw(self.crown, self.x, self.y - 2, math.rad(self.rotation), self.facing_dir, 1, self.w / 2,
             self.h /
-            2)
+        2)
     end
     love.graphics.setColor(255, 255, 255)
 end
 
 function Player:flip()
-    flux.to(self, 0.3, { rotation = -360 })
+    flux.to(self, 0.3, {rotation = -360})
 end
 
 function Player:enter_ghost_mode()
