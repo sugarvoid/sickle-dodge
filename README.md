@@ -31,10 +31,6 @@ Compare making a game in LÖVE and Godot.
 
 
 ## Credits
-### Programming :computer: 
-- Dave
-### Sprites
-- Dave
 ### Font
 - Mago by [nimblebeastscollective](https://nimblebeastscollective.itch.io) [CC0](https://creativecommons.org/publicdomain/zero/1.0/)
 - Fibberish by [Nathan Scott](https://caffinate.itch.io/fibberish) is licensed under [CC BY 3.0]()
